@@ -1,6 +1,6 @@
 ### wtfm
 
-## Coming Soon
+## Coming Soon. Ish.
 
 This repo will share my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
