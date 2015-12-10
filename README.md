@@ -5,7 +5,7 @@
 This repo will share my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
 project. wtfm is fully operational right now, but isn't suitable
-for public distribution quite yet. Mainly because I haevn't... written the
+for public distribution quite yet. Mainly because I haven't... written the
 documentation for it. :)
 
 Watch this space.
