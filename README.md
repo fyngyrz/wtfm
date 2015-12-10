@@ -50,7 +50,7 @@ will be shared.
 ![Examples of custom doc conventions](http://fyngyrz.com/images/wtfmx1.png)
 
 ### Examples of custom blocks
-![Examples of custom blocks](http://fyngyrz.com/images/wtfmx2.png)
+![Examples of custom blocks](http://fyngyrz.com/images/wtfmx2a.png)
 
 ### Example of content using some of these features
 ![Example of document content](http://fyngyrz.com/images/wtfmx3.png)
