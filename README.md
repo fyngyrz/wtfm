@@ -22,20 +22,22 @@ resulting documentation itself can and most likely will be shared.
 
 * Hugely customizable
 * Extensive macro capability
+* Styles allow global document changes with almost no effort
 * Full access to all of HTML and CSS
 * Handles multiple documentation undertakings
 * Global (all docs) and Local (current doc) preset styles
 * Doc-wide (all pages) and Page-Local preset styles
 * Glossary generation
-* TOC generation
+* Multi-level TOC generation
 * Index generation
 * Footnote generation
 * Endnote generation
 * Images
+* Links
 * Sidebars
-* Notes
-* Warnings
-* Cautions
+* Note blocks
+* Warning blocks
+* Caution blocks
 * Forward and Backward references \(multi-pass link resolution\)
 
 ...plus more
