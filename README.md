@@ -52,3 +52,6 @@ resulting documentation itself can and most likely will be shared.
 
 ### Example of content using some of these features
 ![Example of document content](http://fyngyrz.com/images/wtfmx3.png)
+
+### Example of content using images
+![Example of images](http://fyngyrz.com/images/wtfmx4.png)
