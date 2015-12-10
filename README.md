@@ -53,7 +53,7 @@ will be shared.
 * Endnote generation
 * Images
 * Links
-* Sidebars
+* Side blocks \(left and/or right\)
 * Note blocks
 * Warning blocks
 * Caution blocks
