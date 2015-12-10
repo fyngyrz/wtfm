@@ -44,6 +44,8 @@ resulting documentation itself can and most likely will be shared.
 
 ## Examples
 
+### Examples of custom doc conventions
 ![Examples of custom doc conventions](http://fyngyrz.com/images/wtfmx1.png)
 
-![Eamples of custom blocks](http://fyngyrz.com/images/wtfmx2.png)
+### Examples of custom blocks
+![Examples of custom blocks](http://fyngyrz.com/images/wtfmx2.png)
