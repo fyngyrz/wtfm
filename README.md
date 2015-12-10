@@ -32,6 +32,23 @@ will be shared.
 * Glossary generation
 * Multi-level TOC generation
 * Index generation
+* HTML Tables
+* HTML Lists
+* Variables
+* Counters
+* Data lists
+* Data dictionaries
+* Stack operations
+* Math
+* Base conversion
+* Word wrapping
+* Text alignment for fixed width fonts
+* Conditional Content
+* Character mapping
+* Data Sorting
+* Word expansion
+* Various word casing modes
+* Various numbering schemes \(Roman, etc.\)
 * Footnote generation
 * Endnote generation
 * Images
