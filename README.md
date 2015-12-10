@@ -16,8 +16,9 @@ Watch this space.
 create and maintain online \(HTML\) documentation right on the server,
 working in your browser. It is single creator, multiple client software;
 by this I mean that document creation is designed to be a private
-undertaking by the documentation author as a security matter, while the
-resulting documentation itself can and most likely will be shared.
+undertaking by the documentation author as a security matter, ideally
+via https, while the resulting documentation itself can and most likely
+will be shared.
 
 ## Features
 
