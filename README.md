@@ -57,3 +57,7 @@ will be shared.
 
 ### Example of content using images
 ![Example of images](http://fyngyrz.com/images/wtfmx4.png)
+
+## Credit
+
+Credit for the name **wtfm** goes to `xxxJonBoyxxx` on Slashdot.
