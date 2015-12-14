@@ -4,7 +4,7 @@
 
 This repo will share my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
-project. wtfm is fully operational right now, but isn't suitable
+project. **wtfm** is fully operational right now, but isn't suitable
 for public distribution quite yet. Mainly because I haven't... written the
 documentation for it. :)
 
@@ -80,6 +80,10 @@ from any project into any directory you wish on a per-project basis
 
 ## Credit
 
+### Author
+Ben, AA7AS / fyngyrz
+
+### Name
 Credit for the name **wtfm** goes to `xxxJonBoyxxx` on Slashdot.
 He just threw it out like it should have been obvious. It wasn't.
 But it is now!
