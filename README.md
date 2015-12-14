@@ -28,10 +28,10 @@ from any project into any directory you wish on a per-project basis
 * Hugely customizable
 * Extensive macro capability
 * Styles allow global document changes with almost no effort
-* Full access to all of HTML and CSS
+* Full access to *all* of HTML and CSS
 * Handles multiple documentation undertakings
-* Global (all docs) and Local (current doc) preset styles
-* Doc-wide (all pages) and Page-Local preset styles
+* Global \(all projects\), doc-wide \(all pages\) and page-Local preset styles
+* External document and style includes
 * Glossary generation
 * Multi-level TOC generation
 * Index generation
