@@ -13,7 +13,8 @@ Watch this space.
 ## About
 
 **wtfm** resides on a \*NIX web server. It is CGI that allows you to
-create and maintain online \(HTML\) documentation right on the server,
+create and maintain online \(HTML, most likely, although it certainly
+isn't limited to HTML\) documentation right on the server,
 working in your browser. It is single creator, multiple client software;
 by this I mean that document creation is designed to be a private
 undertaking by the documentation author as a security matter, ideally
