@@ -21,7 +21,7 @@ that writing the styles themselves was guaranteed to be simple. :\) But
 once written, yes, the work of actually preparing the documentation
 itself will become much, much easier.
 
-There are three forms involved. One provides a means to specify globals
+There are three CGI forms involved. One provides a means to specify globals
 that apply to all projects. Another provides a way to specify the
 project itself. The last one provides a way to build the actual
 pages in the project.
@@ -64,7 +64,7 @@ dictionary on the tenth file/page of a project, it will not be visible
 to the previous nine files as they have already been processed.
 
 Typically then, you'll define lists and dictionaries in the global and
-project-specific forms if you want them to be available to every page in your
+project-specific CGI forms if you want them to be available to every page in your
 project, and only on a specific page when they are only relevant to that
 page, keeping in mind that they do persist from then on and so will have
 to be re-defined if you want to use the same list or dictionary
