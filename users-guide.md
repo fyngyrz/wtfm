@@ -90,7 +90,7 @@ it looks at globals.
 There are also three forms of style invocation, as well as a convenience
 that duplicates one of them:
 
- 1. Use a global style: **`[glos styleName( content)]`**
- 2. Use a local style: **`[locs styleName( content)]`**
- 3. Use local, or if does not exist, use global: **`[s styleName( content)]`**  
+ 1. Use global style: **`[glos styleName( content)]`**
+ 2. Use local style: **`[locs styleName( content)]`**
+ 3. Use localstyle , or if does not exist, use global: **`[s styleName( content)]`**  
  or: **`{styleName( content)}`**
