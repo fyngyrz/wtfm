@@ -39,10 +39,10 @@ web page or a CSS page, are processed this way:
 
 You can define four types of globals:
 
- 1. Global variables \( **`[global variableName Content]`** \)
- 2. Global styles \( **`[gstyle styleName styleContent]`** \)
- 3. Global lists - quite a few  ways exist to produce lists
- 4. Global dictionaries \( **`[dict dictName]`** and/or **`[dset (sep=X,)dictName,keyXvalue]`** \)
+ 1. Global variables: **`[global variableName Content]`**
+ 2. Global styles: **`[gstyle styleName styleContent]`**
+ 3. Global lists - \(quite a few  ways exist to produce lists\)
+ 4. Global dictionaries: **`[dict dictName]`** and/or **`[dset (sep=X,)dictName,keyXvalue]`**
 
 These apply as described above; once defined, they remain defined until
 they are re-defined. Re-definition can also re-define them to do
@@ -75,8 +75,8 @@ they just won't *do* anything. They are only used in the page-specific environme
 
 There are two forms of locals:
 
- 1. Local variables \( **`[local variablename variableContent]`** \)
- 2. Local styles \( **`[style styleName styleContent]`** \)
+ 1. Local variables: **`[local variablename variableContent]`**
+ 2. Local styles: **`[style styleName styleContent]`**
  
 ## Variable Invocation
 
@@ -87,7 +87,7 @@ it looks at globals:
 
  1. Use global variable: **`[gv variableName]`**
  2. Use global variable: **`[lv variableName]`**
- 3. Use local, or if does not exists, use global variable: **`[v variableName]`**
+ 3. Use local, or if does not exist, use global variable: **`[v variableName]`**
 
 ## Style invocation
 
