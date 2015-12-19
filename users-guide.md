@@ -1,6 +1,6 @@
 # Documentation System User's Guide (beta)
 
-Note: I'm working specifically on repo-targetted documentation now. The
+**Note:** I'm working specifically on repo-targeted documentation now. The
 project is not yet in the repo. I will place the actual project in the
 repo once I get far enough along here. Please be patient with me on
 this.
