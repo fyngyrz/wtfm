@@ -26,13 +26,43 @@ that apply to all projects. Another provides a way to specify the
 project itself. The last one provides a way to build the actual
 pages in the project.
 
-When you generate a project, each file generated, which is typically a
-web page or a CSS page, is processed this way:
+When you generate a project, the files generated, which is typically a
+web page or a CSS page, are processed this way:
 
- 1. Globals are built
- 2. Project-specifics are built
- 3. File-specific styles are built
- 4. File is generated
+ 1. All-project globals are built
+ 2. Project-specific globals are built
+ 3. For all files in the project:
+   1. File-specific styles are built
+   2. File is generated
 
+### Globals
 
+You can define four types of globals:
+
+ 1. Global variables \( `[global variableName Content]`\)
+ 2. Global styles \(`[gstyle styleName styleContent]`\)
+ 3. Global lists - quite a few  ways exist to produce lists
+ 4. Global dictionaries \( `[dict dictName]` and/or `[dset (sep=X,)dictName,keyXvalue]` \)
+
+These apply as described above; once defined, they remain defined until
+they are re-defined. Re-definition can also re-define them to do
+nothing.
+
+Globals are useful for tasks and items that span the breadth of your
+project. If you want to create useful styles that you can use in
+multiple projects, that's what the All-project globals are for.
+
+When you have styles you want to use in a specific project, for instance
+how a specific project's web pages will be formatted, you use the
+project specific globals to define those.
+
+Lists and dictionaries don't have local forms at all, in the sense of
+where in the project they are visible. However, if you define a list or
+a dictionary on the tenth file/page of a project, that element will not
+be visible to the previous nine files. Typically then, you'll define them
+in the global and project-specific forms if you want them to be see by
+every page, and only on a specific page when they are only relevant
+to that page, keeping in mind that they do persist from then on and
+so will have to be re-defined if you want to use the same list or
+dictionary elsewhere with different contents.
 
