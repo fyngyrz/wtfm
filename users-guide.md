@@ -39,8 +39,8 @@ web page or a CSS page, are processed this way:
 
 You can define four types of globals:
 
- 1. Global variables \( `[global variableName Content]`\)
- 2. Global styles \(`[gstyle styleName styleContent]`\)
+ 1. Global variables \( **`[global variableName Content]`** \)
+ 2. Global styles \(`[gstyle styleName styleContent]` \)
  3. Global lists - quite a few  ways exist to produce lists
  4. Global dictionaries \( `[dict dictName]` and/or `[dset (sep=X,)dictName,keyXvalue]` \)
 
