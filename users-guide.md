@@ -92,5 +92,5 @@ that duplicates one of them:
 
  1. Use a global style: **`[glos styleName( content)]`**
  2. Use a local style: **`[locs styleName( content)]`**
- 3. Use local, or if does not exist, use global: **`[s styleName( content)]`**
-   * or: **`{styleName( content)}`**
+ 3. Use local, or if does not exist, use global: **`[s styleName( content)]`**  
+ or: **`{styleName( content)}`**
