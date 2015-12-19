@@ -83,12 +83,16 @@ There are two forms of locals:
 There are three forms of variable invocation. One specifically only
 looks at locals, one specifically only looks at globals, and one
 looks at locals, and if a local of that name does not exist, then
-it looks at globals.
+it looks at globals:
+
+ 1. Use global variable: **`[gv variableName]`**
+ 2. Use global variable: **`[lv variableName]`**
+ 3. Use local, or if does not exists, use global variable: **`[v variableName]`**
 
 ## Style invocation
 
-There are also three forms of style invocation, as well as a convenience
-that duplicates one of them:
+There are also similar three forms of style invocation, as well as a
+convenience that duplicates one of them:
 
  1. Use global style: **`[glos styleName( content)]`**
  2. Use local style: **`[locs styleName( content)]`**
