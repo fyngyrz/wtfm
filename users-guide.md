@@ -21,17 +21,31 @@ that writing the styles themselves was guaranteed to be simple. :\) But
 once written, yes, the work of actually preparing the documentation
 itself will become much, much easier.
 
-There are three CGI forms involved. One provides a means to specify globals
-that apply to all projects. Another provides a way to specify the
-project itself. The last one provides a way to build the actual
-pages in the project.
+There are three CGI forms involved. One provides a means to specify
+globals that apply to all projects. Another provides a way to specify
+the globals that relate to specific projects. The last one provides a
+way to build the actual pages in the project.
+
+You can select from lists of projects, and within the context of a
+project or a page within a project, from lists of pages/files within
+that project.
+
+Projects may be stand-alone in the sense that they only inherit from the
+globals, or they may additionally inherit from a parent project. The latter
+option provides a means to generate multiple streams of documentation
+within the context of the same specific sets of styles. You can also
+use a project specifically *as* a parent, that is, without intending to
+generate pages directly from that project, in order to serve as parent
+for multiple other projects. All this while still inheriting the globals
+and the project-level specifics.
 
 When you generate a project, the files generated, which is typically a
 web page or a CSS page, are processed this way:
 
  1. All-project globals are built
- 2. Project-specific globals are built
- 3. For all files in the project:
+ 2. If there is a parent project, those globals are built
+ 3. Project-specific globals are built
+ 4. For all files in the project:
    1. File-specific styles are built
    2. File is generated
 
