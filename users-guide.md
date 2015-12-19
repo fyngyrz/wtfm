@@ -35,6 +35,8 @@ web page or a CSS page, are processed this way:
    1. File-specific styles are built
    2. File is generated
 
+## Managing information and formatting across the various scopes
+
 ### Globals
 
 You can define four types of globals:
@@ -61,7 +63,7 @@ the project they are visible. However, if you define a list or a
 dictionary on the tenth file/page of a project, it will not be visible
 to the previous nine files as they have already been processed.
 
-Typically then, you'll define lists and doctionaries in the global and
+Typically then, you'll define lists and dictionaries in the global and
 project-specific forms if you want them to be seen by every page in your
 project, and only on a specific page when they are only relevant to that
 page, keeping in mind that they do persist from then on and so will have
@@ -98,3 +100,4 @@ convenience that duplicates one of them:
  2. Use local style: **`[locs styleName( content)]`**
  3. Use localstyle , or if does not exist, use global: **`[s styleName( content)]`**  
  or: **`{styleName( content)}`**
+
