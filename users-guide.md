@@ -9,8 +9,7 @@ this.
 
 This project provides a means to generate HTML documentation that
 leverages the power of my
-[https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md](aa_macro
-language). This is very much a power-user's tool. If you're looking to
+[aa_macro language](https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md). This is very much a power-user's tool. If you're looking to
 create complex, flexible online documentation, find markdown too
 limiting, and writing HTML and CSS directly too low-level, this may be
 just the thing for you. But let me warn you right up front: there's a
