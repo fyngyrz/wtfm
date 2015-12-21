@@ -105,10 +105,22 @@ it looks at globals:
  2. Use global variable: **`[lv variableName]`**
  3. Use local, or if does not exist, use global variable: **`[v variableName]`**
 
+## Includes
+
+You can use the **`[include fileName]`** mechanism at any level; this
+allows you to incorporate "packages" of content, styles and/or variables
+that implement something you find broadly and repeatedly useful, but
+don't want cluttering up each instance of a project or page. The same
+restrictions apply; that is, for packages that are included at the
+global or project levels, global styles and global variables are
+required. When included at the page level, both global and local
+mechanisms work.
+
 ## Style invocation
 
-There are also similar three forms of style invocation, as well as a
-convenience that duplicates one of them:
+There are three forms of style invocation similar to the three forms of
+variable invocation, as well as a convenience form that duplicates one
+of them:
 
  1. Use global style: **`[glos styleName( content)]`**
  2. Use local style: **`[locs styleName( content)]`**
