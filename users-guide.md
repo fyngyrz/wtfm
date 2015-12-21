@@ -124,6 +124,7 @@ of them:
 
  1. Use global style: **`[glos styleName( content)]`**
  2. Use local style: **`[locs styleName( content)]`**
- 3. Use localstyle , or if does not exist, use global: **`[s styleName( content)]`**  
- or: **`{styleName( content)}`**
+ 3. Use localstyle , or if does not exist, use global:
+   * **`[s styleName( content)]`**  
+   * **`{styleName( content)}`**
 
