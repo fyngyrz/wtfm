@@ -8,12 +8,14 @@ this.
 ## Overview
 
 This project provides a means to generate HTML documentation that
-leverages the power of my (https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md)[aa_macro language]. This is very much a
-power-user's tool. If you're looking to create complex, flexible online
-documentation, find markdown too limiting, and writing HTML and CSS
-directly too low-level, this may be just the thing for you. But let me
-warn you right up front: there's a learning curve in stepping beyond
-basic use into where the real power lies.
+leverages the power of my
+[https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md](aa_macro
+language). This is very much a power-user's tool. If you're looking to
+create complex, flexible online documentation, find markdown too
+limiting, and writing HTML and CSS directly too low-level, this may be
+just the thing for you. But let me warn you right up front: there's a
+learning curve in stepping beyond basic use into where the real power
+lies.
 
 aa_macro, and therefore this documentation system, lets you define
 styles that can turn any task into a simple one. Notice I didn't claim
