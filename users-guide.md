@@ -7,7 +7,7 @@ this.
 
 ## User Manual
 
-In the spirit of "[eating my own dog food)[https://en.wikipedia.org/wiki/Eating_your_own_dog_food]", the
+In the spirit of "[eating my own dog food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)", the
 actual user manual is being written using **wtfm** itself. It will be
 linked here. Soon. Ish.
 :\)
