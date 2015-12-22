@@ -5,10 +5,16 @@ project is not yet in the repo. I will place the actual project in the
 repo once I get far enough along here. Please be patient with me on
 this.
 
+## User's manual
+
+In the spirit of "eating one's own cooking", the actual user manual is
+being written using **wtfm** itself. It will be linked here. Soon. Ish.
+:\)
+
 ## Overview
 
 This project provides a means to generate HTML documentation that
-leverages the power of my
+leverages my
 [aa_macro language](https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md). This is very much a power-user's tool. If you're looking to
 create complex, flexible online documentation, find markdown too
 limiting, and writing HTML and CSS directly too low-level, this may be
@@ -16,11 +22,11 @@ just the thing for you. But let me warn you right up front: there's a
 learning curve in stepping beyond basic use into where the real power
 lies.
 
-aa_macro, and therefore this documentation system, lets you define
-styles that can turn any task into a simple one. Notice I didn't claim
-that writing the styles themselves was guaranteed to be simple. :\) But
-once written, yes, the work of actually preparing the documentation
-itself will become much, much easier.
+aa_macro, and therefore this documentation system, let you define styles
+that can turn any task into a simple one. Notice I didn't claim that
+writing the styles themselves was always simple. :\) But once written,
+yes, the work of actually preparing the documentation itself will become
+much, much easier.
 
 There are three CGI forms involved. One provides a means to specify
 globals that apply to all projects. Another provides a way to specify
@@ -32,15 +38,16 @@ project or a page within a project, from lists of pages/files within
 that project.
 
 Projects may be stand-alone in the sense that they only inherit from the
-globals, or they may additionally inherit from a parent project. The latter
-option provides a means to generate multiple streams of documentation
-within the context of the same specific sets of styles. You can also
-use a project specifically *as* a parent, that is, without intending to
-generate pages directly from that project, in order to serve as parent
-for multiple other projects. All this while still inheriting the globals
-and the project-level specifics.
+globals, or they may additionally inherit from a parent project. The
+latter option provides a means to generate multiple streams of
+documentation within the context of the same specific sets of styles.
+You can also use a project specifically *as* a parent, that is, without
+intending to generate pages directly from that project, in order to
+serve as \(one of the\) parent\(s\) for multiple other projects. All
+this while still inheriting the target project's globals and the
+project-level specifics.
 
-When you generate a project, the files generated, which is typically a
+When you generate a project, the files generated, which will typically be a
 web page or a CSS page, are processed this way:
 
  1. All-project globals are built
