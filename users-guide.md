@@ -5,7 +5,7 @@ project is not yet in the repo. I will place the actual project in the
 repo once I get far enough along here. Please be patient with me on
 this.
 
-## User's manual
+## User Manual
 
 In the spirit of "eating one's own cooking", the actual user manual is
 being written using **wtfm** itself. It will be linked here. Soon. Ish.
