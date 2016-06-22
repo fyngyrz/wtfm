@@ -5,8 +5,11 @@
 This repo will share my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
 project. **wtfm** is fully operational right now, but isn't suitable
-for public distribution quite yet. Mainly because I haven't... written the
-documentation for it. :)
+for public distribution quite yet.
+
+I have, however, got a good portion of the [documentation done](http://ourtimelines.com/wtfm/tocpage.html)
+although unfortunately I couldn't do it here on Github, because they
+offer no support for repo-centric syntx highlighting.
 
 Watch this space.
 
