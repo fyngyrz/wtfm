@@ -2,8 +2,6 @@
 
 ## Coming Soon. Ish.
 
-test link: [testlink](../../)
-
 This repo will share my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
 project. **wtfm** is fully operational right now, but isn't suitable
