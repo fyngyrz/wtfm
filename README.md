@@ -6,7 +6,7 @@ project. **wtfm** is fully operational and I am using it for a number
 of projects, so it's pretty stable.
 
 The [documentation is here.](http://ourtimelines.com/wtfm/tocpage.html)
-Unfortunately I couldn't do the documenation here on Github, because they
+Unfortunately I couldn't do the documentation here on Github, because they
 offer no support for repo-centric syntax highlighting.
 
 ## About
