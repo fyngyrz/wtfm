@@ -6,6 +6,8 @@ In the spirit of
 "[eating my own dog food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)",
 the actual user manual has been written using **wtfm** itself.
 
+The [user manual is located here.](http://ourtimelines.com/wtfm/tocpage.html)
+
 ## Project Overview
 
 This project provides a means to generate HTML documentation that
