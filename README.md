@@ -26,7 +26,7 @@ from any project into any directory you wish on a per-project basis
 
 * Hugely customizable
 * Extensive macro capability
-* Styles allow global document changes with almost no effort
+* Styles allow global document changes with an absolute minimum of effort
 * Full access to *all* of HTML and CSS
 * Handles multiple documentation undertakings
 * Global \(all projects\), doc-wide \(all pages\) and page-Local preset styles
