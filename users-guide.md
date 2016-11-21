@@ -22,9 +22,9 @@ stepping beyond basic use into where the real power lies.
 
 aa_macro, and therefore this documentation system, let you define styles
 that can turn any task into a simple one. Notice I didn't claim that
-writing the styles themselves was always simple. :\) But once written,
-yes, the work of actually preparing the documentation itself will become
-much, much easier.
+writing the styles themselves was always simple. :\) But once the styles
+are written, yes, the work of actually preparing the documentation
+itself will become much, much easier.
 
 There are three CGI forms involved. One provides a means to specify
 globals that apply to all projects. Another provides a way to specify
