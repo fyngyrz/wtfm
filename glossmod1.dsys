@@ -1,0 +1,15 @@
+[global GLOSSARY <a style="color: {linkcolor};" href="glosspage.html">Glossary</a>]
+
+[gstyle glosscolor ddddff]
+[gstyle glosstcolor ddffdd]
+
+[gstyle gloss [append glosslist,[b]]]
+
+[gstyle glosswrap [splitcount 1][split |||,[b]]
+[table align="center" width="75%" border="1" bgcolor="#{glosscolor}",
+[row bgcolor="#{glosstcolor}",
+[cell ,<h2><tt>&nbsp;&nbsp;</tt>[parm 0]</h2>]][nl]
+[row ,
+[cell style="padding: 10px;",[parm 1]]]]<br><br>[nl]]
+
+[gstyle glossary [aisort glosslist][dlist wrap=glosswrap,glosslist]]

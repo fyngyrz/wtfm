@@ -1,0 +1,15 @@
+[gstyle figname figurespage.html]
+[gstyle figtag fgfg]
+[global FIGURES <a style="color: {linkcolor};" href="{figname}">Figures</a>]
+[global fig_count 0]
+
+[gstyle upfig_count [global fig_count [inc [v fig_count]]]]
+
+[gstyle figt {figtag}[v fig_count]]
+
+[gstyle figank <a name="{figt}"></a>]
+[gstyle figlnk [splitcount 2][split |||,[b]]&bull;&nbsp;<a href="[parm 0]#{figtag}[parm 1]">[parm 2]</a><br>[nl]]
+
+[gstyle figure {upfig_count}{figank}[append fig_list,[v current_page]|||[v fig_count]|||[b]]]
+
+[gstyle figures [dlist wrap=figlnk,fig_list]]

@@ -1,0 +1,79 @@
+ix entry					// add an index entry (surround w/curly brackets)
+rix n entry					// rix 1 Foo bar = "Foo bar" AND "bar, Foo" (surround w/curly brackets)
+orix n entry				// orix 1 Foo bar = "bar, Foo" (surround w/curly brackets)
+v INDEX						// where you want a link to the index page (surround w/square brackets)
+index						// where you want the index (surround w/curly brackets)
+global INDEX				// if you don't want Index to show in top bar (surround w/square brackets)
+
+Redundancy: "The stuff" also listed as "stuff, The", "A thing" also listed as "thing, A"
+----------------------------------------------------------------------------------------
+[global fl_redun true]		// true for redundancy, false for no redundancy
+[global fl_bysection true]	// true for by section, false for monolithic
+
+[gstyle ix_pagename indexpage.html]
+
+[global INDEX <a style="color: {linkcolor};" href="{ix_pagename}">Index</a>]
+
+[global ixnum 0]
+
+[gstyle ixtag ixref]
+
+[gstyle ixcrement [global ixnum [inc [gv ixnum]]]]
+
+[gstyle iline [split |||,[b]]<a href="[parm 2]#{ixtag}[parm 1]">[parm 0]</a><br>[nl]]
+
+[gstyle ixrf <a name="{ixtag}[gv ixnum]"></a>]
+
+[gstyle i_append [append the_index,[b]|||[gv ixnum]|||[v current_page]]]
+
+[gstyle ci_apl {i_append [v ci_local]}]
+
+[gstyle ci_ap [if style=ci_apl,[v fl_redun] true ]]
+
+Index entries of the form "The stuff" and "A thing" are also added as "stuff, The" and  "thing, A"
+--------------------------------------------------------------------------------------------------
+[gstyle ci_append [local ci_local [slice 4:,[b], The]][if style=ci_ap,[replace  ,=,[lower [slice 0:4,[b]]]] the= ]]
+[gstyle ci_bppend [local ci_local [slice 2:,[b], A]][if style=ci_ap,[replace  ,=,[lower [slice 0:2,[b]]]] a= ]]
+
+[gstyle ci_alsoas {ci_append [b]}{ci_bppend [b]}]
+
+[gstyle ix {ixcrement}{ixrf}{ci_alsoas [b]}{i_append [b]}]
+
+[gstyle ix_ms1 [dset ix_keyd,[upper [slice 0:1,[b]]]:x]]
+
+[gstyle ix_makesections [dlist wrap=ix_ms1,the_index][dkeys ix_keyd,ix_keyl][asort ix_keyl]]
+
+[gstyle ix_kls <a href="#key[b]">[b]</a> ]
+
+[gstyle ix_keyh <center>{p [dlist wrap=ix_kls,ix_keyl]<br>[nl]}</center>]
+
+[gstyle ix_iline [split |||,[v ix_entry]]<a href="[parm 2]#{ixtag}[parm 1]">[parm 0]</a><br>[nl]]
+
+[gstyle ix_keyonly [local ix_entry [b]][if style=ix_iline,[upper [slice 0:1,[b]]] [v ix_keyfix] ]]
+
+[gstyle ix_rtt <a href="{ix_pagename}">Return to Top of Index</a>]
+
+[gstyle ix_sechdr <center><a name="key[b]"></a><br>Index Entries for &quot;[b]&quot;<br>{ix_rtt}<hr width="75%"><br>[nl]</center>]
+
+[gstyle ix_keyo {ix_sechdr [b]}[local ix_keyfix [b]][dlist wrap=ix_keyonly,the_index]]
+
+[gstyle ix_bysection {ix_makesections}{ix_keyh}[dlist wrap=ix_keyo,ix_keyl]]
+[gstyle ix_monolithic [dlist wrap=iline,the_index]]
+
+[gstyle ix_mode [if style=ix_bysection,[v fl_bysection] true ][else style=ix_monolithic,[v fl_bysection] true ]]
+
+
+[gstyle rriv [splitcount 1][split [sp],[b]][local rix_count [parm 0]]]
+[gstyle rriw [lsplit ixrevlist,[sp],[parm 1]]]
+[gstyle rrix [lslice [v rix_count]:,ixrevlist,ixremlist]]
+[gstyle rriy [lslice :[v rix_count],ixrevlist,ixtailist]]
+[gstyle rriz {ix [ljoin ixremlist,[sp]], [ljoin ixtailist,[sp]]}]
+
+[gstyle rix {rriv [b]}{rriw}{rrix}{rriy}{rriz}{ix [parm 1]}]
+[gstyle orix {rriv [b]}{rriw}{rrix}{rriy}{rriz}]
+
+
+[gstyle ix {ixcrement}{ixrf}{ci_alsoas [b]}{i_append [b]}]
+
+[gstyle index [aisort the_index]{ix_mode}]
+

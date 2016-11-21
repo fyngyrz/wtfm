@@ -1,0 +1,22 @@
+cite cite-details			// (for use when quoting facts from a reference)
+acite Author|||cite-details	// (for use when quoting author's statements from a reference)
+cites						// on page where cites are to be placed
+v CITES						// where sites page is to be referenced (typically ref bar at top of page)
+
+[gstyle cite_page citespage.html]
+
+[global CITES <a style="color: {linkcolor};" href="{cite_page}">Cites</a>]
+[global cite_counter 0]
+[gstyle cite_fx ctfx]
+[gstyle inc_cite [global cite_counter [inc [v cite_counter]]]]
+
+[gstyle cite_mark <sup>(<a href="{cite_page}#{cite_fx}[v cite_counter]">[v cite_counter]</a>)</sup>]
+[gstyle acite_mark <sup>(<a href="{cite_page}#{cite_fx}[v cite_counter]">[v cite_counter] [b]</a>)</sup>]
+
+[gstyle cite {inc_cite}{cite_mark}[append cite_list,[v cite_counter]|||[b]]]
+
+[gstyle acite {inc_cite}[splitcount 1][split |||,[b]]{acite_mark [parm 0]}[append cite_list,[v cite_counter]|||[parm 1]]]
+
+[gstyle cite_name <a name="{cite_fx}[parm 0]"></a>]
+[gstyle cite_style [splitcount 1][split |||,[b]]{cite_name}<p>[i Citation] [parm 0].<br>[parm 1]</p><br><br>[nl][nl]]
+[gstyle cites [dlist wrap=cite_style,cite_list]]

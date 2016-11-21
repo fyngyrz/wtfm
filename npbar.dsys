@@ -1,0 +1,50 @@
+Next / Previous page bar
+------------------------
+
+You might think you could do this with div and/or span.
+Good luck with that. Table... simple. Works. Reasonable.
+I fought with CSS for four hours before I simply gave up
+and went with a table. If you DO get it working with
+dov and/or span, I'd like to see the code. Really.
+--------------------------------------------------------
+
+[gstyle linkcolor #ffffff]
+
+[gstyle bleft [cell style="width: 4em;" align="left",[b]]]
+[gstyle brite [cell style="width: 4em;" align="right",[b]]]
+[gstyle bcont [cell align="center",[b]]]
+
+[gstyle nbar [ne [v nextpage],<a style="color:  {linkcolor};" href="[v nextpage]">Next</a>][eq [v nextpage],<i>next</i>]&nbsp;]  
+[gstyle pbar &nbsp;[ne [v prevpage],<a style="color: {linkcolor}" href="[v prevpage]">Prev</a>][eq [v prevpage],<i>prev</i>]]  
+
+[gstyle purplebar <div id="backtrail">[table width="100%",[row ,[b]]]</div>]  
+[gstyle middlep [v TOC] [v INDEX] [v FIGURES] [v GLOSSARY] [v ENDNOTES] [v CITES] [v EXTRA]]
+[gstyle npbar {purplebar {bleft {pbar}}{bcont {middlep}}{brite {nbar}}}]
+
+CSS that will end up in the page header Note that it requires that
+partially transparent .png image to give the desired behavior, which is
+to allow you to put an image background on the page which can be seen
+*through* the purple bar.
+---------------------------------------------------------------------
+[global stylage [nl]
+<STYLE TYPE="text/css">
+#backtrail [ls]
+margin-top: 30px;
+margin-left: 0px;
+margin-bottom: 30px;
+padding-top: 5px;
+padding-bottom: 5px;
+background-color: transparent;
+background: url(/styles/transpurple.png);
+color: #f0f0f0;
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+font-size: medium;
+width: 100%;
+clear: both;
+text-align: left;
+overflow: auto;
+[rs]
+</STYLE>
+]
+p [ls]margin-left: 2%;[rs]

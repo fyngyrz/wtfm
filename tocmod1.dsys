@@ -1,0 +1,57 @@
+[global TOC <a style="color: {linkcolor};" href="tocpage.html">Table of Contents</a>]
+
+Flags
+-----
+[global fl_indents true]	// true for indents on TOC page, false for no indents
+[global fl_numbers true]	// true for numbered sections, false for no numbers
+
+Section / Name interval
+-----------------------
+[gstyle inter  [if [v fl_numbers] true [sp]-[sp]]] in between the section # and the section name on the page
+[gstyle tinter [if [v fl_numbers] true [sp]-[sp]]] in between the section # and the section name in the TOC
+
+[gstyle h1v [if [v fl_numbers] true [gv 1level]]]
+[gstyle h1tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h1v}{inter}[parm 2]</a>]
+[gstyle h1s <a name="{tocref}{h1v}"></a><h1>{h1v}{inter}[b]</h1>]
+[gstyle h1 {hbump 1level}{res1}{h1s [b]}[append toclist,[v current_page]|||{tocref}{h1v}|||1|||{h1v}{tinter}[b]]]
+
+[gstyle h2v [if [v fl_numbers] true [gv 1level].[gv 2level]]]
+[gstyle h2tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h2v}{inter}[parm 2]</a>]
+[gstyle h2s <a name="{tocref}{h2v}"></a><h2>{h2v}{inter}[b]</h2>]
+[gstyle h2 {hbump 2level}{res2}{h2s [b]}[append toclist,[v current_page]|||{tocref}{h2v}|||2|||{h2v}{tinter}[b]]]
+
+[gstyle h3v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level]]]
+[gstyle h3tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h3v}{inter}[parm 2]</a>]
+[gstyle h3s <a name="{tocref}{h3v}"></a><h3>{h3v}{inter}[b]</h3>]
+[gstyle h3 {hbump 3level}{res3}{h3s [b]}[append toclist,[v current_page]|||{tocref}{h3v}|||3|||{h3v}{tinter}[b]]]
+
+[gstyle h4v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level].[gv 4level]]]
+[gstyle h4tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h4v}{inter}[parm 2]</a>]
+[gstyle h4s <a name="{tocref}{h4v}"></a><h4>{h4v}{inter}[b]</h4>]
+[gstyle h4 {hbump 4level}{res4}{h4s [b]}[append toclist,[v current_page]|||{tocref}{h4v}|||4|||{h4v}{tinter}[b]]]
+
+-----
+
+[gstyle tline [split |||,[b]]{hin [parm 2]}<a href="[parm 0]#[parm 1]">[parm 3]</a><br>[nl]]
+[gstyle toc <center><h1>Table of Contents</h1></center>[dlist wrap=tline,toclist]]
+
+[gstyle hin [if [v fl_indents] true <tt>[repeat [b] &nbsp;&nbsp;]</tt>]]
+
+[gstyle tocref tocref]
+
+[global 1level 0]
+[global 2level 0]
+[global 3level 0]
+[global 4level 0]
+
+[gstyle hbump [global [b] [inc [gv [b]]]]]
+
+[gstyle lres2 [global 2level 0]]
+[gstyle lres3 [global 3level 0]]
+[gstyle lres4 [global 4level 0]]
+[gstyle lres5 [global 5level 0]]
+
+[gstyle res1 {lres2}{lres3}{lres4}{lres5}]
+[gstyle res2 {lres3}{lres4}{lres5}]
+[gstyle res3 {lres4}{lres5}]
+[gstyle res4 {lres5}]

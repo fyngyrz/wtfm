@@ -1,27 +1,21 @@
 # Documentation System User's Guide (beta)
 
-**Note:** I'm working specifically on repo-targeted documentation now. The
-project is not yet in the repo. I will place the actual project in the
-repo once I get far enough along here. Please be patient with me on
-this.
+## User Manual - Where is it?
 
-## User Manual
+In the spirit of
+"[eating my own dog food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)",
+the actual user manual has been written using **wtfm** itself.
 
-In the spirit of "[eating my own dog food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)", the
-actual user manual is being written using **wtfm** itself. It will be
-linked here. Soon. Ish.
-:\)
-
-## Overview
+## Project Overview
 
 This project provides a means to generate HTML documentation that
 leverages my
-[aa_macro language](https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md). This is very much a power-user's tool. If you're looking to
-create complex, flexible online documentation, find markdown too
-limiting, and writing HTML and CSS directly too low-level, this may be
-just the thing for you. But let me warn you right up front: there's a
-learning curve in stepping beyond basic use into where the real power
-lies.
+[aa_macro language](https://github.com/fyngyrz/aa_macro/blob/master/users-guide.md).
+This is very much a power-user's tool. If you're looking to create
+complex, flexible online documentation, find markdown too limiting, and
+writing HTML and CSS directly too low-level, this may be just the thing
+for you. But let me warn you right up front: there's a learning curve in
+stepping beyond basic use into where the real power lies.
 
 aa_macro, and therefore this documentation system, let you define styles
 that can turn any task into a simple one. Notice I didn't claim that
@@ -58,82 +52,31 @@ web page or a CSS page, are processed this way:
    1. File-specific styles are built
    2. File is generated
 
-## Managing information and formatting across the various scopes
+## Security
 
-### Globals
+To be at least somewhat secure, you need to do the following things:
 
-You can define four types of globals:
+* rename the `doc_system.py` file to new `something-really-obscure.py`
+* rename the doc_system.cfg` file to new `a-name-just-as-obscure.cfg`
+* change the line in what was `doc_system.py` to the new `.cfg` name
+* create a world-writable directory on your server with an obscure name
+* Inside the newly renamed `.cfg` file:
+    * change the `xsystem` variable to match the new `.py` name
+    * change the `dprefix` variable to match the world-writable directory
+    * change the `dname` variable to `another-very-obscure-db-name.db`
 
- 1. Global variables: **`[global variableName Content]`**
- 2. Global styles: **`[gstyle styleName styleContent]`**
- 3. Global lists - \(quite a few  ways exist to produce lists\)
- 4. Global dictionaries: **`[dict dictName]`** and/or **`[dset (sep=X,)dictName,keyXvalue]`**
+When all of this is done, you will access your new doc system by going to:
 
-These apply as described above; once defined, they remain defined until
-they are re-defined. Re-definition can also re-define them to do
-nothing.
+	`http://your-server.your-tld/your-cgi-location/something-really-obscure.py`
 
-Globals are useful for tasks and items that span the breadth of your
-project. If you want to create useful styles that you can use in
-multiple projects, that's what the All-project globals are for.
+...or...
 
-When you have styles you want to use in a specific project, for instance
-how a specific project's web pages will be formatted, you use the
-project specific globals to define those.
+	`https://your-server.your-tld/your-cgi-location/something-really-obscure.py`
 
-Lists and dictionaries don't have local forms in the sense of where in
-the project they are visible. However, if you define a list or a
-dictionary on the tenth file/page of a project, it will not be visible
-to the previous nine files as they have already been processed.
+### Improving Security
 
-Typically then, you'll define lists and dictionaries in the global and
-project-specific CGI forms if you want them to be available to every page in your
-project, and only on a specific page when they are only relevant to that
-page, keeping in mind that they do persist from then on and so will have
-to be re-defined if you want to use the same list or dictionary
-elsewhere with different contents.
-
-### Locals
-
-Technically, you can define locals in the global and project spefific forms,
-they just won't *do* anything. They are only used in the page-specific environment.
-
-There are two forms of locals:
-
- 1. Local variables: **`[local variablename variableContent]`**
- 2. Local styles: **`[style styleName styleContent]`**
- 
-## Variable Invocation
-
-There are three forms of variable invocation. One specifically only
-looks at locals, one specifically only looks at globals, and one
-looks at locals, and if a local of that name does not exist, then
-it looks at globals:
-
- 1. Use global variable: **`[gv variableName]`**
- 2. Use global variable: **`[lv variableName]`**
- 3. Use local, or if does not exist, use global variable: **`[v variableName]`**
-
-## Includes
-
-You can use the **`[include fileName]`** mechanism at any level; this
-allows you to incorporate "packages" of content, styles and/or variables
-that implement something you find broadly and repeatedly useful, but
-don't want cluttering up each instance of a project or page. The same
-restrictions apply; that is, for packages that are included at the
-global or project levels, global styles and global variables are
-required. When included at the page level, both global and local
-mechanisms work.
-
-## Style invocation
-
-There are three forms of style invocation similar to the three forms of
-variable invocation, as well as a convenience form that duplicates one
-of them:
-
- 1. Use global style: **`[glos styleName( content)]`**
- 2. Use local style: **`[locs styleName( content)]`**
- 3. Use localstyle , or if does not exist, use global:
-   * **`[s styleName( content)]`**  
-   * **`{styleName( content)}`**
-
+If you'd like to add password protection to the whole system, that'd be
+a good idea. I don't need it because I access only from within my LAN,
+and there is no external path to the server -- so I punted. You can also
+use https, and of course if your server is configured to do so, then you
+should..

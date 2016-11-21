@@ -1,0 +1,45 @@
+[global en_counter 0]
+[global fn_counter 0]
+
+[global enp_name endnotespage.html]
+[global enp_tag zendn]
+[global fnp_tag zfootn]
+[global ent_color ffffff]
+[global ent_hcolor ddddff]
+[global fnt_color ffffff]
+[global fnt_hcolor ddffdd]
+
+[global ENDNOTES <a style="color: {linkcolor};" href="[gv enp_name]">Notes</a>]
+
+[gstyle enl_style [splitcount 2][split |||,[b]]
+<a name="[v enp_tag][parm 0]"></a>
+[table align="center" border="1" width="75%" bgcolor="#[v ent_color]",
+[row bgcolor="#[v ent_hcolor]",[cell ,[i Note [parm 0]] - [b [parm 1]]]]
+[row ,[cell ,[parm 2]]]
+]<br><br>[nl]
+]
+
+[gstyle fnl_style [splitcount 2][split |||,[b]]
+<a name="[v fnp_tag][parm 0]"></a>
+[table align="center" border="1" width="75%" bgcolor="#[v fnt_color]",
+[row bgcolor="#[v fnt_hcolor]",[cell ,[i Footnote [parm 0]] - [b [parm 1]]]]
+[row ,[cell ,[parm 2]]]
+]<br><br>[nl]
+]
+
+[gstyle endnotes [dlist wrap=enl_style,endnote_list]<br>]
+
+[gstyle footnotes [dlist wrap=fnl_style,footnote_list][global fn_counter 0][clearl footnote_list]]
+
+[gstyle excounter [global en_counter [inc [gv en_counter]]]]
+[gstyle fncounter [global fn_counter [inc [gv fn_counter]]]]
+
+[gstyle iln_link <a style="text-decoration: none;" href="[v enp_name]#[v enp_tag][gv en_counter]">[b]</a>]
+[gstyle ilfn_link <a style="text-decoration: none;" href="#[v fnp_tag][gv fn_counter]">[b]</a>]
+
+[gstyle inlinenote {iln_link <sup>[i (e/n&nbsp;#[gv en_counter]) ]</sup>}]
+[gstyle inlinefnote {ilfn_link <sup>[i (f/n&nbsp;#[gv fn_counter]) ]</sup>}]
+
+[gstyle endnote {excounter}{inlinenote}[append endnote_list,[v en_counter]|||[b]]]
+
+[gstyle footnote {fncounter}{inlinefnote}[append footnote_list,[v fn_counter]|||[b]]]

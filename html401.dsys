@@ -1,0 +1,9 @@
+Provide htmlpage style with configuration:
+------------------------------------------
+[global metataggage <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<META NAME="robots" CONTENT="noindex,nofollow">[nl]]
+
+[global doctype <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+]
+[global htmlstuff  LANG="en"]
+[global bodystuff  style="color: #000000; background-color: #FFFFFF;"]

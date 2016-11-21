@@ -1,17 +1,13 @@
 ### wtfm
 
-## Coming Soon. Ish.
-
-This repo will share my online documentation system, **wtfm**, which utilizes my
+This repo shares my online documentation system, **wtfm**, which utilizes my
 [aa_macro](https://github.com/fyngyrz/aa_macro)
-project. **wtfm** is fully operational right now, but isn't suitable
-for public distribution quite yet.
+project. **wtfm** is fully operational and I am using it for a number
+of projects, so it's pretty stable.
 
-I have, however, got a good portion of the [documentation done](http://ourtimelines.com/wtfm/tocpage.html)
-although unfortunately I couldn't do it here on Github, because they
-offer no support for repo-centric syntx highlighting.
-
-Watch this space.
+The [documentation is here.](http://ourtimelines.com/wtfm/tocpage.html)
+Unfortunately I couldn't do the documenation here on Github, because they
+offer no support for repo-centric syntax highlighting.
 
 ## About
 
