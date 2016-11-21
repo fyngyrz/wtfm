@@ -60,7 +60,7 @@ To be at least somewhat secure, you need to do the following things:
 
 * rename the `doc_system.py` file to new `something-really-obscure.py`
 * rename the `doc_system.cfg` file to new `a-name-just-as-obscure.cfg`
-* change the line in what was `doc_system.py` to the new `.cfg` name
+* change the `docsystemconfig='doc_system.cfg' line ` in what was `doc_system.py` to the new `.cfg` name
 * create a world-writable directory on your server with an obscure name
 * Inside the newly renamed `.cfg` file:
     * change the `xsystem` variable to match the new `.py` name
