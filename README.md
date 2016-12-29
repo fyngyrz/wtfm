@@ -7,7 +7,10 @@ of projects, so it's pretty stable.
 
 The [documentation is here.](http://ourtimelines.com/wtfm/tocpage.html)
 Unfortunately I couldn't do the documentation here on Github, because they
-offer no support for repo-centric syntax highlighting.
+offer no support for repo-centric syntax highlighting, and they won't
+accept a generally available syntax highlighting definition until hundreds
+of repos use it. Forunately, in _this_ case, I'm documenting an actual documentation
+system, so providing my own documentation serves as a lovely demo.
 
 ## About
 
@@ -87,3 +90,10 @@ Credit for the name **wtfm** goes to `xxxJonBoyxxx` on Slashdot.
 He just threw it out like it should have been obvious. It wasn't.
 But it is now!
 
+### mousetrap.js
+
+I include, for your convenience, `mousetrap.js` by Craig Campbell. This
+is a lovely little bit of cross-browser compatible javascript that
+allows, among other things, reliable keyboard navigation of documents. I
+use it in the `wftm` documentation, and I highly recommend you do as
+well. There's a page in the manual about it [here.]().

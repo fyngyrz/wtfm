@@ -23,7 +23,7 @@ class macro(object):
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015     (for Project)
-     LastRev: December 23rd, 2015     (for Class)
+     LastRev: December 29th, 2016     (for Class)
   LastDocRev: December 23rd, 2015     (for Class)
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1
@@ -57,7 +57,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.51 Beta
+     Version: 1.0.53 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -258,6 +258,8 @@ class macro(object):
 	[issort content]								# sort lines by leading integer,comma,content
 	[hsort content]									# sort lines by leading ham radio callsign
 	[hlit content]									# turn content into HTML; process NOTHING
+	[vlit variable-name]							# turn variable content into HTML; process NOTHING
+	[slit style-name]								# turn style content into HTML; process NOTHING
 	[inter iStr,L|R,everyN,content]					# intersperse iStr every N in content from left or right
 *	[rjust width,padChar,content]					# e.g. [rjust 6,#,foo] = "###foo"
 *	[ljust width,padChar,content]					# e.g. [ljust 6,#,foo] = "foo###"
@@ -419,7 +421,6 @@ class macro(object):
 		self.stack = []
 		self.parms = []
 		self.refs = {}
-		self.rawvar = ''
 		self.refcounter = 0
 		self.padCallLocalToggle = 0
 		self.padCallLocalRegion = -1
@@ -434,6 +435,17 @@ class macro(object):
 		self.lipath = ''
 		self.wepath = ''
 		self.splitCount = 0
+
+		self.theGlobals['txl_lb'] = '[lb]'
+		self.theGlobals['txl_rb'] = '[rb]'
+		self.theGlobals['txl_ls'] = '[ls]'
+		self.theGlobals['txl_rs'] = '[rs]'
+		self.theGlobals['txl_lt'] = '&lt;'
+		self.theGlobals['txl_gt'] = '&gt;'
+		self.theGlobals['txl_am'] = '&amp;'
+		self.theGlobals['txl_qu'] = '&quot;'
+		self.theGlobals['txl_lf'] = '<br>'
+
 		self.months = ['January','February','March','April','may','June','July','August','September','October','November','December']
 		if dothis != None:
 			self.do(dothis)
@@ -1828,15 +1840,15 @@ The contents of the list are safe to include in the output if you like.
 	def pconvert(self,data):
 		a = ''
 		for c in data:
-			if   c == '[': c = self.qvar('ppre_lb')+'[lb]'+self.qvar('ppos_lb')
-			elif c == ']': c = self.qvar('ppre_rb')+'[rb]'+self.qvar('ppos_rb')
-			elif c == '{': c = self.qvar('ppre_ls')+'[ls]'+self.qvar('ppos_ls')
-			elif c == '}': c = self.qvar('ppre_rs')+'[rs]'+self.qvar('ppos_rs')
-			elif c == '<': c = self.qvar('ppre_la')+'&lt;'+self.qvar('ppos_la')
-			elif c == '>': c = self.qvar('ppre_ra')+'&gt;'+self.qvar('ppos_ra')
-			elif c == '&': c = self.qvar('ppre_amp')+'&amp;'+self.qvar('ppos_amp')
-			elif c == '"': c = self.qvar('ppre_quo')+'&quot;'+self.qvar('ppos_quo')
-			elif c == '\n':c = '<br>'
+			if   c == '[': c = self.qvar('ppre_lb')+self.qvar('txl_lb')+self.qvar('ppos_lb')
+			elif c == ']': c = self.qvar('ppre_rb')+self.qvar('txl_rb')+self.qvar('ppos_rb')
+			elif c == '{': c = self.qvar('ppre_ls')+self.qvar('txl_ls')+self.qvar('ppos_ls')
+			elif c == '}': c = self.qvar('ppre_rs')+self.qvar('txl_rs')+self.qvar('ppos_rs')
+			elif c == '<': c = self.qvar('ppre_la')+self.qvar('txl_lt')+self.qvar('ppos_la')
+			elif c == '>': c = self.qvar('ppre_ra')+self.qvar('txl_gt')+self.qvar('ppos_ra')
+			elif c == '&': c = self.qvar('ppre_amp')+self.qvar('txl_am')+self.qvar('ppos_amp')
+			elif c == '"': c = self.qvar('ppre_quo')+self.qvar('txl_qu')+self.qvar('ppos_quo')
+			elif c == '\n':c = self.qvar('ppre_lf')+self.qvar('txl_lf')+self.qvar('ppos_lf')
 			a += c
 		return a
 
@@ -1860,11 +1872,30 @@ The contents of the list are safe to include in the output if you like.
 
 	# [slit stylename]
 	def slit_fn(self,tag,data):
-		data = self.styles.get(data,self.gstyles.get(data,'? Unknown Style \"%s\" ?' % (md1)))
+		data = self.styles.get(data,self.gstyles.get(data,'? Unknown Style \"%s\" ?' % (data)))
 		o = ''
 		a = self.pconvert(data)
 		o = self.do(a)
 		self.theLocals['loc_slit'] = o
+		return ''
+
+	# [hlit literalcontent]
+	def oldhlit_fn(self,tag,data):
+		o = ''
+		a = ''
+		for c in data:
+			if   c == '[': c = '[lb]'
+			elif c == ']': c = '[rb]'
+			elif c == '{': c = '[ls]'
+			elif c == '}': c = '[rs]'
+			elif c == '<': c = '&lt;'
+			elif c == '>': c = '&gt;'
+			elif c == '&': c = '&amp;'
+			elif c == '"': c = '&quot;'
+			elif c == '\n':c = '<br>'
+			a += c
+		o = self.do(a)
+		self.theLocals['loc_hlit'] = o
 		return ''
 
 	def style_fn(self,tag,data):
@@ -3119,7 +3150,7 @@ The contents of the list are safe to include in the output if you like.
 					'strip'	: self.strip_fn,	# [strip htmlContent] - remove HTML tags
 					'wwrap'	: self.wwrap_fn,	# [wwrap (wrap=style,)cols,content] - word wrap content at/before cols
 					'hlit'	: self.hlit_fn,		# [hlit content]
-					'vlit'	: self.vlit_fn,		# [hlit variable-content]
+					'vlit'	: self.vlit_fn,		# [hlit variable-name]
 					'slit'	: self.slit_fn,		# [hlit style-name]
 
 					# Miscellaneous
