@@ -9,32 +9,6 @@
 debug = ''
 do_debug = False
 
-# CHANGE the following line to match the new, obscure name of the
-# configuration file. This is a REQUIRED security precaution. Then
-# change the name of THIS file to something obscure. For instance,
-# you might rename the two main files this way:
-#
-#	doc_system.cfg --> gleeble-perschwizzle.cfg
-#   doc_system.py  --> hop-schlitz-poing.py
-#
-# Then change the first code line below this comment as follows:
-#
-# FROM:   docsystemconfig='doc_system.cfg'
-#   TO:   docsystemconfig='gleeble-perschwizzle.cfg'
-#
-# Then go into the "gleeble-perschwizzle.cfg" file and change the
-# "xsystem" variable to be "hop-schlitz-poing.py"
-#
-# Then, assuming your CGI is in "cgi-bin", you access the system
-# on your server here:
-#
-#	http://myserver.com/cgi-bin/hop-schlitz-poing.py
-#
-# ---------------------------------------------------------------
-docsystemconfig='doc_system.cfg'
-
-
-
 doc ="""Documentation Generation System
       Author: fyngyrz  (Ben)
      Contact: fyngyrz@gmail.com (bugs, feature requests, kudos, bitter rejections)
@@ -50,11 +24,10 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: November 21st, 2016
+     LastRev: December 24th, 2015
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
-Works in Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
@@ -72,8 +45,8 @@ Works in Env: Ubuntu 12.04.5 LTS, Python 2.7.3
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
-     1st-Rel: 0.0.1
-     Version: 0.0.1 Beta
+     1st-Rel: 0.0.0
+     Version: 0.0.0 Beta
      History: See changes.md
 """
 
@@ -89,7 +62,7 @@ from aa_datafile	import *
 
 # global configuration
 # --------------------
-cfg = readDataFile(docsystemconfig)
+cfg = readDataFile('doc_system.cfg')
 xprefix	=	cfg['xprefix']
 xsystem	=	cfg['xsystem']
 dprefix	=	cfg['dprefix']
@@ -700,7 +673,9 @@ def generate():
 	if a.rows == 1:
 		try:
 			glostyles = unclean(str(a.tuples[0][0]))
-			discard = obj.do(str(glostyles))
+			fmt  = '[global vglobal_styles %s]'
+			cpp = fmt % (glostyles)
+			discard = obj.do(str(glostyles+cpp))
 		except Exception,e:
 			warning += 'Processing failure with global styles: "%s"\n' % (e)
 	if do_debug == True: debug += 'a.rows=%d of globals/styles\n' % (a.rows)

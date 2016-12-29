@@ -419,6 +419,7 @@ class macro(object):
 		self.stack = []
 		self.parms = []
 		self.refs = {}
+		self.rawvar = ''
 		self.refcounter = 0
 		self.padCallLocalToggle = 0
 		self.padCallLocalRegion = -1
@@ -1820,23 +1821,50 @@ The contents of the list are safe to include in the output if you like.
 		o += '</td>'
 		return o
 
+	def qvar(self,vName):
+		x = self.theLocals.get(vName,self.theGlobals.get(vName,''))
+		return str(x)
+
+	def pconvert(self,data):
+		a = ''
+		for c in data:
+			if   c == '[': c = self.qvar('ppre_lb')+'[lb]'+self.qvar('ppos_lb')
+			elif c == ']': c = self.qvar('ppre_rb')+'[rb]'+self.qvar('ppos_rb')
+			elif c == '{': c = self.qvar('ppre_ls')+'[ls]'+self.qvar('ppos_ls')
+			elif c == '}': c = self.qvar('ppre_rs')+'[rs]'+self.qvar('ppos_rs')
+			elif c == '<': c = self.qvar('ppre_la')+'&lt;'+self.qvar('ppos_la')
+			elif c == '>': c = self.qvar('ppre_ra')+'&gt;'+self.qvar('ppos_ra')
+			elif c == '&': c = self.qvar('ppre_amp')+'&amp;'+self.qvar('ppos_amp')
+			elif c == '"': c = self.qvar('ppre_quo')+'&quot;'+self.qvar('ppos_quo')
+			elif c == '\n':c = '<br>'
+			a += c
+		return a
+
 	# [hlit literalcontent]
 	def hlit_fn(self,tag,data):
 		o = ''
-		a = ''
-		for c in data:
-			if   c == '[': c = '[lb]'
-			elif c == ']': c = '[rb]'
-			elif c == '{': c = '[ls]'
-			elif c == '}': c = '[rs]'
-			elif c == '<': c = '&lt;'
-			elif c == '>': c = '&gt;'
-			elif c == '&': c = '&amp;'
-			elif c == '"': c = '&quot;'
-			elif c == '\n':c = '<br>'
-			a += c
+		a = self.pconvert(data)
 		o = self.do(a)
 		self.theLocals['loc_hlit'] = o
+		return ''
+
+	# [vlit variablename]
+	def vlit_fn(self,tag,data):
+		l,x = self.fetchVar(data)
+		data = x
+		o = ''
+		a = self.pconvert(data)
+		o = self.do(a)
+		self.theLocals['loc_vlit'] = o
+		return ''
+
+	# [slit stylename]
+	def slit_fn(self,tag,data):
+		data = self.styles.get(data,self.gstyles.get(data,'? Unknown Style \"%s\" ?' % (md1)))
+		o = ''
+		a = self.pconvert(data)
+		o = self.do(a)
+		self.theLocals['loc_slit'] = o
 		return ''
 
 	def style_fn(self,tag,data):
@@ -3091,6 +3119,8 @@ The contents of the list are safe to include in the output if you like.
 					'strip'	: self.strip_fn,	# [strip htmlContent] - remove HTML tags
 					'wwrap'	: self.wwrap_fn,	# [wwrap (wrap=style,)cols,content] - word wrap content at/before cols
 					'hlit'	: self.hlit_fn,		# [hlit content]
+					'vlit'	: self.vlit_fn,		# [hlit variable-content]
+					'slit'	: self.slit_fn,		# [hlit style-name]
 
 					# Miscellaneous
 					# -------------
