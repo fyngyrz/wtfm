@@ -96,4 +96,4 @@ I include, for your convenience, `mousetrap.js` by Craig Campbell. This
 is a lovely little bit of cross-browser compatible javascript that
 allows, among other things, reliable keyboard navigation of documents. I
 use it in the `wftm` documentation, and I highly recommend you do as
-well. There's a page in the manual about it [here.]().
+well. There's a page in the manual about it [here.](http://ourtimelines.com/wtfm/mousetrap.html).
