@@ -82,4 +82,4 @@ If you'd like to add password protection to the whole system, that'd be
 a good idea. I don't need it because I access only from within my LAN,
 and there is no external path to the server -- so I punted. You can also
 use https, and of course if your server is configured to do so, then you
-should..
+should.

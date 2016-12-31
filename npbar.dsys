@@ -17,7 +17,7 @@ dov and/or span, I'd like to see the code. Really.
 [gstyle nbar [ne [v nextpage],<a style="color:  {linkcolor};" href="[v nextpage]">Next</a>][eq [v nextpage],<i>next</i>]&nbsp;]  
 [gstyle pbar &nbsp;[ne [v prevpage],<a style="color: {linkcolor}" href="[v prevpage]">Prev</a>][eq [v prevpage],<i>prev</i>]]  
 
-[gstyle purplebar <div id="backtrail">[table width="100%",[row ,[b]]]</div>]  
+[gstyle purplebar <div class="backtrail">[table width="100%",[row ,[b]]]</div>]  
 [gstyle middlep [v TOC] [v INDEX] [v FIGURES] [v GLOSSARY] [v ENDNOTES] [v CITES] [v EXTRA]]
 [gstyle npbar {purplebar {bleft {pbar}}{bcont {middlep}}{brite {nbar}}}]
 
@@ -28,7 +28,7 @@ to allow you to put an image background on the page which can be seen
 ---------------------------------------------------------------------
 [global stylage [nl]
 <STYLE TYPE="text/css">
-#backtrail [ls]
+.backtrail [ls]
 margin-top: 30px;
 margin-left: 0px;
 margin-bottom: 30px;

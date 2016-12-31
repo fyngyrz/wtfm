@@ -1,13 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import cgi
+import random
+from aa_webpage		import *
+from aa_formboiler	import *
+from aa_sqlite		import *
+from aa_tablelib	import *
+from aa_macro		import *
+from aa_datafile	import *
+
+cfg = readDataFile('doc_system.cfg')
+
 # To-Do:
 # --------------------------------------------------------------------------
 # add stage_fn() and isplit() to aa_macro
 # --------------------------------------------------------------------------
-
-debug = ''
-do_debug = False
 
 doc ="""Documentation Generation System
       Author: fyngyrz  (Ben)
@@ -46,23 +54,15 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.0
-     Version: 0.0.0 Beta
-     History: See changes.md
+     Version: 0.0.1 Beta
+     History: See changelog.md
 """
 
-import cgi
-import random
-
-from aa_webpage		import *
-from aa_formboiler	import *
-from aa_sqlite		import *
-from aa_tablelib	import *
-from aa_macro		import *
-from aa_datafile	import *
 
 # global configuration
 # --------------------
-cfg = readDataFile('doc_system.cfg')
+debug = ''
+do_debug = False
 xprefix	=	cfg['xprefix']
 xsystem	=	cfg['xsystem']
 dprefix	=	cfg['dprefix']
