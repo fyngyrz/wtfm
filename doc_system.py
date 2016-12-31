@@ -1,21 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import cgi
-import random
-from aa_webpage		import *
-from aa_formboiler	import *
-from aa_sqlite		import *
-from aa_tablelib	import *
-from aa_macro		import *
-from aa_datafile	import *
-
-cfg = readDataFile('doc_system.cfg')
-
 # To-Do:
 # --------------------------------------------------------------------------
 # add stage_fn() and isplit() to aa_macro
 # --------------------------------------------------------------------------
+
+debug = ''
+do_debug = False
 
 doc ="""Documentation Generation System
       Author: fyngyrz  (Ben)
@@ -32,7 +24,7 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: December 24th, 2015
+     LastRev: December 31st, 2015
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
@@ -53,16 +45,24 @@ doc ="""Documentation Generation System
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
-     1st-Rel: 0.0.0
-     Version: 0.0.1 Beta
-     History: See changelog.md
+     1st-Rel: 0.0.2
+     Version: 0.0.0 Beta
+     History: See changes.md
 """
 
+import cgi
+import random
+
+from aa_webpage		import *
+from aa_formboiler	import *
+from aa_sqlite		import *
+from aa_tablelib	import *
+from aa_macro		import *
+from aa_datafile	import *
 
 # global configuration
 # --------------------
-debug = ''
-do_debug = False
+cfg = readDataFile('perdunkdoc_system.cfg')
 xprefix	=	cfg['xprefix']
 xsystem	=	cfg['xsystem']
 dprefix	=	cfg['dprefix']
@@ -75,6 +75,8 @@ stard = 'jfjfjn76876juj54g4g'
 
 warning = ''
 cmd = ''
+searchterm = ''
+casesensitive = False
 
 # various forms of web- and db-safety things
 # ==========================================
@@ -213,7 +215,7 @@ div#docnote
 # command lists used to populate the cmd bars on the three form types
 # -------------------------------------------------------------------
 rpacmds = ['save','generate','delete']
-gpacmds = ['prev','next','list','load','resequence']
+gpacmds = ['prev','next','list','search','load','resequence']
 
 rprcmds = ['save','generate','delete']
 gprcmds = ['list','load']
@@ -393,14 +395,23 @@ def prolist():
 
 # This produces a page listing all pages in a project
 # ---------------------------------------------------
-def paglist():
+def paglist(term=None):
 	global xprefix
 	global dbname
 	global projectname
+	global warning
+#	a = dbl(dbname,'PRAGMA case_sensitive_like=ON')
+#	warning += '<pre>\n'+str(a)+'\n</pre>'
 	tcolors = 'style="color: #442200; background-color: #FFEEDD;"'
-	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s' ORDER BY sequence" % (projectname)
+	ssql = ''
+	if term != None:
+		if casesensitive == True:
+			ssql = " AND (pagelocals LIKE '"+term+"' OR content LIKE '"+term+"')"
+		else:
+			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"') OR lower(content) LIKE lower('"+term+"'))"
+	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
 	a = dbl(dbname,sql)
-	content = ''
+	content = warning
 	if a.rows != 0:
 		seqlist = []
 		for tup in a.tuples:
@@ -673,9 +684,8 @@ def generate():
 	if a.rows == 1:
 		try:
 			glostyles = unclean(str(a.tuples[0][0]))
-			fmt  = '[global vglobal_styles %s]'
-			cpp = fmt % (glostyles)
-			discard = obj.do(str(glostyles+cpp))
+			obj.theGlobals['vglobal_styles'] = glostyles
+			discard = obj.do(str(glostyles))
 		except Exception,e:
 			warning += 'Processing failure with global styles: "%s"\n' % (e)
 	if do_debug == True: debug += 'a.rows=%d of globals/styles\n' % (a.rows)
@@ -726,6 +736,7 @@ def generate():
 				if pastyles != '':
 					pastyles = unclean(pastyles)
 					try:
+						obj.theGlobals['vparent_styles'] = pastyles
 						discard = obj.do(str(pastyles))
 					except Exception,e:
 						warning += 'Failure with parent "%s" styles: "%s"\n' % (paname,e)
@@ -735,6 +746,7 @@ def generate():
 		# -------------------------------------------
 		try:
 			parstyles = unclean(str(prstyles))
+			obj.theGlobals['vproject_styles'] = parstyles
 			discard = obj.do(str(parstyles))
 		except Exception,e:
 			warning += 'Failure: "%s"\n' % (e)
@@ -922,6 +934,21 @@ except:	delrand		= ''
 
 # Execute the various commands in the context of the current mode
 # ---------------------------------------------------------------
+try:
+	searchterm = form['searchterm'].value
+except:
+	searchterm = ''
+else:
+	searchterm = searchterm.replace('\'','\\\'')
+
+try:
+	cs = str(form['casesensitive'].value).lower()
+except:
+	casesensitive = False
+else:
+	if cs == 'on':
+		casesensitive = True
+
 dodelete = False
 try:
 	if override == 0:	# normal operation
@@ -969,6 +996,9 @@ else:
 		elif cmd == 'PREV':
 			savepage()
 			prevpage()
+		elif cmd == 'SEARCH':
+			savepage()
+			paglist(searchterm)
 		elif cmd == 'LIST':
 			savepage()
 			paglist()
@@ -1012,7 +1042,12 @@ def mtrow(body,label,name,content,rows,cols):
 # ---------------
 def mcmd(name):
 	name = name[:1].upper() + name[1:].lower()
-	boil = '<td align="center"><INPUT TYPE="SUBMIT" VALUE="%s" NAME="perform"></td>' % (name.upper())
+	termy = ''
+	if name == 'Search':
+		termx = '<INPUT TYPE="checkbox" NAME="casesensitive"> Match Case'
+		termx = ' Wildcards: % _'
+		termy = ' <INPUT TYPE="text"  NAME="searchterm"  SIZE=10 MAXLENGTH=40 VALUE="">'+termx
+	boil = '<td align="center"><INPUT TYPE="SUBMIT" VALUE="%s" NAME="perform">%s</td>' % (name.upper(),termy)
 	return boil
 
 # Builds all SUBMIT elements

@@ -8,6 +8,9 @@ such as to the associated utlitilies and sample files are not tracked here.
 ### Log
 
 0.0.1
+ * Added search operator: % and _ wildcards, case insensitive
+
+0.0.1
  * Support for [slit] and [vlit]
  * Added changelog.md to project
  * Improved npbar.dsys (now class instead of label... ooops)
