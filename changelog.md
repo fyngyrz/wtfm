@@ -7,8 +7,10 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
-0.0.1
+0.0.2
  * Added search operator: % and _ wildcards, case insensitive
+ * Removed anti-robot indexing from html401.dsys
+ * wrapped nobreak around the Table Of Contents string in the tocmod1.dsys module
 
 0.0.1
  * Support for [slit] and [vlit]
