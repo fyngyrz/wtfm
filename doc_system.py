@@ -24,7 +24,7 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: December 31st, 2015
+     LastRev: December 4th, 2017
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
@@ -45,8 +45,8 @@ doc ="""Documentation Generation System
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
-     1st-Rel: 0.0.2
-     Version: 0.0.0 Beta
+     1st-Rel: 0.0.1
+     Version: 0.0.3 Beta
      History: See changes.md
 """
 
@@ -536,7 +536,7 @@ def savepage():
 								str(thedis),
 								str(snum),
 								clean(pageloc))
-			icmd = "UPDATE pages SET %s WHERE pagename='%s'" % (values,clean(webpagename))
+			icmd = "UPDATE pages SET %s WHERE projectname='%s' AND pagename='%s'" % (values,clean(projectname),clean(webpagename))
 		a = dbl(dbname,icmd)
 		if do_debug == True: debug += 'save command result:' + str(a)
 	else:

@@ -7,6 +7,9 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
+0.0.3
+ * Serious bug fixed wherre multiple projects were writing over each other when there were identically-named pages
+
 0.0.2
  * Added search operator: % and _ wildcards, case insensitive
  * Removed anti-robot indexing from html401.dsys
