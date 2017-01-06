@@ -500,8 +500,8 @@ def savepage():
 
 	# insanity?
 	# ---------
-	if webpagename == '': return
-	if projectname == '': return
+	if webpagename.strip() == '': return
+	if projectname.strip() == '': return
 
 	# does project exist?
 	projectname = projectname.lower()
