@@ -6,6 +6,8 @@
 # add stage_fn() and isplit() to aa_macro
 # --------------------------------------------------------------------------
 
+docsystemname = 'doc_system.cfg'
+
 debug = ''
 do_debug = False
 
@@ -24,7 +26,7 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: December 4th, 2017
+     LastRev: January 6th, 2017
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
@@ -46,7 +48,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.3 Beta
+     Version: 0.0.4 Beta
      History: See changes.md
 """
 
@@ -62,7 +64,7 @@ from aa_datafile	import *
 
 # global configuration
 # --------------------
-cfg = readDataFile('perdunkdoc_system.cfg')
+cfg = readDataFile(docsystemname)
 xprefix	=	cfg['xprefix']
 xsystem	=	cfg['xsystem']
 dprefix	=	cfg['dprefix']
@@ -569,6 +571,9 @@ def savepro():
 	global extension
 	global dbname
 	global debug
+	
+	projectname = projectname.strip()
+	if projectname == '': return
 	
 	if do_debug == True: debug += 'Saving: "%s", "%s", "%s", "%s", "%s"\n' % (parentname,previewpath,projectname,projecttarget,projectext)
 

@@ -7,6 +7,9 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
+0.0.4
+ * could create or update a blank project under some circumstances, fixed
+
 0.0.3
  * Serious bug fixed wherre multiple projects were writing over each other when there were identically-named pages
 

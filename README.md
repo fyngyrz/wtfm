@@ -6,11 +6,12 @@ project. **wtfm** is fully operational and I am using it for a number
 of projects, so it's pretty stable.
 
 The [documentation is here.](http://ourtimelines.com/wtfm/tocpage.html)
-Unfortunately I couldn't do the documentation here on Github, because they
-offer no support for repo-centric syntax highlighting, and they won't
-accept a generally available syntax highlighting definition until hundreds
-of repos use it. Forunately, in _this_ case, I'm documenting an actual documentation
-system, so providing my own documentation serves as a lovely demo.
+Unfortunately I couldn't do the documentation here on Github, because
+they offer no support for repo-centric syntax highlighting, and they
+won't accept a generally available syntax highlighting definition until
+hundreds of repos use it. Fortunately, in _this_ case, I'm documenting
+an actual documentation system, so providing my own documentation serves
+as a lovely demo.
 
 ## About
 
