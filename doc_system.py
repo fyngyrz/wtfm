@@ -26,7 +26,7 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: January 6th, 2017
+     LastRev: January 7th, 2017
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
@@ -48,7 +48,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.4 Beta
+     Version: 0.0.5 Beta
      History: See changes.md
 """
 
@@ -838,6 +838,13 @@ def generate():
 			except Exception,e:
 				fh.close()
 				warning += 'Page %s; ERROR: "%s" Can\'t parse page locals. Aborted.\n' % (fpn,str(e))
+				return
+		else:
+			try:
+				discard = obj.do(str(pagref))
+			except Exception,e:
+				fh.close()
+				warning += 'Page %s; ERROR: "%s" Can\'t parse local next/prev. Aborted.\n' % (fpn,str(e))
 				return
 #		discard = obj.do(pagref)
 		co = cpp + co

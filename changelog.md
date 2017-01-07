@@ -7,6 +7,9 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
+0.0.5
+ * if a page had no pagelocals, next/prev links would not be set, fixed
+
 0.0.4
  * could create or update a blank project under some circumstances, fixed
 
