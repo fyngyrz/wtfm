@@ -633,7 +633,7 @@ def nextpage():
 	if sn < sl and sn >= 0 and sid != -1:
 		webpagename = slist[sn+1]
 
-# the sequence values on eah page determine the processing
+# the sequence values on each page determine the processing
 # and editing order. You can put any values in there, which
 # makes it easy to insert pages between, etc. But eventually,
 # you can run out of room. This function renembers all pages,
