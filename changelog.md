@@ -7,6 +7,9 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
+0.0.6
+ * Project editor "Page Editor List" link now opens new tab
+
 0.0.5
  * if a page had no pagelocals, next/prev links would not be set, fixed
 

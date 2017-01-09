@@ -26,7 +26,7 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: January 7th, 2017
+     LastRev: January 9th, 2017
   LastDocRev: December 24th, 2015
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
@@ -48,8 +48,8 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.5 Beta
-     History: See changes.md
+     Version: 0.0.6 Beta
+     History: See changelog.md
 """
 
 import cgi
@@ -1167,7 +1167,7 @@ def mlnks(body):
 				sub += '<td align="center"><a href="%s%s?%s&amp;projectname=%s">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
 			else:
 				el[0] += ' List'
-				sub += '<td align="center"><a href="%s%s?%s&amp;projectname=%s&amp;perform=LIST">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
+				sub += '<td align="center"><a target="_blank" href="%s%s?%s&amp;projectname=%s&amp;perform=LIST">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
 		elif projectname != '' and mode == 'page' and el[1] == 'mode=project':
 			sub += '<td align="center"><a href="%s%s?%s&amp;projectname=%s">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
 		else:
