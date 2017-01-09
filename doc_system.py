@@ -1164,7 +1164,7 @@ def mlnks(body):
 			sql = "SELECT pagename FROM pages WHERE projectname='%s' LIMIT 1" % (clean(projectname))
 			x = dbl(dbname,sql)
 			if x.rows == 0:
-				sub += '<td align="center"><a href="%s%s?%s&amp;projectname=%s">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
+				sub += '<td align="center"><a target="_blank" href="%s%s?%s&amp;projectname=%s">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
 			else:
 				el[0] += ' List'
 				sub += '<td align="center"><a target="_blank" href="%s%s?%s&amp;projectname=%s&amp;perform=LIST">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
