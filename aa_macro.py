@@ -23,8 +23,8 @@ class macro(object):
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015     (for Project)
-     LastRev: January 9th, 2017     (for Class)
-  LastDocRev: December 23rd, 2015     (for Class)
+     LastRev: January 10th, 2017     (for Class)
+  LastDocRev: January 10th, 2017     (for Class)
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1
 	  Status:  BETA
@@ -57,7 +57,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.66 Beta
+     Version: 1.0.68 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -159,7 +159,8 @@ class macro(object):
 													# and with posts, if any, postfixed to list elements
 													# and with inter, if any, interspersed between list elements
 													# and ntl, if any, this goes between next to last and last
-	[translate listName,text]						# characters are mapped to listName (see examples)
+	[translate (pre=PRE,)(post=POST,)(inter=INTER)listName,text]
+													# characters are mapped to listName (see examples)
 	[ljoin listname,joinContent]					# join a list into a string with interspersed content
 	[scase listName,content]						# Case words as they are cased in listName
 	[ltol listName,content]							# splits lines into a list
@@ -278,7 +279,7 @@ class macro(object):
 	[date]											# date processing took place
 	[time]											# time processing took place
 	[fref label]									# forward reference
-	[resolve label,content]							# resolve forward reference(s) to lable
+	[resolve (hex=1,)label,content]					# resolve forward label reference(s) to content
 	[sys shellCommand]								# execute shell command
 	[repeat count content]							# repeat content count times
 													# count may be any one of:
@@ -790,11 +791,29 @@ The contents of the list are safe to include in the output if you like.
 			o += key
 		return o
 
-	# [reso label,content]
+	# [reso (hex=1,)label,content]
 	def reso_fn(self,tag,data):
+		dh = ''
+		opts,data = self.popts(['hex'],data)
+		for el in opts:
+			if el[0] == 'hex=':
+				dh = el[1]
 		p = data.split(',',1)
 		if len(p) == 2:
 			k,c = p
+			if dh == '1':
+				em = 'bad hex value for resolve of label "'+k+'"'
+				kl = len(c)
+				cc = ''
+				if (kl & 1 == 0) and kl != 0: # has to be even, can't be non-zero
+					for i in range(0,kl,2):
+						try:
+							cc += chr(int(c[i:i+2],16))
+						except:
+							return em
+					c = cc
+				else:
+					return em
 			key = self.mkey(k)
 			self.refs[key] = c
 		return ''
@@ -2791,12 +2810,29 @@ The contents of the list are safe to include in the output if you like.
 	# [translate listName,text]
 	def translate_fn(self,tag,data):
 		o = ''
+		pre = ''
+		post = ''
+		inter = ''
+		opts,data = self.popts(['pre','post','inter'],data)
+		for el in opts:
+			if el[0] == 'pre=':
+				pre = el[1]
+			if el[0] == 'post=':
+				post = el[1]
+			if el[0] == 'inter=':
+				inter = el[1]
 		ll = data.split(',',1)
 		if len(ll) == 2:
 			if ll[0] != '':
+				s = ll[1]
 				try:
-					for c in ll[1]:
-						o += self.theLists[ll[0]][ord(c)]
+					i = 1
+					tl = len(s)
+					for c in s:
+						o += pre+self.theLists[ll[0]][ord(c)]+post
+						if i != tl:
+							o += inter
+						i += 1
 				except:
 					pass
 		return o
@@ -3396,7 +3432,7 @@ The contents of the list are safe to include in the output if you like.
 		self.fns = {
 					# escape codes
 					# ------------
-					'co'	: self.co_fn,		#	,	comma
+					'co'	: self.co_fn,		#	,	HTML char-encoded comma
 					'sp'	: self.sp_fn,		#	,	space
 					'lb'	: self.lb_fn,		#	[	left square bracket
 					'rb'	: self.rb_fn,		#	]	right square bracket
