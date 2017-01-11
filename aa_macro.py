@@ -57,7 +57,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.72 Beta
+     Version: 1.0.73 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -134,6 +134,9 @@ class macro(object):
 	[v variableName]								# use a variable (local, if not local, then global)
 	[gv variableName]								# use the global variable and ignore the local
 	[lv variableName]								# use the local variable and ignore the global
+	[vinc (quiet=1,)(pre=1,)variableName]			# increment a local(global) variable
+	[vdec (quiet=1,)(pre=1,)variableName]			# deccrement a local(global) variable
+	
 	[page]											# reset local environment: variables
 													  global variables are unaffected
 
@@ -2494,6 +2497,41 @@ The contents of the list are safe to include in the output if you like.
 			self.theLists[data] = []
 		return ''
 
+	# [vinc (quiet=1,)(pre=1,)variableName]
+	def vmod_fn(self,tag,data,amt):
+		pre = ''
+		quiet = ''
+		x = '0'
+		opts,data = self.popts(['pre','quiet'],data)
+		for el in opts:
+			if el[0] == 'pre=':
+				pre = el[1]
+			if el[0] == 'quiet=':
+				quiet = el[1]
+		try:
+			l,x = self.fetchVar(data)
+			x = int(x)
+			dv = str(x)
+			x += amt
+			if pre != '1':
+				dv = str(x)
+			if l == 1: # if local var was fetched
+				self.theLocals[data] = str(x)
+			else: # global
+				self.theGlobals[data] = str(x)
+			x = str(dv)
+		except: x = '0'
+		if quiet == '1': x = ''
+		return(x)
+
+	# [vdec (quiet=1,)(pre=1,)variableName]
+	def vdec_fn(self,tag,data):
+		return self.vmod_fn(tag,data,-1)
+
+	# [vinc (quiet=1,)(pre=1,)variableName]
+	def vinc_fn(self,tag,data):
+		return self.vmod_fn(tag,data,1)
+
 	# [list (sep=X,)listName,listContent]
 	def list_fn(self,tag,data):
 		o = ''
@@ -3596,6 +3634,8 @@ The contents of the list are safe to include in the output if you like.
 					'lv'	: self.lv_fn,		# use local variable						P1 -->
 					'v'		: self.v_fn,		# use local variable. if none, use global	P1 -->
 					'clear'	: self.clear_fn,	# clear a local variable					'' -> P1
+					'vinc'	: self.vinc_fn,		# increment a local(global) variable
+					'vdec'	: self.vdec_fn,		# deccrement a local(global) variable
 					
 					# stack
 					# -----
