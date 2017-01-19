@@ -2058,6 +2058,9 @@ The contents of the list are safe to include in the output if you like.
 		else:
 			d2 = da2.split(sep)
 		dsiz = len(d2)
+		if ssiz > 1 and dsiz == 1:
+			d2 = [da2] * ssiz
+			dsiz = ssiz
 		if dsiz == ssiz:
 			for i in range(0,ssiz):
 				md1 = d1[i]
