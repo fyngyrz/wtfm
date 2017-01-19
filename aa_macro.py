@@ -63,7 +63,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.81 Beta
+     Version: 1.0.82 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -4139,9 +4139,14 @@ The contents of the list are safe to include in the output if you like.
 		# the newlines used this way into a space so as to simplify
 		# subsequent processing.
 		# ----------------------------------------------------------------
+		s = s.replace('\n\r','\n')
+		s = s.replace('\r\n','\n')
 		if fg == 0: s = s.replace('{','[s ')
 		s = re.sub(r'(\[s\s[\w-])\n',r'\1 ',s)
-		if fg == 1: re.sub(r'(\{[\w-])\n',r'\1 ',s)
+#		if fg == 1: re.sub(r'(\{[\w-])\n',r'\1 ',s)
+		if fg == 1:
+			s = re.sub('(\\{\\w*)\n','\\1 ',s)
+#			s = re.sub(r'(\{[\w-])\n',r'\1 ',s)
 		if self.noDinner == False:
 			s = s.replace('  \n','')
 
