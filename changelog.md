@@ -7,6 +7,12 @@ such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
 
+0.0.7
+ * (multi-)password security implementation
+ * (multi-)IP security implementation
+ * [local ds_rawmode 1] in page locals triggers raw Page Content
+ * - in Non-Default Exension skips ANY extension
+
 0.0.6
  * Project editor "Page Editor List" link now opens new tab
 

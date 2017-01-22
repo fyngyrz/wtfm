@@ -1,13 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# To-Do:
-# --------------------------------------------------------------------------
-# add stage_fn() and isplit() to aa_macro
-# --------------------------------------------------------------------------
+docsystemcfgname = 'doc_system.cfg'
 
-docsystemname = 'doc_system.cfg'
-
+warning = ''
 debug = ''
 do_debug = False
 
@@ -26,8 +22,8 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: January 9th, 2017
-  LastDocRev: December 24th, 2015
+     LastRev: January 22nd, 2017
+  LastDocRev: January 22nd, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
@@ -48,12 +44,15 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.6 Beta
-     History: See changelog.md
+     Version: 0.0.7 Beta
+     History: See changes.md
 """
 
+import os
 import cgi
 import random
+import Cookie
+import datetime
 
 from aa_webpage		import *
 from aa_formboiler	import *
@@ -64,18 +63,265 @@ from aa_datafile	import *
 
 # global configuration
 # --------------------
-cfg = readDataFile(docsystemname)
+cfg = readDataFile(docsystemcfgname)
 xprefix	=	cfg['xprefix']
 xsystem	=	cfg['xsystem']
 dprefix	=	cfg['dprefix']
 dname	=	cfg['dname']
+password=	cfg['passwords']
+user	=	cfg['users']
+limitip	=	cfg['iplimit']
+logtime	=	cfg['logtime']
+domain	=	cfg['domain']
+timezone=	cfg['timezone']
+try:
+	logtime = int(logtime)
+except:
+	logtime = 30
+
+cookiejar = ''
+
+def bailer(msg=''):
+	global cookiejar
+	pbody = ''
+	if msg != '':
+		pbody += 'Security Error:<br>'+msg+'<br>'
+	pbody += '<FORM ACTION="'+xprefix+xsystem+'" METHOD="POST">\n'
+	pbody += '<TABLE>'
+	pbody += '<tr> <td align="right">Enter&nbsp;User&nbsp;name:</td> <td><INPUT TYPE="text" NAME="USERNAME" VALUE=""></td>    <td><i>not</i> case sensitive</td> </tr>'
+	pbody += '<tr> <td align="right">Enter&nbsp;Password:</td>       <td><INPUT TYPE="PASSWORD" NAME="password" VALUE=""></td><td><b>case sensitive</b></td>     </tr>'
+	pbody += '<tr> <td align="center" colspan=3><INPUT TYPE="submit" VALUE="Submit"></td>  </tr>'
+	pbody += '</table>'
+	pbody += '</FORM>\n'
+	print thePage(	title   = 'DocSystem Security',
+					styles  = '',
+					body    = pbody,
+					valid   = 1,
+					forhead = '',
+					cookiejar = cookiejar,
+					forbody = '',
+					doctype = '4.01')
+	raise SystemExit
+
+def signOut():
+	global domain
+	global xprefix
+	global cookiejar
+	sheet = ''
+	expiration = datetime.datetime(2000,1,1)
+
+	cookie = Cookie.SimpleCookie()
+	cookie["pwcheck"] = 'x'
+	cookie["pwcheck"]["domain"] = domain
+	cookie["pwcheck"]["path"] = xprefix
+	cookie["pwcheck"]["expires"] = expiration.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	sheet += cookie.output()+'\n'
+
+	cookie = Cookie.SimpleCookie()
+	cookie["pwname"] = 'x'
+	cookie["pwname"]["domain"] = domain
+	cookie["pwname"]["path"] = xprefix
+	cookie["pwname"]["expires"] = expiration.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	sheet += cookie.output()+'\n'
+	cookiejar = sheet
+	bailer('You have been signed out.')
+
+# capture any incoming CGI for further manipulation
+# -------------------------------------------------
+form = cgi.FieldStorage()
+
+# Logout
+# ------
+try: una = form['logout'].value
+except:
+	pass
+else:
+	try:
+		una = int(una)
+	except:
+		pass
+	else:
+		if una == 1:
+			signOut()
+
+# Security
+# ========
+def whitelist(string):
+	s = ''
+	for c in string: # whitelisting A-Z, a-z and 0-9
+		good = 1
+		if c < '0' or  c > 'z': good = 0
+		if c > '9' and c < 'A': good = 0
+		if c > 'Z' and c < 'a': good = 0
+		if c == '-': good = 1
+		if c == '_': good = 1
+		if good == 1:
+			s += c
+	return s
+
+def lighten(s,ip):
+	def iterw(b):
+		return int(b / 256)
+	def iterx(n,c=1):
+		for x in range(0,c):
+			n = (n * 5) % 65536
+		return n
+	def itery(h):
+		h = iterw(h)
+		h2 = random.random() * 255.0
+		return (int(h) ^ int(h2))
+	def iterz():
+		qq = int(random.random() * 2.999) + 1
+		return qq
+	random.seed(s)
+	its = len(s)
+	rts = 1
+	for c in s:
+		its += ord(c)
+		rts += 1
+	b = 1
+	its *= 5
+	for i in range(0,its):
+		b = iterx(b)
+	o = ''
+	p = iterz()
+	r = 0
+	for c in ip:
+		b = iterx(b)
+	for c in s:
+		b = iterx(b)
+		v = itery(ord(c)) ^ iterw(b)
+		o += '%02x' % (v)
+		r += 1
+		if r == p:
+			o += '%02x' % (itery(b))
+			p = iterz()
+			r = 0
+	return o.upper()
+
+# IPs first:
+# ----------
+ip = cgi.escape(os.environ.get("REMOTE_ADDR",'127.0.0.1'))
+if limitip != 'None':
+	if limitip.find(',') != -1:
+		iplist = limitip.split(',')
+	else:
+		iplist = []
+		iplist.append(limitip)
+	ipins = []
+	try:
+		for i in iplist:
+			a,b,c,d = i.split('.')
+			if d.find('-') != -1: # if a range
+				rlist = d.split('-')
+				if len(rlist) != 2:
+					bailer('Config file error: iplist -range error')
+				istart = int(rlist[0])
+				iend = int(rlist[1])
+				if istart < 0 or istart > 255 or iend < 0 or iend > 255:
+					bailer('Config file error: iplist value error')
+				if istart > iend:
+					istart,iend = iend,istart
+				for ipr in range(istart,iend+1):
+					ipins.append(a+'.'+b+'.'+c+'.'+str(ipr))
+			else: # not a range
+				ipins.append(i)
+		iplist = ipins
+	except Exception,e:
+		bailer('Config file error: iplist:: '+str(e))
+	hit = False
+	for i in iplist:
+		if i == ip:
+			hit = True
+	if hit == False:
+		bailer('Firewalled')
+#		bailer('"'+i+'" "'+ip+'"')
+
+# We'll need the browser cookies:
+# -------------------------------
+pwcheck = ''
+pwuser = ''
+cookisok = False
+if "HTTP_COOKIE" in os.environ:
+	ccc = str(os.environ)
+	try:
+		cookie = Cookie.SimpleCookie(os.environ["HTTP_COOKIE"])
+	except Exception,e:
+		bailer('Cookies not found!')
+	cookisok = True
+
+upw = None
+una = None
+pwcheck = None
+pwuser = None
+cookiesmatch = False
+
+try: una = form['USERNAME'].value
+except:
+	pass
+try: upw = form['password'].value
+except:
+	pass
+
+if cookisok == True:
+	pwcheck = whitelist(str(cookie['pwcheck'].value))
+	pwuser  = whitelist(str(cookie['pwname'].value))
+
+# Now user(s) and password(s)
+# ---------------------------
+if user.find(',') != -1:
+	userlist = user.split(',')
+else:
+	userlist = []
+	userlist.append(user)
+if password.find(',') != -1:
+	pwlist = password.split(',')
+else:
+	pwlist = []
+	pwlist.append(password)
+ulen = len(userlist)
+plen = len(pwlist)
+if ulen != plen:
+	bailer('configuration file error')
+
+# See if cookies sufficiently ID the user
+# ---------------------------------------
+if pwcheck != None and pwuser != None:
+	for u,p in zip(userlist,pwlist):
+		if u == pwuser and lighten(p,ip) == pwcheck:
+			cookiesmatch = True
+
+if user != 'None' and cookiesmatch != True:
+	okay = False
+	for u,p in zip(userlist,pwlist):
+		if u == una and p == upw:
+			okay = True
+	if okay == False:
+		bailer()
+#		bailer('Username and password do not match'+str(una)+' '+str(upw))
+
+	# we're good based on PW form input, so we're
+	# going to need to set the cookies:
+	# -------------------------------------------
+	expiration = datetime.datetime.now() + datetime.timedelta(seconds=logtime)
+	cookie = Cookie.SimpleCookie()
+	cookie["pwcheck"] = lighten(upw,ip)
+	cookie["pwcheck"]["domain"] = domain
+	cookie["pwcheck"]["path"] = xprefix
+	cookie["pwcheck"]["expires"] = expiration.strftime("%a, %d-%b-%Y %H:%M:%S "+timezone)
+	cookiejar += cookie.output()+'\n'
+	cookie = Cookie.SimpleCookie()
+	cookie["pwname"] = user
+	cookie["pwname"]["domain"] = domain
+	cookie["pwname"]["path"] = xprefix
+	cookie["pwname"]["expires"] = expiration.strftime("%a, %d-%b-%Y %H:%M:%S "+timezone)
+	cookiejar += cookie.output()+'\n'
 
 # special chars
 # -------------
 qtard = 'j8g67f54dlll9f8f7f'
 stard = 'jfjfjn76876juj54g4g'
 
-warning = ''
 cmd = ''
 searchterm = ''
 casesensitive = False
@@ -265,7 +511,7 @@ thereference = """<br>
 # ---------
 pabody  = """
 [WARNING]
-<h3 style="text-align: center;">Page Editor</h3>
+<div style="text-align: center;">Page Editor  &mdash;  <a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>
 <FORM METHOD="POST" ACTION="[XPREFIX][XSYSTEM]">
 [MODE]
 <table style="margin: auto; background-color: rgb(240,240,240);" width="90%" border=1>
@@ -297,7 +543,8 @@ pabody  = """
 # Style form
 # ----------
 stbody  = """
-<h3 style="text-align: center;">Global Style Editor - These apply to <i>all</i> documents</h3>
+<div style="text-align: center;">Global Style Editor - These apply to <i>all</i> documents<br>
+<a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>
 [WARNING]
 <FORM METHOD="POST" ACTION="[XPREFIX][XSYSTEM]">
 [MODE]
@@ -329,7 +576,7 @@ These styles apply to <i>all</i> projects
 # ------------
 prbody  = """
 [WARNING]
-<h3 style="text-align: center;">Project Editor</h3>
+<div style="text-align: center;">Project Editor  &mdash;  <a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>
 <FORM METHOD="POST" ACTION="[XPREFIX][XSYSTEM]">
 [MODE]
 <table style="margin: auto; background-color: rgb(240,240,240);" width="90%" border=1>
@@ -372,21 +619,25 @@ def prolist():
 	global mode
 	global cmd
 	global warning
+	global cookiejar
 	sql  = 'SELECT name FROM projects'
 	a = dbl(dbname,sql)
-	content = ''
+	content = '<div style="text-align: center;"><a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>'
 	if a.rows != 0:
 		b = table("Projects")
 		for tup in a.tuples:
 			content += b.line('&nbsp;<a href="%s%s?mode=project&amp;projectname=%s">%s</a>&nbsp;' % (xprefix,xsystem,str(tup[0]),str(tup[0])))
 		content += b.finish()
 		content += '<br><a href="%s%s?mode=project">Open Empty, Unnamed Project</a>' % (xprefix,xsystem)
+		content = content.replace('[XPREFIX]',xprefix)
+		content = content.replace('[XSYSTEM]',xsystem)
 		print thePage(	title   = 'Proj List',
 						styles  = '',
 						body    = content,
 						valid   = 1,
 						forhead = metags,
 						forbody = colors,
+						cookiejar = cookiejar,
 						doctype = '4.01')
 		exit()
 	else:
@@ -399,9 +650,11 @@ def prolist():
 # ---------------------------------------------------
 def paglist(term=None):
 	global xprefix
+	global xsystem
 	global dbname
 	global projectname
 	global warning
+	global cookiejar
 #	a = dbl(dbname,'PRAGMA case_sensitive_like=ON')
 #	warning += '<pre>\n'+str(a)+'\n</pre>'
 	tcolors = 'style="color: #442200; background-color: #FFEEDD;"'
@@ -413,7 +666,10 @@ def paglist(term=None):
 			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"') OR lower(content) LIKE lower('"+term+"'))"
 	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
 	a = dbl(dbname,sql)
-	content = warning
+	content = '<div style="margin-bottom: .5em; text-align: center;"><a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>'
+	content = content.replace('[XPREFIX]',xprefix)
+	content = content.replace('[XSYSTEM]',xsystem)
+	content += warning
 	if a.rows != 0:
 		seqlist = []
 		for tup in a.tuples:
@@ -444,6 +700,7 @@ def paglist(term=None):
 					body    = content,
 					valid   = 1,
 					forhead = metags,
+					cookiejar = cookiejar,
 					forbody = tcolors,
 					doctype = '4.01')
 	exit()
@@ -633,7 +890,7 @@ def nextpage():
 	if sn < sl and sn >= 0 and sid != -1:
 		webpagename = slist[sn+1]
 
-# the sequence values on each page determine the processing
+# the sequence values on eah page determine the processing
 # and editing order. You can put any values in there, which
 # makes it easy to insert pages between, etc. But eventually,
 # you can run out of room. This function renembers all pages,
@@ -774,6 +1031,7 @@ def generate():
 			ex = ext
 		pl = na + ex
 		seqlist.append(pl)
+	obj.theGlobals['diag_pagecount'] = str(seqlist).replace('[','xy3zy').replace(']','[rb]').replace('xy3zy','[lb]')
 
 	# Per-page generation (lean fetch mode)
 	# -------------------------------------
@@ -791,7 +1049,10 @@ def generate():
 		if pagloc == None:
 			pagloc = ''
 		pagloc = unclean(pagloc)
-		if ex == '' or ex == 'None': ex = ext
+		if ex != '-':
+			if ex == '' or ex == 'None': ex = ext
+		else:
+			ex = ''
 		fpn = pn + ex
 		fn = tgt + fpn
 		if pagloc != '':
@@ -844,23 +1105,28 @@ def generate():
 				discard = obj.do(str(pagref))
 			except Exception,e:
 				fh.close()
-				warning += 'Page %s; ERROR: "%s" Can\'t parse local next/prev. Aborted.\n' % (fpn,str(e))
+				warning += 'Page %s; ERROR: "%s" Can\'t parse page next/prev. Aborted.\n' % (fpn,str(e))
 				return
 #		discard = obj.do(pagref)
-		co = cpp + co
-		if ps != '':
-			co = '{%s %s}' %  (ps,co)
-		try: # try
-			pco = obj.do(str(unclean(co)))
-		except Exception,e: # except
-			fh.close()
-			warning += 'Page %s; ERROR: "%s" Can\'t parse content. Aborted.\n' % (fpn,str(e))
-			return
-		pco = pco.replace('&#123;','{')
-		pco = pco.replace('&#125;','}')
-		pco = pco.replace('&#91;','[')
-		pco = pco.replace('&#93;',']')
-		pco = pco.replace('&#44;',',')
+		rawmode = obj.theLocals.get('ds_rawmode','0')
+		if rawmode == '0':
+			co = cpp + co
+			if ps != '':
+				co = '{%s %s}' %  (ps,co)
+			try: # try
+				pco = obj.do(str(unclean(co)))
+			except Exception,e: # except
+				fh.close()
+				ln = sys.exc_info()[-1].tb_lineno
+				warning += 'Page %s; ERROR: "%s" Can\'t parse content at line %d. Aborted.\n' % (fpn,str(e),ln)
+				return
+			pco = pco.replace('&#123;','{')
+			pco = pco.replace('&#125;','}')
+			pco = pco.replace('&#91;','[')
+			pco = pco.replace('&#93;',']')
+			pco = pco.replace('&#44;',',')
+		else: # in raw mode
+			pco = co
 		try:
 			fh.write(pco)
 		except:
@@ -873,10 +1139,6 @@ def generate():
 		except:	return
 		else:
 			if do_debug == True: debug += 'gen/6B: save went ok\n'
-
-# capture any incoming CGI for further manipulation
-# -------------------------------------------------
-form = cgi.FieldStorage()
 
 # if you come in without a mode, or with a pathological mode, defaults to project mode
 # ------------------------------------------------------------------------------------
@@ -1171,7 +1433,7 @@ def mlnks(body):
 		elif projectname != '' and mode == 'page' and el[1] == 'mode=project':
 			sub += '<td align="center"><a href="%s%s?%s&amp;projectname=%s">%s</a></td>' % (xprefix,xsystem,el[1],projectname,el[0])
 		else:
-			sub += '<td align="center"><a href="%s%s?%s">%s</a></td>' % (xprefix,xsystem,el[1],el[0])
+			sub += '<td align="center"><a target="_blank" href="%s%s?%s">%s</a></td>' % (xprefix,xsystem,el[1],el[0])
 	body = body.replace('[LINKS]',sub)
 	return body
 
@@ -1329,6 +1591,7 @@ print thePage(	title   = mytitl,
 				body    = str(mybody),
 				valid   = 1,
 				forhead = metags,
+				cookiejar = cookiejar,
 				forbody = colors,
 				doctype = '4.01')
 

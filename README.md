@@ -28,6 +28,7 @@ from any project into any directory you wish on a per-project basis
 
 ## Features
 
+* Password and IP security
 * Hugely customizable
 * Extensive macro capability
 * Styles allow global document changes with an absolute minimum of effort
