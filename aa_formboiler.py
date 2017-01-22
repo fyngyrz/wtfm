@@ -268,7 +268,7 @@ def makevrow(label,tag,variable,length,lfmt='',efmt='',olimit=64,tt=1):
 	o += efmt % (s)
 	return o
 
-def maketextarea(label,tag,variable,lfmt='',efmt='',rows=8,cols=40,tt=1):
+def maketextarea(label,tag,variable,lfmt='',efmt='',rows=8,cols=40,tt=1,pid=''):
 	tts = ''
 	tte = ''
 	if tt == 1:
@@ -282,7 +282,7 @@ def maketextarea(label,tag,variable,lfmt='',efmt='',rows=8,cols=40,tt=1):
 	if lfmt == '':
 		lfmt = '<tr><td align="right">'+tts+'%s'+tte+'</td>'
 	o = lfmt % (label)
-	s = '<TEXTAREA '+sty+'NAME="'+tag+'" ROWS='+str(rows)+' COLS='+str(cols)+'>'
+	s = '<TEXTAREA '+pid+sty+'NAME="'+tag+'" ROWS='+str(rows)+' COLS='+str(cols)+'>'
 	s+= key
 	s+= '</TEXTAREA>'
 	s = s.replace(key,str(variable))

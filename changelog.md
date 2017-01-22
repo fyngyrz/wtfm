@@ -6,6 +6,8 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
+0.0.8
+ * Page Content field now tracks content size as you type.
 
 0.0.7
  * (multi-)password security implementation

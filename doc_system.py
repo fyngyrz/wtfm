@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-docsystemcfgname = 'doc_system.cfg'
+docsystemcfgname = 'perdunkdoc_system.cfg'
 
 warning = ''
 debug = ''
@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.7 Beta
+     Version: 0.0.8 Beta
      History: See changes.md
 """
 
@@ -80,6 +80,17 @@ except:
 	logtime = 30
 
 cookiejar = ''
+
+charcounter = """
+<SCRIPT>
+function onCharInput()
+{
+var conpagechars = document.getElementById("pagecontentx").value;
+var conpagecharcount = conpagechars.length.toString();
+	document.getElementById("pccount").innerHTML = conpagecharcount;
+}
+</SCRIPT>
+"""
 
 def bailer(msg=''):
 	global cookiejar
@@ -635,7 +646,7 @@ def prolist():
 						styles  = '',
 						body    = content,
 						valid   = 1,
-						forhead = metags,
+						forhead = metags+charcounter,
 						forbody = colors,
 						cookiejar = cookiejar,
 						doctype = '4.01')
@@ -1307,8 +1318,8 @@ def mcrow(body,label,name,value):
 
 # text box elements
 # -----------------
-def mtrow(body,label,name,content,rows,cols):
-	fi = maketextarea(label,name,content,rows=rows,cols=cols)
+def mtrow(body,label,name,content,rows,cols,pid=''):
+	fi = maketextarea(label,name,content,rows=rows,cols=cols,pid=pid)
 	body = body.replace('[' + name.upper() + ']',fi)
 	return body
 
@@ -1564,11 +1575,16 @@ elif mode == 'page':
 	if pretgt != '':
 		hlp+= '<a href="%s" target="_blank">Page Preview</a>' % (pretgt)
 	pabody = mtrow(pabody,'Page Locals:%s' % (hlp),	'pagelocal',	dequote(pagelocal),		6, 80)
-	hlp = '<br><br>Do <i>not</i> define styles here!'
-	pabody = mtrow(pabody,'Page Content:%s' % (hlp),			'pagecontent',	dequote(pagecontent),	10, 80)
+	hlp  = '<br><br>Do <i>not</i> define styles here!<br><br>'
+	hlp += 'Content Size: <span id="pccount"></span>'
+	moregoods = 'id="pagecontentx" oninput="onCharInput()" '
+	pabody = mtrow(pabody,'Page Content:%s' % (hlp),			'pagecontent',	dequote(pagecontent),	10, 80, pid=moregoods)
 	pabody = mcmds(pabody,gpacmds,rpacmds)
 	pabody = mlnks(pabody)
 	mybody = pabody
+
+
+# <span id="pccount"></span>
 
 if do_debug == True: debug += 'mode=%s\n' % (mode)
 
@@ -1590,9 +1606,9 @@ print thePage(	title   = mytitl,
 				styles  = styles,
 				body    = str(mybody),
 				valid   = 1,
-				forhead = metags,
+				forhead = metags+charcounter,
 				cookiejar = cookiejar,
-				forbody = colors,
+				forbody = colors+' onload="onCharInput();"',
 				doctype = '4.01')
 
 # Done!
