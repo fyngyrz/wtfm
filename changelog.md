@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
+0.0.10
+ * Search now does not require wrapping term with **
+
 0.0.9
  * Page search now supports case sensitivity
  * Wildcards are now ? and * instead of annoying SQL _ and %

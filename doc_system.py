@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.9 Beta
+     Version: 0.0.10 Beta
      History: See changes.md
 """
 
@@ -661,6 +661,7 @@ def prolist():
 # and provides for \? and \* escapes
 # --------------------------------------------------------------
 def wc_convert(term):
+	global warning
 	REALLYQMARK = 'hduw7yrQMARK5gh3fr89f'
 	REALLYASTER = 'te453gfASTERi94gk0f67'
 	REALLYUNDER = 'gtfcmgvUNDERlof7567h6'
@@ -675,7 +676,8 @@ def wc_convert(term):
 	term = term.replace(REALLYASTER,'*')
 	term = term.replace(REALLYPERCE,'\\%')
 	term = term.replace(REALLYUNDER,'\\_')
-	return term
+#	warning = '"'+term+'"'
+	return '%'+term+'%'
 
 # This produces a page listing all pages in a project
 # ---------------------------------------------------
@@ -695,7 +697,7 @@ def paglist(term=None):
 		if casesensitive == True:
 			ssql = " AND (pagelocals LIKE '"+term+"' OR content LIKE '"+term+"')"
 		else:
-			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"') OR lower(content) LIKE lower('"+term+"'))"
+			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"')OR lower(content) LIKE lower('"+term+"'))"
 	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
 	if casesensitive == True:
 		a = dbl(dbname,sql,cs=True)
