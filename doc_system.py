@@ -22,8 +22,8 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: January 22nd, 2017
-  LastDocRev: January 22nd, 2017
+     LastRev: January 23rd, 2017
+  LastDocRev: January 23rd, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.8 Beta
+     Version: 0.0.9 Beta
      History: See changes.md
 """
 
@@ -335,7 +335,7 @@ stard = 'jfjfjn76876juj54g4g'
 
 cmd = ''
 searchterm = ''
-casesensitive = False
+casesensitive = True
 
 # various forms of web- and db-safety things
 # ==========================================
@@ -657,6 +657,26 @@ def prolist():
 		mode = 'project'
 	return
 
+# This changes ? and * into SQL's (stupid) '%' and '_' wildcards
+# and provides for \? and \* escapes
+# --------------------------------------------------------------
+def wc_convert(term):
+	REALLYQMARK = 'hduw7yrQMARK5gh3fr89f'
+	REALLYASTER = 'te453gfASTERi94gk0f67'
+	REALLYUNDER = 'gtfcmgvUNDERlof7567h6'
+	REALLYPERCE = 'kljgu45PERCE79opjdtwc'
+	term = term.replace('\\?',REALLYQMARK)
+	term = term.replace('\\*',REALLYASTER)
+	term = term.replace('%',REALLYPERCE)
+	term = term.replace('_',REALLYUNDER)
+	term = term.replace('?','_')
+	term = term.replace('*','%')
+	term = term.replace(REALLYQMARK,'?')
+	term = term.replace(REALLYASTER,'*')
+	term = term.replace(REALLYPERCE,'\\%')
+	term = term.replace(REALLYUNDER,'\\_')
+	return term
+
 # This produces a page listing all pages in a project
 # ---------------------------------------------------
 def paglist(term=None):
@@ -671,12 +691,16 @@ def paglist(term=None):
 	tcolors = 'style="color: #442200; background-color: #FFEEDD;"'
 	ssql = ''
 	if term != None:
+		term = wc_convert(term)
 		if casesensitive == True:
 			ssql = " AND (pagelocals LIKE '"+term+"' OR content LIKE '"+term+"')"
 		else:
 			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"') OR lower(content) LIKE lower('"+term+"'))"
 	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
-	a = dbl(dbname,sql)
+	if casesensitive == True:
+		a = dbl(dbname,sql,cs=True)
+	else:
+		a = dbl(dbname,sql,cs=False)
 	content = '<div style="margin-bottom: .5em; text-align: center;"><a href="[XPREFIX][XSYSTEM]?logout=1">Click here to Log Out</a></div>'
 	content = content.replace('[XPREFIX]',xprefix)
 	content = content.replace('[XSYSTEM]',xsystem)
@@ -1329,8 +1353,9 @@ def mcmd(name):
 	name = name[:1].upper() + name[1:].lower()
 	termy = ''
 	if name == 'Search':
-		termx = '<INPUT TYPE="checkbox" NAME="casesensitive"> Match Case'
-		termx = ' Wildcards: % _'
+		termx  = ''
+		termx += '<INPUT TYPE="checkbox" NAME="casesensitive"> Match Case'
+		termx += ' &mdash; <span style="color: #00ffff; background: #000000;">&nbsp;Wildcards:</span><span style="color: #ff8844; background: #000000;">&nbsp;*&nbsp;?&nbsp;</span>'
 		termy = ' <INPUT TYPE="text"  NAME="searchterm"  SIZE=10 MAXLENGTH=40 VALUE="">'+termx
 	boil = '<td align="center"><INPUT TYPE="SUBMIT" VALUE="%s" NAME="perform">%s</td>' % (name.upper(),termy)
 	return boil

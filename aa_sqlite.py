@@ -2,16 +2,51 @@ import sqlite3
 
 class dbl(object):
 	"""Class to simplify access to sqlite3.
-	
-	      Author: fyngyrz  (Ben)
-	     Contact: fyngyrz@gmail.com (bugs, feature requests, kudos)
-	     Project: aa_sqlite.py
-	  Incep Date: February 1st, 2015
-	     LastRev: April 8th, 2015
-	  LastDocRev: April 14th, 2015
-	 Tab spacing: 4 (set your editor to this for sane formatting while reading)
-	     1st-Rel: 1.0.6
-	     Version: 1.0.8
+      Author: fyngyrz  (Ben)
+     Contact: fyngyrz@gmail.com
+              (bugs, feature requests, kudos, bitter rejections)
+     Project: aa_sqlite.py
+    Homepage: https://github.com/fyngyrz/aa_sqlite
+     License: None. It's free. *Really* free.
+              Defy invalid social and legal norms.
+ Disclaimers: 1) Probably completely broken. Do Not Use.
+                 You were explicitly warned. Phbbbbt.
+              2) My code is blackbox, meaning I wrote it without reference
+                 to OPC (other people's code.)
+              3) I can't check other people's contributions effectively,
+                 so if you use any version of aa_sqlite.py that incorporates
+                 accepted commits from others, you are risking the use of
+                 OPC, which may or may not be protected by copyright,
+                 patent, and the like, because our intellectual property
+                 system is pathological. The risks and responsibilities and
+                 any subsequent consequences are entirely yours. Have you
+                 written your congresscritter about patent and copyright
+                 reform yet?
+      Incep Date: February 1st, 2015
+         LastRev: January 15th, 2017
+      LastDocRev: January 15th, 2017
+     Tab spacing: 4 (set your editor to this for sane formatting while reading)
+     Dev Env: OS X 10.6.8, Python 2.6.1
+   Add'l Env: Debian 8.6, Python 2.7.9
+   Add'l Env: Ubuntu 12.04.5 LTS, Python 2.7.3
+	  Status: BETA
+    Policies: 1) I will make every effort to never remove functionality or
+                 alter existing functionality once past BETA stage. Anything
+                 new will be implemented as something new, thus preserving all
+                 behavior. The only intentional exceptions to this are if a
+                 bug is found that does not match the intended behavior,
+                 or I determine there is some kind of security risk. Remember,
+                 this only applies to production code. Until the BETA status
+                 is removed, ANYTHING may change.
+       Usage: Run examples in shell like so:    python aa_sqlite.py
+              Otherwise, it's an import library. See details below.
+     1st-Rel: 1.0.6
+     Version: 1.0.9
+     History:
+	    1.0.9 - case-sensitivity issues with sqlite addressed
+		1.0.8 - bugfixes
+		1.0.7 - bugfixes
+		1.0.6 - first public release
 	
 	The circumstances underlying why you would want to use this are:
 	
@@ -29,25 +64,27 @@ class dbl(object):
 	.tuples, or can be iterated for each tuple, which are the query data,
 	and .rows which tells how many (if any) rows were, or have been, retreived.
 	
-	In addition, there are three very handy utiltity functions that serve to
+	In addition, there are three very handy utility functions that serve to
 	keep DB data just the way you want (details above each function, below)::
 	
 		def sqclean2html(string):        # cleans up single quotes for HTML use
 		def sqclean2esc(string):         # cleans up single quotes for literal use
 		def launder(string,alsothis=''): # can clean up anything. :)
 	
-	As for the main tool, class dbl, you have a choice with queries, either heavy
-	or light memory use:
+	As for the main tool, class dbl, you have a choice with queries,
+	either heavy or light memory use:
 	
-	Returning all the tuples is memory-heavy, as they all have to be fetched
-	and stored within the object. Benefit: You know how many rows you have
-	before you process them. This is "heavy" use of class dbl.
+	Returning all the tuples is memory-heavy, as they all have to be
+	fetched and stored within the object. Benefit: You know how many
+	rows you have before you process them. This is "heavy" use of class
+	dbl. memory is cheap, and this is very effective if you are going to
+	process all rows anyway.
 	
-	Returning one tuple at a time is memory-light, as only one tuple has to
-	be stored in the object at one time. Issue: You don't know how many rows
-	will be retrieved, although object.rows is always set to how many rows
-	have been retrieved *thus far* as you retrieve additional rows. This  is
-	"light" use of class dbl.
+	Returning one tuple at a time is memory-light, as only one tuple has
+	to be stored in the object at one time. Issue: You don't know how
+	many rows will be retrieved, although object.rows is always set to
+	how many rows have been retrieved *thus far* as you retrieve
+	additional rows. This  is "light" use of class dbl.
 	
 	The object is printable, like so...
 	
@@ -95,11 +132,11 @@ class dbl(object):
 	
 	------------- Outline of Use ---------------------
 	
-	Basic memory heavy query operation:
+	Basic memory heavy query operation with case sensitive like:
 	
-	    a = dbl(dbname,sqlSELECT)        # db is closed upon object creation
-	    for tup in a.tuples:             # all SELECTed data is now in object
-	        # do things with tup[0...n]  # db already closed
+	    a = dbl(dbname,sqlSELECT,cs=True) # db is closed upon object creation
+	    for tup in a.tuples:              # all SELECTed data is now in object
+	        # do things with tup[0...n]   # db already closed
 	
 	Basic memory light query operation:
 	
@@ -147,19 +184,19 @@ class dbl(object):
 			print str(tup)					# do something with each as fetched
 		a.cmt()								# commits the changes
 		
-		Some explanation:
-		-----------------
-		These forms of use allow you to atomically change data without
-		anyone else getting in between you and the change on read OR
-		write operations. The DB is read/write locked for any other
-		accessing code other than YOUR object until you commit (so
-		don't hold on to that commit too long!) You can read the
-		changes you have made back with a deferred mode read, as
-		shown just above. This is ideal for utilizing a guaranteed
-		monotonically increasing index or serial number. Locked
-		databases will wait a little bit to see if the lock goes
-		away before they return an error. So quick operations as
-		shown here don't interfere with other users.
+		Some explanation about deferred operations:
+		-------------------------------------------
+		The deferred forms of use allow you to atomically change data
+		without anyone else getting in between you and the change on
+		read OR write operations. The DB is read/write locked for any
+		other accessing code other than YOUR object until you commit (so
+		don't hold on to that commit too long!) You can read the changes
+		you have made back with a deferred mode read, as shown just
+		above. This is ideal for utilizing a guaranteed monotonically
+		increasing index or serial number. Locked databases will wait a
+		little bit to see if the lock goes away before they return an
+		error. So quick operations as shown here don't interfere with
+		other users.
 	
 	*** Diagnostics normally accrue during deferred commit operations.
 		Because of this, you may wish to reset them prior to each op...
@@ -172,7 +209,37 @@ class dbl(object):
 	
 		...in this way, only the diags for the most recent deferred command will
 		be stored in the object at any one time.
-	
+		
+		Case Sensitivity
+		================
+		
+		sqlite is, inexplicably, not case-sensitive with LIKE();
+		PostgreSQL LIKE is case-sensitive, and its ILIKE is
+		case-insensitive. Which makes sense. sqlite's default
+		approach... does not make sense. sqlite is both missing ILIKE
+		and has the sense of LIKE backwards. So that's kind of a mess.
+		There is a way to coerce sqlite's LIKE into being
+		case-sensitive, and I've implemented it as a flag: cs=True.
+		
+		With cs=True either in the class instantiation or in a call to
+		dbl() with an extant object, LIKE is or becomes case-sensitive.
+		But now you don't have case INsensitivity. But there's an easy
+		way to make that happen in the query SQL.
+		
+		Say you have a db where the names column contains one name 'ben'
+		and one name 'Ben':
+		
+		case sensitive:
+		---------------
+		SELECT name FROM names WHERE name LIKE('ben)
+		result: 'ben'
+		
+		case INsensitive:
+		-----------------
+		SELECT name FROM names WHERE lower(name) LIKE('ben')
+		SELECT name FROM names WHERE upper(name) LIKE('BEN')
+		result: 'ben','Ben'
+		
 		Informational pragmas (but see note):
 		=====================================
 		dbl() knows how to return rows for:
@@ -183,7 +250,7 @@ class dbl(object):
 	
 		At the end of this module are some concrete examples that demonstrate
 		how to run commands and queries (both light and heavy), execute
-		deferred operations and so on.
+		deferred operations, demonstrate case-sensitivity,  and so on.
 		
 		You can actually run them. Just execute this file directly instead
 		of importing it, like this...
@@ -192,8 +259,7 @@ class dbl(object):
 	
 		...and the examples will run. Examining them and their outputs may
 		be enlightening.
-		
-	"""
+"""
 
 # Accumulates errors in user-reportable form
 # ------------------------------------------
@@ -329,7 +395,6 @@ class dbl(object):
 				self.looping = 0
 			else:
 				self.rows += 1
-				self.qdiag('momma')
 				yield self.row
 		self.qdiag('fetchone() sequence completed normally')
 		if self.defer == True:
@@ -368,6 +433,17 @@ class dbl(object):
 		if self.c == None:
 			self.qdiag('Cursor not open, cannot execute')
 		else:
+			if self.cs == True and self.csset == False:
+				try:
+					self.c.execute('PRAGMA CASE_SENSITIVE_LIKE = On')
+				except Exception,e:
+					self.qerr('Unable to set CASE_SENSITIVE_LIKE: "'+str(e)+'"')
+					self.qdiag('Case sensitivity failed to set')
+				else:
+					self.qdiag('Case sensitivity set')
+					self.csset = True
+			else:
+				self.qdiag('Case insensitive mode')
 			try: self.c.execute(self.qs)
 			except:
 				self.qerr('Execute exception thrown, check query/cmd string')
@@ -375,11 +451,12 @@ class dbl(object):
 			else:
 				self.qdiag('conn.execute OK')
 
-	def dbl(self,qs='',defer=None,commit=None,lean=None):
+	def dbl(self,qs='',defer=None,commit=None,lean=None,cs=None):
 		if defer != None: self.defer = defer
 		if commit != None: self.commit = commit
 		if lean != None: self.lean = lean
 		if qs != '': self.qs = qs
+		if cs != None: self.cs = cs
 
 		if self.lean == True:
 			self.qdiag('lean detected true')
@@ -440,6 +517,17 @@ class dbl(object):
 				else:
 					self.qdiag('conn.cursor() OK')
 
+			if self.cs == True and self.csset == False:
+				try:
+					self.c.execute('PRAGMA CASE_SENSITIVE_LIKE = On')
+				except Exception,e:
+					self.qerr('Unable to set CASE_SENSITIVE_LIKE: "'+str(e)+'"')
+				else:
+					self.qdiag('Case sensitivity set')
+					self.csset = True
+			else:
+				self.qdiag('Case insensitive mode')
+
 			try: self.c.execute(self.qs)
 			except:
 				self.qerr('Execute exception thrown, check query/cmd string')
@@ -448,7 +536,14 @@ class dbl(object):
 #
 # we only have selects here if we're not in lean mode
 #
-				if self.qs[0:6].upper() == "SELECT" or self.qs[0:17].upper() == "PRAGMA TABLE_INFO":
+				sel1  = "SELECT"
+				prag1 = "PRAGMA TABLE_INFO"
+				prag2 = 'PRAGMA CASE_SENSITIVE_LIKE'
+
+				if	self.qs[0:len(sel1)].upper() == sel1 or \
+					self.qs[0:len(prag1)].upper() == prag1:
+#					self.qs[0:len(prag2)].upper() == prag2:
+
 					if self.qs[0:6].upper() == "SELECT":
 						self.mode = "Query mode"
 					else:
@@ -492,7 +587,7 @@ class dbl(object):
 # forth. See class documentation for examples of use.
 # -----------------------------------------------------
 
-	def __init__(self,dbn='',qs='',defer=False,commit=True,lean=False):
+	def __init__(self,dbn='',qs='',defer=False,commit=True,lean=False,cs=False):
 		self.dbn    = dbn
 		self.qs     = qs
 		self.rows   = 0
@@ -506,6 +601,8 @@ class dbl(object):
 		self.c      = None
 		self.err    = None
 		self.ec     = 0
+		self.cs     = cs
+		self.csset	= False
 		self.diag   = None
 		self.dbl()
 
@@ -673,30 +770,22 @@ if __name__ == "__main__":
 	else:
 		fh.close()
 
-	sql = "SELECT theuni,ip FROM ips WHERE theuni IS NOT NULL LIMIT 10"
-
 	# HEAVY way
 	# =========
 	# You get all the tuples at once in a.tuples
 	# a.rows tells you how many tuples you got
 	# ------------------------------------------
-	a = dbl(thedb,sql)
-	for tup in a.tuples:
-		print str(tup)
 
-	# LIGHT way
-	# =========
+	# LIGHT way (lean=True)
+	# =====================
 	# b.rows is a *counter* that increments
 	# as you get tuples, not a total. You
 	# get one tuple every time you call
 	# object.tup()
 	# ---------------------------------
-	b = dbl(thedb,sql,lean=True)
-	for tup in b.tup():
-		print str(b.rows)+': '+str(tup[0])+','+str(tup[1])
 
-	# Heavy deferred example:
-	# -----------------------
+	# Heavy deferred commit example:
+	# -------------------------------
 	print 'Heavy:'
 	a = dbl(thedb,'',True,False)							# open, deferred commit
 	a.dbl("UPDATE thesn SET unibase = unibase + 1")			# increment SN
@@ -725,4 +814,65 @@ if __name__ == "__main__":
 
 	a.cmt()													# DB committed,closed here
 
-# don't mix light and heavy techniques on the same object!
+# ...don't mix light and heavy techniques on the same object!
+
+	# Here are light and heavy query examples
+	# Also demonstrations of case-sensitity management
+	# Note the distinction between mode and method
+	# ------------------------------------------------
+	thedb = 'mytestnames.db'
+	# if demo db doesn't exist, create it
+	# -----------------------------------
+	try:
+		fh = open(thedb)
+	except:
+		nt = ('Ben','haben','mobendar','benjy','ben','Sheila')
+		a = dbl(thedb,"create table names(uname text)")
+		for tup in nt:
+			b = dbl(thedb,"insert into names (uname) VALUES ('"+tup+"')")
+	else:
+		fh.close()
+
+	print "heavy, case-insensitive mode"
+	sql = "SELECT uname FROM names WHERE uname LIKE('ben')"
+	a = dbl(thedb,sql)
+	for tup in a.tuples:
+		print str(tup)
+
+	print "light, case-insensitive mode"
+	sql = "SELECT uname FROM names WHERE uname LIKE('ben')"
+	a = dbl(thedb,sql,lean=True)
+	for tup in a.tup():
+		print str(tup)
+	a.close()
+
+	print "heavy, case-sensitive mode, case-sensitive method"
+	sql = "SELECT uname FROM names WHERE uname LIKE('ben')"
+	a = dbl(thedb,sql,cs=True)
+	for tup in a.tuples:
+		print str(tup)
+
+	print "heavy, case-sensitive mode, case-insensitive method"
+	sql = "SELECT uname FROM names WHERE lower(uname) LIKE('ben')"
+	a = dbl(thedb,sql,cs=True)
+	for tup in a.tuples:
+		print str(tup)
+
+	print "light, case-sensitive mode, case-sensitive method"
+	sql = "SELECT uname FROM names WHERE uname LIKE('ben')"
+	a = dbl(thedb,sql,lean=True,cs=True)
+	for tup in a.tup():
+		print str(tup)
+	a.close()
+
+	print "light, case-sensitive mode, case-insensitive method"
+	sql = "SELECT uname FROM names WHERE lower(uname) LIKE('ben')"
+	a = dbl(thedb,sql,lean=True,cs=True)
+	for tup in a.tup():
+		print str(tup)
+	print 'demonstrating cs=True is sticky with connection open:'
+	sql = "SELECT uname FROM names WHERE uname LIKE('ben%')"
+	a = dbl(thedb,sql,lean=True,cs=True)
+	for tup in a.tup():
+		print str(tup)
+	a.close()
