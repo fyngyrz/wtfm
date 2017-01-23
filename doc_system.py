@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.10 Beta
+     Version: 0.0.11 Beta
      History: See changes.md
 """
 
@@ -784,6 +784,7 @@ def savepage():
 	global pagedisable
 	global pageseq
 	global debug
+	global warning
 
 	try:	snum = int(pageseq)
 	except:	snum = 10
@@ -794,8 +795,12 @@ def savepage():
 
 	# insanity?
 	# ---------
-	if webpagename.strip() == '': return
-	if projectname.strip() == '': return
+	if webpagename.strip() == '':
+		warning += '<br>Web page name not specified'
+		return
+	if projectname.strip() == '':
+		warning += '<br>Project name not specified'
+		return
 
 	# does project exist?
 	projectname = projectname.lower()

@@ -6,6 +6,12 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utlitilies and sample files are not tracked here.
 
 ### Log
+0.0.11
+ * Warning messages when page save fails because:
+    * specified project does not exist
+    * project name is blank
+	* page name is blank
+
 0.0.10
  * Search now does not require wrapping term with **
 
