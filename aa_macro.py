@@ -29,8 +29,8 @@ class macro(object):
                  you written your congresscritter about patent and
                  copyright reform yet?
   Incep Date: June 17th, 2015     (for Project)
-     LastRev: January 31st, 2017     (for Class)
-  LastDocRev: January 31st, 2017     (for Class)
+     LastRev: October 23rd, 2017     (for Class)
+  LastDocRev: October 23rd, 2017     (for Class)
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1 from inception
               OS X 10.12, Python 2.7.10 as of Jan 31st, 2017
@@ -64,7 +64,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.86 Beta
+     Version: 1.0.94 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -121,7 +121,7 @@ class macro(object):
 	HTML Lists
 	----------
 	[ul (lstyle=hstyle,)(istyle=hstyle,)(wrap=style,)(sep=X,)item1(Xitem2Xitem3...)]
-	[ol (lstyle=hstyle,)(istyle=hstyle,)(wrap=style,)(sep=X,)item1(Xitem2Xitem3...)]
+	[ol (lstyle=hstyle,)(istyle=hstyle,)(wrap=style,)(type=X)(start=N,)(sep=X,)item1(Xitem2Xitem3...)]
 	[iful (wrap=style,)(sep=X,)item1(Xitem2Xitem3...)] - more than one item makes a list
 	[ifol (wrap=style,)(sep=X,)item1(Xitem2Xitem3...)] - more than one item makes a list
 	[t (wrap=style,)(sep=X,)item1(Xitem2Xitem3...)]
@@ -166,6 +166,7 @@ class macro(object):
 	[hmap listName]									# creates 256-entry list of 1:1 2-digit hex char mappings
 	[postparse pythoncode]							# pretty-prints python (must replace [] {})
 	[pythparse pythoncode]							# pretty-prints python into local loc_pyth
+	[getc (tabsiz=n,)(tabchar=X,)(high=c|cp|oc)filename]	# c/cpp/oc file to aa_macro format
 	[lsub (ci=1,)(sep=X,)listName,content]			# sequenced replacement by list
 	[dlist (style=X,)(fs=X,)(ls=X,)(parms=X,)(inter=X)(ntl=X)(posts=X,)listName]
 													# output list elements, can be wrapped with style X
@@ -2191,14 +2192,20 @@ The contents of the list are safe to include in the output if you like.
 
 	def genlist(self,tag,data,ty):
 		o = ''
-		opts,data = self.popts(['wrap','sep','istyle','lstyle'],data)
+		opts,data = self.popts(['type','wrap','sep','istyle','lstyle','start'],data)
 		wraps = ''
 		sep = ','
 		istyle = ''
 		lstyle = ''
+		start = ''
+		ltype = ''
 		for el in opts:
 			if el[0] == 'wrap=':
 				wraps = el[1]
+			elif el[0] == 'type=':
+				ltype = ' type="'+el[1]+'"'
+			elif el[0] == 'start=':
+				start = ' start="'+el[1]+'"'
 			elif el[0] == 'sep=':
 				sep = el[1]
 				if sep == '': return o
@@ -2209,7 +2216,7 @@ The contents of the list are safe to include in the output if you like.
 		entries = data.split(sep)
 		if lstyle != '':
 			lstyle = ' style="%s"' % (lstyle)
-		o += '<%s%s>\n' % (ty,lstyle)						# BUILD a list
+		o += '<%s%s%s%s>\n' % (ty,ltype,start,lstyle)						# BUILD a list
 		if istyle != '':
 			istyle = ' style="%s"' % (istyle)
 		for en in entries:
@@ -3968,6 +3975,343 @@ The contents of the list are safe to include in the output if you like.
 				o = ' !embrace "%s" fail: %s! ' % (data,e)
 		return o
 
+	def csssplit(self,line):
+		ray = []
+		token = ''
+		ttype = 0
+		inquote = ''
+		slashcount = 0
+		slashing = 0
+		for c in line:
+			if c == '/':
+				slashcount += 1
+				if slashcount == 2:
+					slashing = 1
+					if len(token) > 1: # case where comment begins w/o whitespace
+						ray += [token[0:-1]]
+						token = '/'
+			else:
+				slashcount = 0
+			if slashing == 1:
+				token += c
+			elif c == '"':
+				if inquote == '"': # then this is closing quote
+					token += c
+					ray += [token]
+					token = ''
+					inquote = ''
+					ttype = 0
+					c = ''
+				else: # this is an opening quote
+					inquote = c
+					if token != '':
+						ray += [token]
+						token = ''
+						ttype = 4
+			if slashing == 1:
+				pass
+			elif inquote != '':
+				token += c
+			elif c == ' ' or c == '\t': # this is whitespace
+				if ttype == 0 or ttype == 1: # if this is a whitespace token
+					token += c
+				else: # NOT a whitespace token
+					if token != '': # add previous token to list if exists
+						ray += [token]
+					token = c # new token begins with this whitespace char
+				ttype = 1
+			elif (	(c >= 'a' and c <= 'z') or
+					(c >= 'A' and c <= 'Z') or
+					(c >= '0' and c <= '9') or
+					(c == '_') or
+					(c == '#' and token == '')):
+				if ttype == 0 or ttype == 2: # text token
+					token += c
+				else: # token is NOT text
+					if token != '': # add previous token to list
+						ray += [token]
+					token = c # new token begins with this text char
+				ttype = 2
+			else: # some kind of special character
+				if ttype == 0 or ttype == 3: # special char token
+					token += c
+				else: # token is NOT special
+					if token != '': # add previous token to list
+						ray += [token]
+					token = c # new token begins with this special char
+				ttype = 3
+		if token != '': # pending token?
+			ray += [token]
+		return ray
+
+	def ocsssplit(self,line):
+		ray = []
+		token = ''
+		ttype = 0
+		inquote = ''
+		slashcount = 0
+		slashing = 0
+		for c in line:
+			if c == '/':
+				slashcount += 1
+				if slashcount == 2:
+					slashing = 1
+					if len(token) > 1: # case where comment begins w/o whitespace
+						ray += [token[0:-1]]
+						token = '/'
+			else:
+				slashcount = 0
+			if slashing == 1:
+				token += c
+			elif c == '"':
+				if inquote == '"': # then this is closing quote
+					token += c
+					ray += [token]
+					token = ''
+					inquote = ''
+					ttype = 0
+					c = ''
+				else: # this is an opening quote
+					inquote = c
+					if token != '':
+						ray += [token]
+						token = ''
+						ttype = 4
+			if slashing == 1:
+				pass
+			elif inquote != '':
+				token += c
+			elif c == ' ' or c == '\t': # this is whitespace
+				if ttype == 0 or ttype == 1: # if this is a whitespace token
+					token += c
+				else: # NOT a whitespace token
+					if token != '': # add previous token to list if exists
+						ray += [token]
+					token = c # new token begins with this whitespace char
+				ttype = 1
+			elif (	(c >= 'a' and c <= 'z') or
+					(c >= 'A' and c <= 'Z') or
+					(c >= '0' and c <= '9') or
+					(c == '_') or
+					(c == '#' and token == '') or
+					(c == '@' and token == '')):
+				if ttype == 0 or ttype == 2: # text token
+					token += c
+				else: # token is NOT text
+					if token != '': # add previous token to list
+						ray += [token]
+					token = c # new token begins with this text char
+				ttype = 2
+			else: # some kind of special character
+				if ttype == 0 or ttype == 3: # special char token
+					token += c
+				else: # token is NOT special
+					if token != '': # add previous token to list
+						ray += [token]
+					token = c # new token begins with this special char
+				ttype = 3
+		if token != '': # pending token?
+			ray += [token]
+		return ray
+
+	def getc_fn(self,tag,data):
+		o = ''
+		opts,data = self.popts(['tabsiz','tabchar','high'],data)
+		tabsiz = 4
+		tabchar = '&nbsp;'
+		high = ''
+		for el in opts:
+			if el[0] == 'tabsiz=':
+				try:
+					tabsiz = int(el[1])
+				except:
+					pass
+			elif el[0] == 'tabchar=':
+				if el[1] == 'sp':
+					tabchar = ' '
+				else:
+					tabchar = el[1]
+			elif el[0] == 'high=':
+				high = el[1]
+		filename = data
+		try:
+			fh = open(filename)
+		except:
+			o = '--unable to open "%s"--' % (filename)
+		else:
+			fpre = 'fibble87pre'
+			fpost = 'fibble87post'
+			spre = 'glocker23pre'
+			spost = 'glocker23post'
+			stpre = 'wsp74pre'
+			stpost = 'wsp74post'
+			copre = 'ogy8080pre'
+			copost = 'ogy8080post'
+			pppre = 'sksk1802pre'
+			pppost = 'sksk1802post'
+			atpre = 'ghy8000pre'
+			atpost = 'ghy8000post'
+			ckeys = ['auto','break','case','char',
+					'const','continue','default','do',
+					'double','else','enum','extern',
+					'float','for','goto','if',
+					'int','long','register','return',
+					'short','signed','sizeof','static',
+					'struct','switch','typedef','union',
+					'unsigned','void','volatile','while']
+			cpkeys = ['alignas','alignof','and','and_eq',
+					'asm','atomic_cancel','atomic_commit','atomic_noexcept',
+					'auto','bitand','bitor','bool','break','case','catch','char',
+					'char16_t','char_32t','class','compl',
+					'concept','const','constexpr','conts_cast',
+					'continue','decltype','default','delete','do',
+					'double','dynamic_cast','else',
+					'enum','explicit','export','extern','false',
+					'float','for','friend','goto','if','import','inline',
+					'int','long','module','mutable',
+					'namespace','new','noexcept','not','not_eq',
+					'nullptr','operator','or','or_eq','private',
+					'protected','public','register','reinterpret_cast',
+					'requires','return',
+					'short','signed','sizeof','static','static_assert',
+					'static_cast','struct','switch','synchronized',
+					'template','this','thread_local','throw',
+					'true','try','typedef','typeid','typename','union',
+					'unsigned','using','virtual','void','volatile',
+					'wchar_t','while','xor','xor_eq']
+			ockeys = ['auto','break','case','char',
+					'const','continue','default','do',
+					'double','else','enum','extern',
+					'float','for','goto','if',
+					'int','long','register','return',
+					'short','signed','sizeof','static',
+					'struct','switch','typedef','union',
+					'unsigned','void','volatile','while',
+					'id','inline','restrict']
+			skeys = [' ','\t']
+			tr = tabchar * tabsiz
+			try:
+				spacefool = 'space6809fool'
+				for line in fh:
+					xx = ''
+					for c in line:
+						if c == chr(9):
+							ll = len(xx) # current line length
+							rm = ll % tabsiz # remainder to get to next tab
+							tr = spacefool * (tabsiz - rm)
+							xx += tr
+						else:
+							xx += c
+					line = xx
+					if high == 'c':
+						cline = self.csssplit(line)
+						line = ''
+						for el in cline:
+							cc = el[0:1]
+							if el in ckeys:
+								el = fpre + el + fpost
+							elif cc == ' ' or cc == '\t':
+								pass # whitespace
+							elif el[0:2] == '//':
+								el = copre + el + copost
+							elif cc == '"':
+								el = stpre + el + stpost
+							elif cc == '#':
+								el = pppre + el + pppost
+							elif (	(cc >= 'a' and cc <= 'z') or
+									(cc >= 'A' and cc <= 'Z') or
+									(c == '_') or
+									(cc >= '0' and cc <= '9')):
+								pass # not a keyword
+							else: # special chars
+								el = spre + el + spost
+							line += el
+					if high == 'cp':
+						cline = self.csssplit(line)
+						line = ''
+						for el in cline:
+							cc = el[0:1]
+							if el in cpkeys:
+								el = fpre + el + fpost
+							elif cc == ' ' or cc == '\t':
+								pass # whitespace
+							elif el[0:2] == '//':
+								el = copre + el + copost
+							elif cc == '"':
+								el = stpre + el + stpost
+							elif cc == '#':
+								el = pppre + el + pppost
+							elif (	(cc >= 'a' and cc <= 'z') or
+									(cc >= 'A' and cc <= 'Z') or
+									(c == '_') or
+									(cc >= '0' and cc <= '9')):
+								pass # not a keyword
+							else: # special chars
+								el = spre + el + spost
+							line += el
+					elif high == 'oc':
+						cline = self.ocsssplit(line)
+						line = ''
+						for el in cline:
+							cc = el[0:1]
+							if el in ockeys:
+								el = fpre + el + fpost
+							elif cc == ' ' or cc == '\t':
+								pass # whitespace
+							elif el[0:2] == '//':
+								el = copre + el + copost
+							elif cc == '"':
+								el = stpre + el + stpost
+							elif cc == '#':
+								el = pppre + el + pppost
+							elif cc == '@':
+								el = atpre + el + atpost
+							elif (	(cc >= 'a' and cc <= 'z') or
+									(cc >= 'A' and cc <= 'Z') or
+									(c == '_') or
+									(cc >= '0' and cc <= '9')):
+								pass # not a keyword
+							else: # special chars
+								el = spre + el + spost
+							line += el
+					oo = ''
+					for c in line:
+						if c == '<': oo += '&lt;'
+						elif c == '>': oo += '&gt;'
+						elif c == '[': oo += '[lb]'
+						elif c == ']': oo += '[rb]'
+						elif c == '{': oo += '[ls]'
+						elif c == '}': oo += '[rs]'
+						elif c == '"': oo += '&quot;'
+						elif c == '&': oo += '&amp;'
+						else: oo += c
+					oo = oo.replace(fpre,'<span style="color: #ff8844">')
+					oo = oo.replace(fpost,'</span>')
+					oo = oo.replace(spre,'<span style="color: #4488ff">')
+					oo = oo.replace(spost,'</span>')
+					oo = oo.replace(stpre,'<span style="color: #ffffff">')
+					oo = oo.replace(stpost,'</span>')
+					oo = oo.replace(copre,'<span style="color: #888888">')
+					oo = oo.replace(copost,'</span>')
+					oo = oo.replace(pppre,'<span style="color: #ff0000">')
+					oo = oo.replace(pppost,'</span>')
+					oo = oo.replace(atpre,'<span style="color: #ff00ff">')
+					oo = oo.replace(atpost,'</span>')
+					oo = oo.replace(spacefool,tabchar)
+					o += oo
+			except Exception,e:
+				try:
+					fh.close()
+				except:
+					pass
+				o += '--error while reading "%s": %s--' % (filename,str(e))
+			else:
+				try:
+					fh.close()
+				except:
+					o += '--error closing "%s"--' % (filename)
+		return o
+
 	def setFuncs(self): #    '':self._fn,
 		self.fns = {
 					# escape codes
@@ -4171,6 +4515,7 @@ The contents of the list are safe to include in the output if you like.
 					'pythparse':self.pythparse_fn, # [pythparse text]
 					'th'	: self.th_fn,		# [th integer] = st, nd, rd, th
 					'nd'	: self.nd_fn,		# [th integer] = 1st, 2nd, 3rd, 4th
+					'getc'	: self.getc_fn,		# [getc filename] import c text
 
 					# Miscellaneous
 					# -------------
@@ -4199,6 +4544,7 @@ The contents of the list are safe to include in the output if you like.
 		inout = 0
 		o = ''
 		fg = 1
+		lasttag = ''
 		OUT = 0
 		IN = 1
 		DEFER = 2
@@ -4240,15 +4586,18 @@ The contents of the list are safe to include in the output if you like.
 					s[dex:dex+6]  == '[hlit '):
 					state = DEFER
 					depth = 1
+					lasttag = tag
 					tag = ''
 					data = ''
 				elif c == '{': # this is equiv to '[s '
 					state = IN
+					lasttag = tag
 					tag = 's '
 					data = ''
 					depth = 1
 				else:
 					state = IN
+					lasttag = tag
 					tag = ''
 					data = ''
 					depth = 1
@@ -4277,6 +4626,7 @@ The contents of the list are safe to include in the output if you like.
 					state = OUT
 					depth = 0
 				else:
+					lasttag = tag
 					tag = macstack.pop()
 					tag += fx
 			elif state == IN:
@@ -4293,6 +4643,8 @@ The contents of the list are safe to include in the output if you like.
 				o += c
 		for key in self.refs.keys():
 			o = o.replace(key,self.refs.get(key,''))
+		if depth != 0:
+			o += 'ERROR:\n<br>lasttag = "%s"\n<br>Depth != 0 (%d)\n<br>tag="%s"\n<br>data="%s"' % (lasttag,depth,tag[:32],data[:32])
 		self.result = o
 		return o
 

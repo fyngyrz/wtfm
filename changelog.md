@@ -3,9 +3,14 @@
 ### Note
 
 This log reflects changes to the wftm documentation system. Other changes
-such as to the associated utlitilies and sample files are not tracked here.
+such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.12
+ * Renumber bug where identical page names cause renumber in multiple projects fixed
+ * improved HTML in page list generation
+ * Latest support libraries
+
 0.0.11
  * Warning messages when page save fails because:
     * specified project does not exist

@@ -268,14 +268,14 @@ def makevrow(label,tag,variable,length,lfmt='',efmt='',olimit=64,tt=1):
 	o += efmt % (s)
 	return o
 
-def maketextarea(label,tag,variable,lfmt='',efmt='',rows=8,cols=40,tt=1,pid=''):
+def maketextarea(label,tag,variable,lfmt='',efmt='',rows=8,cols=40,tt=1,pid='',mno=0):
 	tts = ''
 	tte = ''
 	if tt == 1:
 		tts = '<font face="courier">'
 		tte = '</font>'
-	if 0:
-		sty = 'style="font-size: 16px; font-family:Courier;" '
+	if mno != 0:
+		sty = 'style="font-size: 16px; font-family:Courier new,Monospace;" '
 	else:
 		sty = ''
 	key = '['+tag.upper()+']'

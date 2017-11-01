@@ -22,8 +22,8 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: January 23rd, 2017
-  LastDocRev: January 23rd, 2017
+     LastRev: November 1st, 2017
+  LastDocRev: November 1st, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.11 Beta
+     Version: 0.0.12 Beta
      History: See changes.md
 """
 
@@ -716,8 +716,8 @@ def paglist(term=None):
 		bgc = 'FFEEDD'
 		ccc = 'ffeedd'
 		b = table("#","</tt> Page Order "," "," Alpha Order ")
-		b.options(	hparms = 'align=right||bgcolor=%s|' % (bgc),
-					lparms = '||width=50 bgcolor=%s|' % (bgc))
+		b.options(	hparms = 'align="right"||bgcolor="#%s"|' % (bgc),
+					lparms = 'align="right"||width=50 bgcolor="#%s"|' % (bgc))
 		cpn = '%s <b><font color="#880000">==&gt;</font></b>' % (projectname)
 		for i in range(0,n):
 			tik = seqlist[i]
@@ -952,7 +952,7 @@ def resequence():
 	for tup in a.tuples:
 		num += 10
 		nam = str(clean(tup[0]))
-		sql = "UPDATE pages SET sequence = %d WHERE pagename='%s'" % (num,nam)
+		sql = "UPDATE pages SET sequence = %d WHERE pagename='%s' AND projectname='%s'" % (num,nam,projectname)
 		b = dbl(dbname,sql)
 	if do_debug == True: debug += 'reseq\n'
 
@@ -1350,7 +1350,7 @@ def mcrow(body,label,name,value):
 # text box elements
 # -----------------
 def mtrow(body,label,name,content,rows,cols,pid=''):
-	fi = maketextarea(label,name,content,rows=rows,cols=cols,pid=pid)
+	fi = maketextarea(label,name,content,rows=rows,cols=cols,pid=pid,mno=0)
 	body = body.replace('[' + name.upper() + ']',fi)
 	return body
 
