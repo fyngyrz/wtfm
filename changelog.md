@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.13
+ * Project Editor now tracks character count in style block
+
 0.0.12
  * Renumber bug where identical page names cause renumber in multiple projects fixed
  * improved HTML in page list generation

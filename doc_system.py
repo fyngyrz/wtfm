@@ -44,7 +44,7 @@ doc ="""Documentation Generation System
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      1st-Rel: 0.0.1
-     Version: 0.0.12 Beta
+     Version: 0.0.13 Beta
      History: See changes.md
 """
 
@@ -1513,9 +1513,11 @@ if mode == 'project':
 	prbody = mvrow(prbody,'Preview Path:',				'previewpath',		dequote(previewpath),	512)
 	prbody = mvrow(prbody,'Default Extension:',			'projectext',		dequote(projectext),	32)
 	prbody = delrow(prbody,'Allow Delete','projectallow')
-	hlp = '<br><br>(<i>Non-style, non-variable content is treated as commentary</i>)'
+	hlp  = '<br><br>(<i>Non-style, non-variable content is treated as commentary</i>)'
+	hlp += '<br><br>Content Size: <span id="pccount"></span>'
+	moregoods = 'id="pagecontentx" oninput="onCharInput()" '
 	prbody = mvrow(prbody,'Parent Project',				'parentname',	dequote(parentname),	64)
-	prbody = mtrow(prbody,'Project Styles:%s' % (hlp),	'projectstyles',	dequote(projectstyles),	16, 80)
+	prbody = mtrow(prbody,'Project Styles:%s' % (hlp),	'projectstyles',	dequote(projectstyles),	16, 80, pid=moregoods)
 	prbody = mcmds(prbody,gprcmds,rprcmds)
 	prbody = mlnks(prbody)
 	mybody = prbody
