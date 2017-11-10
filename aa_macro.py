@@ -29,8 +29,8 @@ class macro(object):
                  you written your congresscritter about patent and
                  copyright reform yet?
   Incep Date: June 17th, 2015     (for Project)
-     LastRev: October 23rd, 2017     (for Class)
-  LastDocRev: October 23rd, 2017     (for Class)
+     LastRev: November 10th, 2017     (for Class)
+  LastDocRev: November 10th, 2017     (for Class)
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1 from inception
               OS X 10.12, Python 2.7.10 as of Jan 31st, 2017
@@ -64,7 +64,7 @@ class macro(object):
 			  someone who wants to do you wrong. Having said that, see the sanitize()
 			  utility function within this class.
      1st-Rel: 1.0.0
-     Version: 1.0.94 Beta
+     Version: 1.0.98 Beta
      History:                    (for Class)
 	 	See changelog.md
 
@@ -87,10 +87,11 @@ class macro(object):
 	
 	Linking
 	-------
-	[a (tab,)URL(,linked text)]		# The WORD tab, not a tab character. As in a browser tab
+	[url (sep=|,)(nam=Name,)(css=CSS,)(tgt=_target,)URLsepITEM]
 	
-	Older Linking (will remain, but [a URL] is better)
+	Older Linking (will remain, but [url] is better)
 	--------------------------------------------------
+	[a (tab,)URL(,linked text)]		# The WORD tab, not a tab character. As in a browser tab
 	[web URL (text)]				# If you don't provide text, you get "On the web"
 	[link URL (text)]				# If you don't provide text, you get the URL as the text
 	[urlencode URL]					# converts certain chars to character entities, etc.:
@@ -236,6 +237,8 @@ class macro(object):
 	
 	Parsing and text processing
 	---------------------------
+	[alphalead (trail=1,)content]					# return leading alpha, discard remainder
+	[alphanumlead (trail=1,)content]				# return leading alphanumerics, discard remainder
 	[slice sliceSpec,contentToSlice]				# [slice 3:6,foobarfoo] = bar ... etc.
 	[splitcount N]									# limit number of splits to N for next split ONLY
 	[split splitSpec,contentToSplit]				# [split |,x|y|z] results in parms 0,1,2
@@ -757,8 +760,11 @@ The contents of the list are safe to include in the output if you like.
 		self.back = self.mcolor(back)
 
 	def popts(self,olist,data):
-		plist = data.split(',')
 		ropts = []
+		if data.find(',') != -1:
+			plist = data.split(',')
+		else:
+			return ropts,data
 		run = True
 		while run == True:
 			hit = False
@@ -2748,6 +2754,16 @@ The contents of the list are safe to include in the output if you like.
 		return ''
 
 	def low_img_fn(self,tag,data,getxy=False):
+		opts,data = self.popts(['lpath','wpath'],data)
+		blpath = lpath = self.lipath
+		bwpath = wpath = self.wepath
+		for el in opts:
+			if el[0] == 'lpath=':
+				lpath = el[1]
+			elif el[0] == 'wpath=':
+				wpath = el[1]
+		self.lipath = lpath
+		self.wepath = wpath
 		tit = ''
 		txy = ''
 		rv = ''
@@ -2772,6 +2788,8 @@ The contents of the list are safe to include in the output if you like.
 		if rv == '':
 			if getxy == True: txy = self.xyhelper(d1)
 			rv ='<a href="%s" target="_blank"><img%s alt="%s" title="%s" src="%s"></a>' % (d2,txy,tit,tit,self.wepath+d1)
+		self.lipath = blpath
+		self.wepath = bwpath
 		return rv
 
 	def img_fn(self,tag,data):
@@ -2790,6 +2808,40 @@ The contents of the list are safe to include in the output if you like.
 
 	def nc_fn(self,tag,data):
 		return data.replace(',','&#44;')
+
+	def url_fn(self,tag,data):
+		opts,data = self.popts(['sep','tgt','css','nam'],data)
+		sep='|'
+		tgt=''
+		css=''
+		nam=''
+		o = ''
+		for el in opts:
+			if el[0] == 'sep=':
+				if el[1] == '&#44;':
+					el[1] = ','
+				sep = el[1]
+			elif el[0] == 'tgt=':
+				tgt = ' target="'+el[1]+'"'
+			elif el[0] == 'css=':
+				css = ' style="'+el[1]+'"'
+			elif el[0] == 'nam=':
+				nam = ' name="'+el[1]+'"'
+		if data == '':
+			data = '|'
+		try:
+			url,string = data.split(sep)
+		except:
+			o = ' MALFORMED_URL Error '
+		else:
+			if data != '|':
+				o = '<a'+nam+css+tgt+' href="'+url+'">'+string+'</a>'
+			else: # no data provided
+				if nam=='':
+					o = ' EMPTY_URL_AND_NAM Error '
+				else:
+					o = '<a'+nam+'></a>'
+		return o
 
 	def a_fn(self,tag,data):
 		o = ''
@@ -3816,6 +3868,56 @@ The contents of the list are safe to include in the output if you like.
 			lx.append(float(el))
 		return lx
 
+	# [alphalead]
+	def alphalead_fn(self,tag,data):
+		o = ''
+		opts,data = self.popts(['trail'],data)
+		trail='0'
+		o = ''
+		t = ''
+		sw = 0
+		for el in opts:
+			if el[0] == 'trail=':
+				trail = el[1]
+		for c in data:
+			if ((sw == 0) and ((c <= 'z' and c >= 'a') or
+			    (c <= 'Z' and c >= 'A'))):
+				o += c;
+			else:
+				sw = 1
+				if trail == '1':
+					t += c
+				else:
+					break
+		if trail == '1':
+			o = t
+		return o
+
+	# [alphanumlead]
+	def alphanumlead_fn(self,tag,data):
+		opts,data = self.popts(['trail'],data)
+		trail='0'
+		o = ''
+		t = ''
+		sw = 0
+		for el in opts:
+			if el[0] == 'trail=':
+				trail = el[1]
+		for c in data:
+			if ((sw == 0) and ((c <= 'z' and c >= 'a') or
+			    (c <= 'Z' and c >= 'A') or
+			    (c <= '9' and c >= '0'))):
+				o += c;
+			else:
+				sw = 1
+				if trail == '1':
+					t += c
+				else:
+					break
+		if trail == '1':
+			o = t
+		return o
+
 	# [stage start end steps step]
 	def stage_fn(self,tag,data):
 		o = ''
@@ -4395,7 +4497,8 @@ The contents of the list are safe to include in the output if you like.
 					'link'	: self.link_fn,		# link URL (text) if no text, then linked URL
 					'web'	: self.web_fn,		# link URL (text) if no text, the "On the Web"
 					'urlencode': self.urle_fn,	# encodes space, ampersand, double quotes
-					
+					'url'	: self.url_fn,		# [url (sep=|,)(nam=Name,)(css=CSS,)(tgt=_target,)URLsepITEM]
+
 					# Image handling
 					# --------------
 					'img'	: self.img_fn,		# img emplacement from URL
@@ -4516,6 +4619,8 @@ The contents of the list are safe to include in the output if you like.
 					'th'	: self.th_fn,		# [th integer] = st, nd, rd, th
 					'nd'	: self.nd_fn,		# [th integer] = 1st, 2nd, 3rd, 4th
 					'getc'	: self.getc_fn,		# [getc filename] import c text
+					'alphalead': self.alphalead_fn, #[alphalead (trail=1,)string] return leading alpha
+					'alphanumlead': self.alphanumlead_fn, #[alphanumlead (trail=1,)string] return leading alpha
 
 					# Miscellaneous
 					# -------------
