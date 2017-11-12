@@ -2832,7 +2832,7 @@ The contents of the list are safe to include in the output if you like.
 		try:
 			url,string = data.split(sep)
 		except:
-			o = ' MALFORMED_URL Error '
+			o = ' MALFORMED_URL Error sep="%s" data="%s"' % (sep,data)
 		else:
 			if data != '|':
 				o = '<a'+nam+css+tgt+' href="'+url+'">'+string+'</a>'

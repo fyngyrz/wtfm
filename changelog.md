@@ -6,6 +6,10 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.14
+ * tocmod1.dsys now supports all 6 levels of HTML headings
+ * latest aa-macro.py
+
 0.0.13
  * Project Editor now tracks character count in style block
 

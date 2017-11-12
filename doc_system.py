@@ -21,12 +21,18 @@ doc ="""Documentation Generation System
                  like, because our intellectual property system is pathological. The risks and
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
-  Incep Date: June 17th, 2015
-     LastRev: November 1st, 2017
-  LastDocRev: November 1st, 2017
- Tab spacing: 4 (set your editor to this for sane formatting while reading)
-     Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
-      Status: BETA
+
+      Incep Date: June 17th, 2015
+     LastCodeRev: November 1st, 2017
+      LastDocRev: November 12th, 2017
+LastComponentRev: November 12th, 2017
+     Tab spacing: 4 (set your editor to this for sane formatting while reading)
+         Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
+          Status: BETA
+         1st-Rel: 0.0.1
+         Version: 0.0.14 Beta
+         History: See changes.md
+
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -43,9 +49,6 @@ doc ="""Documentation Generation System
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
-     1st-Rel: 0.0.1
-     Version: 0.0.13 Beta
-     History: See changes.md
 """
 
 import os
