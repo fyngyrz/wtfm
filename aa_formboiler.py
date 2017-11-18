@@ -237,7 +237,7 @@ def makeselector(label,ll,cginame,defs=None,lfmt=None,rfmt=None):
 	line += rfmt % (thing,)
 	return line
 
-# value selector
+# value selector as row
 #
 # retrieve with any of
 # getannfield(),getnfield(),getsafefield(),getfield()
@@ -249,9 +249,10 @@ def makevrow(label,tag,variable,length,lfmt='',efmt='',olimit=64,tt=1):
 	if tt == 1:
 		tts = '<font face="courier">'
 		tte = '</font>'
-	fl = l
+	fl = int(l)
 	if fl > olimit:
 		fl = olimit
+		l = str(olimit)
 	fl = str(fl)
 	key = '['+tag.upper()+']'
 	if lfmt == '':
@@ -265,6 +266,38 @@ def makevrow(label,tag,variable,length,lfmt='',efmt='',olimit=64,tt=1):
 	s = s.replace(key,str(variable))
 	if efmt == '':
 		efmt = '<td>'+tts+'%s'+tte+'</td></tr>'
+	o += efmt % (s)
+	return o
+
+# value selector as cell
+#
+# retrieve with any of
+# getannfield(),getnfield(),getsafefield(),getfield()
+# ---------------------------------------------------
+def makevcell(label,tag,variable,length,lfmt='',efmt='',olimit=64,tt=1):
+	l = str(length)
+	tts = ''
+	tte = ''
+	if tt == 1:
+		tts = '<font face="courier">'
+		tte = '</font>'
+	fl = int(l)
+	if fl > olimit:
+		fl = olimit
+		l = str(olimit)
+	fl = str(fl)
+	key = '['+tag.upper()+']'
+	if lfmt == '':
+		lfmt = '<td align="right">'+tts+'%s'+tte+'</td>'
+	o = lfmt % (label)
+	if 0:
+		sty = 'style="font-size: 16px; font-family:Courier;" '
+	else:
+		sty = ''
+	s = '<INPUT '+sty+'TYPE="TEXT" SIZE='+fl+' MAXLENGTH='+l+' NAME="'+tag+'" VALUE="'+key+'">'
+	s = s.replace(key,str(variable))
+	if efmt == '':
+		efmt = '<td>'+tts+'%s'+tte+'</td>'
 	o += efmt % (s)
 	return o
 
@@ -307,6 +340,25 @@ def makecheckrow(label,tag,variable,lfmt='',efmt=''):
 		s = s.replace(key,'')
 	if efmt == '':
 		efmt = '<td>%s</td></tr>'
+	o += efmt % (s)
+	return o
+
+# Checked option selector in cell
+#
+# retrieve with getacheckfield()
+# ------------------------------
+def makecheckcells(label,tag,variable,lfmt='',efmt=''):
+	key = '['+tag.upper()+']'
+	if lfmt == '':
+		lfmt = '<td align="right">%s</td>'
+	o = lfmt % (label)
+	s = '<input type="checkbox" name="'+tag+'" value="ON"'+key+'>'
+	if variable == 'ON':
+		s = s.replace(key,' CHECKED')
+	else:
+		s = s.replace(key,'')
+	if efmt == '':
+		efmt = '<td>%s</td>'
 	o += efmt % (s)
 	return o
 

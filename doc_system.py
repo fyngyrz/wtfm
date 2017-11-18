@@ -21,18 +21,12 @@ doc ="""Documentation Generation System
                  like, because our intellectual property system is pathological. The risks and
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
-
-      Incep Date: June 17th, 2015
-     LastCodeRev: November 1st, 2017
-      LastDocRev: November 12th, 2017
-LastComponentRev: November 12th, 2017
-     Tab spacing: 4 (set your editor to this for sane formatting while reading)
-         Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
-          Status: BETA
-         1st-Rel: 0.0.1
-         Version: 0.0.14 Beta
-         History: See changes.md
-
+  Incep Date: June 17th, 2015
+     LastRev: November 2nd, 2017
+  LastDocRev: November 2nd, 2017
+ Tab spacing: 4 (set your editor to this for sane formatting while reading)
+     Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
+      Status: BETA
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -49,6 +43,9 @@ LastComponentRev: November 12th, 2017
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
+     1st-Rel: 0.0.1
+     Version: 0.0.15 Beta
+     History: See changes.md
 """
 
 import os
@@ -434,8 +431,9 @@ except:
 	psql += ',pagestyle TEXT'	# the style that *wraps* this page
 	psql += ',pagelocals TEXT'	# the styles local to this page
 	psql += ',content TEXT'		# the actual page content
-	psql += ',extension TEXT'	# if the page has a disfferent extension than the default
-	psql += ',disable INTEGER'	# if the page is not to be generated
+	psql += ',extension TEXT'	# if the page has a different extension than the default
+	psql += ',disable INTEGER default 0'	# if the page is not to be generated
+	psql += ',noreseq INTEGER default 0'	# if the page is not to be resequenced
 	psql += ',sequence INTEGER'	# the order in which the pages are built and linked
 	a = dbl(dbname,'CREATE TABLE pages(%s)' % (psql))
 
@@ -533,7 +531,7 @@ pabody  = """
 [WEBPAGENAME]
 [PAGELOC]
 [EXTENSION]
-[PAGESEQ]
+<tr><td align="right"><font face="Courier">Seq Control:</font></td><td><table><tr><td>[PAGESEQ]</td><td>[NORESEQ]</td></tr></table></td></tr>
 [PAGEDISABLE]
 [PAGEALLOW]
 [PAGESTYLE]
@@ -701,7 +699,7 @@ def paglist(term=None):
 			ssql = " AND (pagelocals LIKE '"+term+"' OR content LIKE '"+term+"')"
 		else:
 			ssql = " AND (lower(pagelocals) LIKE lower('"+term+"')OR lower(content) LIKE lower('"+term+"'))"
-	sql  = "SELECT pagename||'||||'||sequence FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
+	sql  = "SELECT pagename||'||||'||sequence||'||||'||noreseq FROM pages WHERE projectname='%s'%s ORDER BY sequence" % (projectname,ssql)
 	if casesensitive == True:
 		a = dbl(dbname,sql,cs=True)
 	else:
@@ -721,18 +719,29 @@ def paglist(term=None):
 		b = table("#","</tt> Page Order "," "," Alpha Order ")
 		b.options(	hparms = 'align="right"||bgcolor="#%s"|' % (bgc),
 					lparms = 'align="right"||width=50 bgcolor="#%s"|' % (bgc))
-		cpn = '%s <b><font color="#880000">==&gt;</font></b>' % (projectname)
+		cpna = '%s <b><font color="#008800">==&gt;</font></b>' % (projectname)
+		cpnb = '%s <b><font color="#880000">==&gt;</font></b>' % (projectname)
 		for i in range(0,n):
 			tik = seqlist[i]
-			tup,sn = tik.split('||||')
+			tup,sn,nrs = tik.split('||||')
 			tak = alplist[i]
-			tap,discard = tak.split('||||')
+			tap,discard,vnrs = tak.split('||||')
+			if nrs == '0':
+				cpn = cpna
+			else:
+				cpn = cpnb
+			if vnrs == '0':
+				cpnc = cpna
+			else:
+				cpnc = cpnb
 			content += b.line(	sn,
 								' <a href="%s%s?mode=page&amp;webpagename=%s&amp;projectname=%s">&nbsp;%s %s</a>&nbsp;'	%	(xprefix,xsystem,str(tup),projectname,cpn,str(tup)),
 								'&nbsp;',
-								' <a href="%s%s?mode=page&amp;webpagename=%s&amp;projectname=%s">&nbsp;%s %s</a>&nbsp;'	%	(xprefix,xsystem,str(tap),projectname,cpn,str(tap))
+								' <a href="%s%s?mode=page&amp;webpagename=%s&amp;projectname=%s">&nbsp;%s %s</a>&nbsp;'	%	(xprefix,xsystem,str(tap),projectname,cpnc,str(tap))
 							)
 		content += b.finish()
+		content += '<p><b><font color="#008800">==&gt;</font></b> means pages will resequence<br>'
+		content += '<b><font color="#880000">==&gt;</font></b> means pages will <b>not</b> resequence</p>'
 	else:
 		content += '...No Pages Found<br>'
 	print thePage(	title   = 'Pages List',
@@ -759,6 +768,7 @@ webpagename = ''
 extension = ''
 pageseq = '10'
 pagedisable = ''
+noreseq = ''
 pagestyle = ''
 pageloc = ''
 pagelocal = ''
@@ -785,6 +795,7 @@ def savepage():
 	global pagecontent
 	global extension
 	global pagedisable
+	global noreseq
 	global pageseq
 	global debug
 	global warning
@@ -795,6 +806,10 @@ def savepage():
 	thedis = 0
 	if pagedisable == 'ON':
 		thedis = 1
+
+	thenrs = 0
+	if noreseq == 'ON':
+		thenrs = 1
 
 	# insanity?
 	# ---------
@@ -813,8 +828,10 @@ def savepage():
 		sql = "SELECT pagename FROM pages WHERE projectname='%s' AND pagename='%s'" % (clean(projectname),clean(webpagename))
 		a = dbl(dbname,sql)
 		if a.rows == 0:	# then insert, page does not exist
-			fields = 'pagename,pageloc,projectname,pagestyle,pagelocals,content,extension,disable,sequence'
-			values = "'%s','%s','%s','%s','%s','%s','%s','%s','%s'"
+			#         1        2       3           4         5          6       7         8       9        10
+			fields = 'pagename,pageloc,projectname,pagestyle,pagelocals,content,extension,disable,sequence,noreseq'
+			#          1    2    3    4    5    6    7    8    9    10
+			values = "'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'"
 			values = values % (	clean(webpagename),
 								clean(pageloc),
 								clean(projectname),
@@ -823,7 +840,8 @@ def savepage():
 								clean(pagecontent),
 								clean(extension),
 								str(thedis),
-								str(snum))
+								str(snum),
+								str(thenrs))
 			icmd = 'INSERT INTO pages (%s) VALUES (%s)' % (fields,values)
 		else:			# update, page exists - no need to update name or project
 			values  =  "pagestyle='%s'"
@@ -833,13 +851,16 @@ def savepage():
 			values += ",disable=%s"
 			values += ",sequence=%s"
 			values += ",pageloc='%s'"
+			values += ",noreseq=%s"
+
 			values = values % (	clean(pagestyle),
 								clean(pagelocal),
 								clean(pagecontent),
 								clean(extension),
 								str(thedis),
 								str(snum),
-								clean(pageloc))
+								clean(pageloc),
+								str(thenrs))
 			icmd = "UPDATE pages SET %s WHERE projectname='%s' AND pagename='%s'" % (values,clean(projectname),clean(webpagename))
 		a = dbl(dbname,icmd)
 		if do_debug == True: debug += 'save command result:' + str(a)
@@ -949,7 +970,7 @@ def resequence():
 	global do_debug
 	global debug
 	global projectname
-	sql = "SELECT pagename FROM pages WHERE projectname='%s' ORDER BY sequence" % (projectname)
+	sql = "SELECT pagename FROM pages WHERE projectname='%s' AND noreseq=0 ORDER BY sequence" % (projectname)
 	a = dbl(dbname,sql)
 	num = 0
 	for tup in a.tuples:
@@ -1228,6 +1249,8 @@ try:	pagecontent		= philter(form['pagecontent'].value)
 except:	pagecontent		= ''
 try:	pagedisable		= philter(form['pagedisable'].value)
 except:	pagedisable		= ''
+try:	noreseq			= philter(form['noreseq'].value)
+except:	noreseq			= ''
 
 # Capture style CGI data
 # ----------------------
@@ -1338,15 +1361,29 @@ if do_debug == True: debug += cmd + '\n'
 
 # text elements, one line
 # -----------------------
-def mvrow(body,label,name,content,length):
-	fi = makevrow(label,name,content,length)
+def mvrow(body,label,name,content,length,maxlength=64):
+	fi = makevrow(label,name,content,length,olimit=maxlength)
 	body = body.replace('[' + name.upper() + ']',fi)
 	return body
 
-# checkmark elements
-# ------------------
+# text elements, one cell
+# -----------------------
+def mvcells(body,label,name,content,length,maxlength=64):
+	fi = makevcell(label,name,content,length,olimit=maxlength)
+	body = body.replace('[' + name.upper() + ']',fi)
+	return body
+
+# checkmark elements in rows
+# --------------------------
 def mcrow(body,label,name,value):
 	fi = makecheckrow(label,name,value)
+	body = body.replace('[' + name.upper() + ']',fi)
+	return body
+
+# checkmark elements in pair of cells
+# -----------------------------------
+def mccells(body,label,name,value):
+	fi = makecheckcells(label,name,value)
 	body = body.replace('[' + name.upper() + ']',fi)
 	return body
 
@@ -1563,8 +1600,8 @@ elif mode == 'page':
 				if do_debug == True: debug += 'adding trailing "/"\n'
 				pretgt += '/'
 
-		#         0         1        2       3         4          5       6
-		fields = "extension,sequence,disable,pagestyle,pagelocals,content,pageloc"
+		#         0         1        2       3         4          5       6       7
+		fields = "extension,sequence,disable,pagestyle,pagelocals,content,pageloc,noreseq"
 		sql = "SELECT %s FROM pages WHERE projectname='%s' AND pagename='%s'" % (fields,clean(projectname),clean(webpagename))
 		a = dbl(dbname,sql)
 		if a.rows == 1:
@@ -1574,10 +1611,15 @@ elif mode == 'page':
 				preext = tup[0]
 			pageseq = str(tup[1])
 			pagedisable = str(tup[2])
+			noreseq = str(tup[7])
 			if pagedisable == '1':
 				pagedisable = 'ON'
 			else:
 				pagedisable = ''
+			if noreseq == '1':
+				noreseq = 'ON'
+			else:
+				noreseq = ''
 			pagestyle = unclean(tup[3])
 			pagelocal = unclean(tup[4])
 			pagecontent = unclean(tup[5])
@@ -1591,6 +1633,7 @@ elif mode == 'page':
 			preext = ''
 			pageseq = '10'
 			pagedisable = ''
+			noreseq = ''
 			pagestyle = ''
 			pagelocal = ''
 			pagecontent = ''
@@ -1604,7 +1647,10 @@ elif mode == 'page':
 	pabody = mvrow(pabody,'Non-default location:',	'pageloc',		dequote(pageloc),		32)
 
 	pabody = mvrow(pabody,'Non-default Extension:',	'extension',	dequote(extension),		32)
-	pabody = mvrow(pabody,'Page Sequence:',			'pageseq',		dequote(pageseq),		32)
+	
+	pabody = mvcells(pabody,'Page Sequence:',		'pageseq',		dequote(pageseq),		10)
+	pabody = mccells(pabody,'No Reseq:',			'noreseq',		dequote(noreseq))
+	
 	pabody = mcrow(pabody,'Page Disable:',			'pagedisable',	dequote(pagedisable))
 	pabody = delrow(pabody,'Allow Delete','pageallow')
 	pabody = mvrow(pabody,'Page Style:',			'pagestyle',	dequote(pagestyle),		32)

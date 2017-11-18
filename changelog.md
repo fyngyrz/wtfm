@@ -6,6 +6,35 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.15
+ * new `aa_formboiler.py`
+ * `editdb.py` added for database maintainance - BE CAREFUL: BACKUP old db first!
+ * Pages can now be locked out of renumbering.
+
+If you have not previously been using **wtfm**, you can ignore the following.
+
+Version 0.0.15 **REQUIRES** editing any existing database from version 14 or earlier.
+
+I have provided `editdb.py` to help you perform this process.
+You must copy `editdb.py` and `aa_qslite.py` to the directory where
+your database reside.
+
+First, **BACK UP YOUR CURRENT DATABASE** by copying it to a different name
+
+The following assumes `docsystem.db`
+is your db name... alter that if not.
+
+Enter these commands at the shell prompt:
+
+> `cd DIRECTORY_WHERE_DATABASE_RESIDES`
+> `./editdb.py`
+> `db=docsystem.db`
+> `qs=alter table pages add column noreseq default 0`
+> `x`
+> `q`
+
+Your old database is now compatible with 0.0.15
+
 0.0.14
  * tocmod1.dsys now supports all 6 levels of HTML headings
  * latest aa-macro.py
