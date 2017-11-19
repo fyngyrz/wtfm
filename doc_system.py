@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.16 Beta
+     Version: 0.0.17 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -95,9 +95,9 @@ var conpagecharcount = conpagechars.length.toString();
 previewblock = """<center>
 This area allows you to preview <b>aa_macro</b> syntax:
 &nbsp;<br>
-<div onkeyup="onpCharInput(event)" class="foo" id="dpagecontentx" name="dpagecontent" contenteditable="true" style="font-family: Courier; padding: .5em; text-align: left; border-color: #000000; border-width: 1px; border-style: solid; width: 60em; height: 3em;"></div>
+<div onkeyup="onpCharInput(event)" class="foo" id="dpagecontentx" name="dpagecontent" contenteditable="true" style="font-family: Courier; padding: .5em; text-align: left; border-color: #000000; border-width: 1px; border-style: solid; width: 60em; height: 3em; white-space: pre-wrap; "></div>
 &nbsp;<br>
-<div style="color: #00ff00; text-align: left; font-weight: bold; width: 60em; height: 3em; background-color: #000000;" id="diag"></div>
+<div style="white-space: pre-wrap; color: #00ff00; text-align: left; font-family: Courier; font-weight: bold; width: 60em; height: 3em; background-color: #000000;" id="diag"></div>
 &nbsp;<br>
 <div id="mesg" style="width: 60em; text-align: left;">Balance: </div>
 &nbsp;<br>
