@@ -22,11 +22,13 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: November 2nd, 2017
+     LastRev: November 19th, 2017
   LastDocRev: November 2nd, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
+     1st-Rel: 0.0.1
+     Version: 0.0.16 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -43,8 +45,6 @@ doc ="""Documentation Generation System
                  is removed, ANYTHING may change. Having said that, if something
                  changes that seriously inconverniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
-     1st-Rel: 0.0.1
-     Version: 0.0.15 Beta
      History: See changes.md
 """
 
@@ -91,6 +91,118 @@ var conpagecharcount = conpagechars.length.toString();
 }
 </SCRIPT>
 """
+
+previewblock = """<center>
+This area allows you to preview <b>aa_macro</b> syntax:
+&nbsp;<br>
+<div onkeyup="onpCharInput(event)" class="foo" id="dpagecontentx" name="dpagecontent" contenteditable="true" style="font-family: Courier; padding: .5em; text-align: left; border-color: #000000; border-width: 1px; border-style: solid; width: 60em; height: 3em;"></div>
+&nbsp;<br>
+<div style="color: #00ff00; text-align: left; font-weight: bold; width: 60em; height: 3em; background-color: #000000;" id="diag"></div>
+&nbsp;<br>
+<div id="mesg" style="width: 60em; text-align: left;">Balance: </div>
+&nbsp;<br>
+</center>
+
+"""
+
+previewscript = """<SCRIPT>
+function onpCharInput(e)
+{
+var brco = "ffff00";
+var brtco = "888888";
+var brtag = "008800";
+
+var sqco = "ff0000";
+var sqtco = "ff8800";
+var sqtag = "ff00ff";
+
+var anco = "ffff00";
+var antco = "5599FF";
+
+var quco = "ffffff";
+var qutco = "00ff00";
+
+var squco = "ffff00";
+var squtco = "4488FF";
+
+	var msg = document.getElementById("mesg");
+	var src = document.getElementById("dpagecontentx");
+	var dig = document.getElementById("diag");
+	var cpco = src.innerText;
+	var cpc = cpco;
+	var cpct = cpc.length.toString();
+	var cpcr = '';
+	var insq = 0;
+	var inbr = 0;
+	var inq = 0;
+	var ins = 0;
+	var pushed = '';
+	var bc = 0;
+	var sc = 0;
+	var sqb = 0;
+	var dqb = 0;
+	for (var i = 0; i < cpco.length; i++) // >
+	{
+		var c = cpco[i];
+		if (c == '[')      { bc = bc + 1; inbr += 1; pushed = '<font color="#'+brtco+'">'; c = '<font color="#'+brco+'">' + c + '</font><font color="#'+brtag+'">'; }
+		else if (c == ']') { bc = bc - 1; inbr -= 1; c = '</font><font color="#'+brco+'">' + c + '</font>'; }
+		else if (c == '{') { sc = sc + 1; insq += 1; pushed = '<font color="#'+sqtco+'">'; c = '<font color="#'+sqco+'">' + c + '</font><font color="#'+sqtag+'">'; }
+		else if (c == '}') { sc = sc - 1; insq -= 1; c = '</font><font color="#'+sqco+'">' + c + '</font>'; }
+		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + c + '</font><font color="#'+antco+'">'; }
+		else if (c == '>') { insq -= 1; c = '</font><font color="#'+anco+'">' + c + '</font>'; }
+		else if (c == ' ')
+		{
+			if (pushed != '') { c = '</font>' + c + pushed; pushed = ''; }
+		}
+		else if (c == '"')
+		{
+			if (dqb == 1) { dqb = 0; } else { dqb = 1; }
+			if (inq == 1) { inq=0; } else { inq=1;}
+			if (inq == 1)
+			{
+				c = '<font color="#'+quco+'">' + c + '</font>';
+				c = c + '<font color="#'+qutco+'">';
+			}
+			else // leaving quote
+			{
+				c = '</font><font color="#'+quco+'">' + c + '</font>';
+			}
+		}
+		else if (0) // (c == "'")
+		{
+			if (sqb == 1) { sqb = 0; } else { sqb = 1; }
+			if (ins == 1) { ins=0; } else { ins=1;}
+			if (ins == 1)
+			{
+				c = '<font color="#'+squco+'">' + c + '</font>';
+				c = c + '<font color="#'+squtco+'">';
+			}
+			else // leaving quote
+			{
+				c = '</font><font color="#'+squco+'">' + c + '</font>';
+			}
+		}
+		cpcr = cpcr + c;
+	}
+	
+	dig.innerHTML = cpcr;
+	var tgt = document.getElementById("pccount");
+	tgt.innerHTML = cpct;
+	var hi = '';
+	var ho = ''
+	var hsi = '';
+	var hso = ''
+	var dqi = 'ok';
+	var sqi = 'ok';
+	if (bc != 0) { hi = '<b><font color="#ff0000">'; ho = '</font></b>';}
+	if (sc != 0) { hsi = '<b><font color="#ff0000">'; hso = '</font></b>';}
+	if (sqb != 0) { sqi = '<b><font color="#ff0000">unbalanced</font>'; }
+	if (dqb != 0) { dqi = '<b><font color="#ff0000">unbalanced</font>'; }
+	msg.innerHTML = 'Balance: []='+hi+bc.toString()+ho+' / {}='+hsi+sc.toString()+hso+ ' / "='+dqi; //+"; // '="+sqi;
+}
+</SCRIPT>
+"""
+
 
 def bailer(msg=''):
 	global cookiejar
@@ -549,6 +661,7 @@ pabody  = """
 </table>
 </FORM>
 [DEBUG]
+[PREVIEWER]
 [REFERENCE]
 """
 
@@ -573,6 +686,7 @@ stbody  = """
 <tr>[LINKS]</tr>
 </table>
 </FORM>
+[PREVIEWER]
 <br>
 <div id="docwarn">
 <b>Note:</b><br>
@@ -610,6 +724,7 @@ prbody  = """
 <tr>[LINKS]</tr>
 </table>
 </FORM>
+[PREVIEWER]
 <br>
 <div id="docwarn">
 <b>Note:</b><br>
@@ -1559,6 +1674,7 @@ if mode == 'project':
 	prbody = mvrow(prbody,'Parent Project',				'parentname',	dequote(parentname),	64)
 	prbody = mtrow(prbody,'Project Styles:%s' % (hlp),	'projectstyles',	dequote(projectstyles),	16, 80, pid=moregoods)
 	prbody = mcmds(prbody,gprcmds,rprcmds)
+	prbody = prbody.replace('[PREVIEWER]',previewblock)
 	prbody = mlnks(prbody)
 	mybody = prbody
 elif mode == 'style':
@@ -1575,6 +1691,7 @@ elif mode == 'style':
 	stbody = mtrow(stbody,'Global Styles:%s' % (hlp),		'globalstyles',	dequote(globalstyles),	16, 80)
 	stbody = mcmds(stbody,gstcmds,rstcmds)
 	stbody = mlnks(stbody)
+	stbody = stbody.replace('[PREVIEWER]',previewblock)
 	mybody = stbody
 elif mode == 'page':
 	pretgt = ''
@@ -1662,10 +1779,10 @@ elif mode == 'page':
 	hlp += 'Content Size: <span id="pccount"></span>'
 	moregoods = 'id="pagecontentx" oninput="onCharInput()" '
 	pabody = mtrow(pabody,'Page Content:%s' % (hlp),			'pagecontent',	dequote(pagecontent),	10, 80, pid=moregoods)
+	pabody = pabody.replace('[PREVIEWER]',previewblock)
 	pabody = mcmds(pabody,gpacmds,rpacmds)
 	pabody = mlnks(pabody)
 	mybody = pabody
-
 
 # <span id="pccount"></span>
 
@@ -1689,7 +1806,7 @@ print thePage(	title   = mytitl,
 				styles  = styles,
 				body    = str(mybody),
 				valid   = 1,
-				forhead = metags+charcounter,
+				forhead = metags+charcounter+previewscript,
 				cookiejar = cookiejar,
 				forbody = colors+' onload="onCharInput();"',
 				doctype = '4.01')
