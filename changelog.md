@@ -6,6 +6,16 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.18
+ * HTML / aa-macro previewer improved
+ * added stand-along previewer HTML page
+
+0.0.17
+ * HTML / aa-macro previewer improved
+
+0.0.16
+ * HTML / aa-macro previewer added
+
 0.0.15
  * new `aa_formboiler.py`
  * `editdb.py` added for database maintainance - BE CAREFUL: BACKUP old db first!
