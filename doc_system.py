@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.22 Beta
+     Version: 0.0.23 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -135,7 +135,7 @@ border-style: solid;
 width: 90%;
 height: 8em;"></div>
 <div style="margin-top: .5em; width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
-Content Size: <span class="bar" id="xpccount"></span></div>
+Content Size: <span class="bar" id="xpccount">0</span></div>
 
 <div style="margin-left: auto; margin-right: auto; width: 90%;">
 <button onclick=showem()>Click for Demo</button>
@@ -159,12 +159,16 @@ var clr = document.getElementById("dpagecontentx");
 	clr.innerText = '';
 	clr = document.getElementById("pretty");
 	clr.innerText = '';
+	clr = document.getElementById("xpccount");
+	clr.innerHTML = '0';
 }
 function showem()
 {
-var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]' +
-'{style [built-in {style content} content]} unincorporated text' +
-'[built-in] {style} unincorporated "quoted" text can'+"'"+'t stop this';
+var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]\\n' +
+'{style [built-in {style content} content]} unincorporated text\\n' +
+'[built-in] {style} unincorporated "quoted" text can'+"'"+'t stop this\\n\\n' +
+'[style italics <i>[b]</i>]\\n' +
+'{italics slanty text}';
 
 var src = document.getElementById("dpagecontentx");
 	src.innerText = samt;
