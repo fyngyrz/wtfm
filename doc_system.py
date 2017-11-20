@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.20 Beta
+     Version: 0.0.21 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -43,7 +43,7 @@ doc ="""Documentation Generation System
                  encourages new and (hopefully) better stuff. But remember,
                  this only applies to production code. Until the BETA status
                  is removed, ANYTHING may change. Having said that, if something
-                 changes that seriously inconverniences you, let me know, and
+                 changes that seriously inconveniences you, let me know, and
                  I will try to do something about it if it is reasonably possible.
      History: See changes.md
 """
@@ -163,7 +163,7 @@ function showem()
 {
 var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]' +
 '{style [built-in {style content} content]} unincorporated text' +
-'[built-in] {style} unincorporated "quoted" text';
+'[built-in] {style} unincorporated "quoted" text can'+"'"+'t stop this';
 
 var src = document.getElementById("dpagecontentx");
 	src.innerText = samt;
@@ -186,7 +186,7 @@ var antco = "5599FF";
 var quco = "00ffff";
 var qutco = "ffffff";
 
-var squco = "ffff00";
+var squco = "ff00ff";
 var squtco = "4488FF";
 
 	var msg = document.getElementById("mesg");
@@ -234,6 +234,10 @@ var squtco = "4488FF";
 			{
 				c = '<\/font><font color="#'+quco+'">' + c + '<\/font>';
 			}
+		}
+		else if (c == "'")
+		{
+			c = '<font color="#'+squco+'">' + c + '<\/font>';
 		}
 		else if (0) // (c == "'")
 		{

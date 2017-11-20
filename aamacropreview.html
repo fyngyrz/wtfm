@@ -5,23 +5,31 @@
 <META name="description" content="aa_macro previewer / syntax display">
 <META name="keywords" content="HTML,CSS,JavaScript,aa_macro,wtfm">
 <SCRIPT type="text/javascript">
+window.onload = function()
+{
+    hitme = document.getElementById("dpagecontentx")
+    hitme.focus();
+    hitme.select();
+};
 function clearem()
 {
 var clr = document.getElementById("dpagecontentx");
 	clr.innerText = '';
+	clr.focus(); // these don't work in Safari - can't focus an empty element. Apple is lazy.
+	clr.select();
 	clr = document.getElementById("pretty");
 	clr.innerText = '';
-}
+};
 function showem()
 {
 var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]' +
 '{style [built-in {style content} content]} unincorporated text' +
-'[built-in] {style} unincorporated "quoted" text';
+'[built-in] {style} unincorporated "quoted" text can\'t stop this';
 
 var src = document.getElementById("dpagecontentx");
 	src.innerText = samt;
 	onpCharInput('foo');
-}
+};
 
 function onpCharInput(e)
 {
@@ -39,7 +47,7 @@ var antco = "5599FF";
 var quco = "00ffff";
 var qutco = "ffffff";
 
-var squco = "ffff00";
+var squco = "ff00ff";
 var squtco = "4488FF";
 
 	var msg = document.getElementById("mesg");
@@ -88,6 +96,10 @@ var squtco = "4488FF";
 				c = '<\/font><font color="#'+quco+'">' + c + '<\/font>';
 			}
 		}
+		else if (c == "'")
+		{
+			c = '<font color="#'+squco+'">' + c + '<\/font>';
+		}
 		else if (0) // (c == "'")
 		{
 			if (sqb == 1) { sqb = 0; } else { sqb = 1; }
@@ -119,7 +131,7 @@ var squtco = "4488FF";
 	if (sqb != 0) { sqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
 	if (dqb != 0) { dqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
 	msg.innerHTML = 'Balance: []='+hi+bc.toString()+ho+' / {}='+hsi+sc.toString()+hso+ ' / "='+dqi; //+"; // '="+sqi;
-}
+};
 </SCRIPT>
 <title>aa-macro syntax / display</title>
 </HEAD>

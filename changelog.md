@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.21
+ * single quote color in forms, previewer
+
 0.0.20
  * Removed visible demo text in forms, replaced with button
  * added clear button
