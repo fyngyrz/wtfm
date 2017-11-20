@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<HTML lang="en">
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META name="description" content="aa_macro previewer / syntax display">
+<SCRIPT type="text/javascript">
+function onpCharInput(e)
+{
+var brco = "ffff00";
+var brtco = "888888";
+var brtag = "008800";
+
+var sqco = "ff0000";
+var sqtco = "ff8800";
+var sqtag = "ff00ff";
+
+var anco = "ffff00";
+var antco = "5599FF";
+
+var quco = "00ffff";
+var qutco = "ffffff";
+
+var squco = "ffff00";
+var squtco = "4488FF";
+
+	var msg = document.getElementById("mesg");
+	var src = document.getElementById("dpagecontentx");
+	var dig = document.getElementById("pretty");
+	var cpco = src.innerText;
+	var cpc = cpco;
+	var cpct = cpc.length.toString();
+	var cpcr = '';
+	var insq = 0;
+	var inbr = 0;
+	var inq = 0;
+	var ins = 0;
+	var pushed = '';
+	var bc = 0;
+	var sc = 0;
+	var sqb = 0;
+	var dqb = 0;
+	for (var i = 0; i < cpco.length; i++) // >
+	{
+		var c = cpco[i];
+		if (c == '[')      { bc = bc + 1; inbr += 1; pushed = '<font color="#'+brtco+'">'; c = '<font color="#'+brco+'">' + c + '<\/font><font color="#'+brtag+'">'; }
+		else if (c == ']') { bc = bc - 1; inbr -= 1; pushed=''; c = '<\/font><font color="#'+brco+'">' + c + '<\/font>'; }
+
+		else if (c == '{') { sc = sc + 1; insq += 1; pushed = '<font color="#'+sqtco+'">'; c = '<font color="#'+sqco+'">' + c + '<\/font><font color="#'+sqtag+'">'; }
+		else if (c == '}') { sc = sc - 1; insq -= 1; pushed='';c = '<\/font><font color="#'+sqco+'">' + c + '<\/font>'; }
+
+		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + c + '<\/font><font color="#'+antco+'">'; }
+		else if (c == '>') { insq -= 1; c = '<\/font><font color="#'+anco+'">' + c + '<\/font>'; }
+
+		else if (c == ' ')
+		{
+			if (pushed != '') { c = '<\/font>' + c + pushed; pushed = ''; }
+		}
+		else if (c == '"')
+		{
+			if (dqb == 1) { dqb = 0; } else { dqb = 1; }
+			if (inq == 1) { inq=0; } else { inq=1;}
+			if (inq == 1)
+			{
+				c = '<font color="#'+quco+'">' + c + '<\/font>';
+				c = c + '<font color="#'+qutco+'">';
+			}
+			else // leaving quote
+			{
+				c = '<\/font><font color="#'+quco+'">' + c + '<\/font>';
+			}
+		}
+		else if (0) // (c == "'")
+		{
+			if (sqb == 1) { sqb = 0; } else { sqb = 1; }
+			if (ins == 1) { ins=0; } else { ins=1;}
+			if (ins == 1)
+			{
+				c = '<font color="#'+squco+'">' + c + '<\/font>';
+				c = c + '<font color="#'+squtco+'">';
+			}
+			else // leaving quote
+			{
+				c = '<\/font><font color="#'+squco+'">' + c + '<\/font>';
+			}
+		}
+		cpcr = cpcr + c;
+	}
+	
+	dig.innerHTML = cpcr;
+	var tgt = document.getElementById("pccount");
+	tgt.innerHTML = cpct;
+	var hi = '';
+	var ho = ''
+	var hsi = '';
+	var hso = ''
+	var dqi = 'ok';
+	var sqi = 'ok';
+	if (bc != 0) { hi = '<b><font color="#ff0000">'; ho = '<\/font><\/b>';}
+	if (sc != 0) { hsi = '<b><font color="#ff0000">'; hso = '<\/font><\/b>';}
+	if (sqb != 0) { sqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
+	if (dqb != 0) { dqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
+	msg.innerHTML = 'Balance: []='+hi+bc.toString()+ho+' / {}='+hsi+sc.toString()+hso+ ' / "='+dqi; //+"; // '="+sqi;
+}
+</SCRIPT>
+<title>aa-macro syntax / display</title>
+</HEAD>
+<BODY>
+<div style="text-align: center;">
+<div style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: pre-wrap;
+margin-left: auto; margin-right: auto;
+color: #00ff00;
+text-align: left;
+font-weight: bold;
+width: 90%;
+height: 8em;
+background-color: #000000;
+font-family: Courier;"
+id="pretty"></div>
+<div id="mesg"
+style="width: 90%;
+margin-left: auto; margin-right: auto;
+text-align:
+left;">Balance: </div>
+&nbsp;<br>
+<div onkeyup="onpCharInput(event)"
+class="foo"
+id="dpagecontentx"
+contenteditable="true"
+style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: pre-wrap;
+margin-left: auto; margin-right: auto;
+font-family: Courier;
+padding: .5em;
+text-align: left;
+border-color: #000000;
+border-width: 1px;
+border-style: solid;
+width: 90%;
+height: 8em;"></div>
+<div style="margin-top: .5em; width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+Content Size: <span class="bar" id="pccount"></span>
+</div>
+<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+&nbsp;<br>
+<span style="color: #0000ff;">
+<b>Sample <b>aa_macro</b> and HTML syntax; copy and paste into above text area (or try your own):</b>
+</span>
+<br>
+<span style="font-family: Courier; white-space: pre-wrap;">
+&lt;htmltag style="width: 30em;"&gt;foo&lt;/htmltag&gt; {style content} [built-in content]
+{style [built-in {style content} content]} unincorporated text
+[built-in] {style} unincorporated "quoted" text
+</span>
+</div>
+<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+<p>
+<b>Reference:</b><br>
+<a target="_blank" href="http://ourtimelines.com/aamacrodoc/tocpage.html">aa_macro manual</a><br>
+<a target="_blank" href="http://ourtimelines.com/wtfm/tocpage.html">wtfm manual</a>
+</p>
+</div>
+<P>
+<a href="http://validator.w3.org/check?uri=referer">
+<b>Validated HTML 5</b>
+</a>
+</p>
+</div>
+</BODY>
+</HTML>

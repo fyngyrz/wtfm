@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.17 Beta
+     Version: 0.0.18 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -92,16 +92,69 @@ var conpagecharcount = conpagechars.length.toString();
 </SCRIPT>
 """
 
-previewblock = """<center>
-This area allows you to preview <b>aa_macro</b> syntax:
+previewblock = """
+<br>
+<div style="text-align: center;">
+
+<div style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: pre-wrap;
+margin-left: auto; margin-right: auto;
+color: #00ff00;
+text-align: left;
+font-weight: bold;
+width: 90%;
+height: 8em;
+background-color: #000000;
+font-family: Courier;"
+id="pretty"></div>
+<div id="mesg"
+style="width: 90%;
+margin-left: auto; margin-right: auto;
+text-align:
+left;">Balance: </div>
+
 &nbsp;<br>
-<div onkeyup="onpCharInput(event)" class="foo" id="dpagecontentx" name="dpagecontent" contenteditable="true" style="font-family: Courier; padding: .5em; text-align: left; border-color: #000000; border-width: 1px; border-style: solid; width: 60em; height: 3em; white-space: pre-wrap; "></div>
+
+<div onkeyup="onpCharInput(event)"
+class="foo"
+id="dpagecontentx"
+contenteditable="true"
+style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: pre-wrap;
+margin-left: auto; margin-right: auto;
+font-family: Courier;
+padding: .5em;
+text-align: left;
+border-color: #000000;
+border-width: 1px;
+border-style: solid;
+width: 90%;
+height: 8em;"></div>
+<div style="margin-top: .5em; width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+Content Size: <span class="bar" id="xpccount"></span></div>
+
+<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 &nbsp;<br>
-<div style="white-space: pre-wrap; color: #00ff00; text-align: left; font-family: Courier; font-weight: bold; width: 60em; height: 3em; background-color: #000000;" id="diag"></div>
-&nbsp;<br>
-<div id="mesg" style="width: 60em; text-align: left;">Balance: </div>
-&nbsp;<br>
-</center>
+<span style="color: #0000ff;">
+<b>Sample <b>aa_macro</b> and HTML syntax; copy and paste into above text area (or try your own):</b>
+</span>
+<br>
+<span style="font-family: Courier; white-space: pre-wrap;">
+&lt;htmltag style="width: 30em;"&gt;foo&lt;/htmltag&gt; {style content} [built-in content]
+{style [built-in {style content} content]} unincorporated text
+[built-in] {style} unincorporated "quoted" text
+</span>
+</div>
+<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+<br>
+<b>Reference:</b><br>
+<a target="_blank" href="http://ourtimelines.com/aamacrodoc/tocpage.html">aa_macro manual</a><br>
+<a target="_blank" href="http://ourtimelines.com/wtfm/tocpage.html">wtfm manual</a>
+</div>
 
 """
 
@@ -119,15 +172,15 @@ var sqtag = "ff00ff";
 var anco = "ffff00";
 var antco = "5599FF";
 
-var quco = "ffffff";
-var qutco = "00ff00";
+var quco = "00ffff";
+var qutco = "ffffff";
 
 var squco = "ffff00";
 var squtco = "4488FF";
 
 	var msg = document.getElementById("mesg");
 	var src = document.getElementById("dpagecontentx");
-	var dig = document.getElementById("diag");
+	var dig = document.getElementById("pretty");
 	var cpco = src.innerText;
 	var cpc = cpco;
 	var cpct = cpc.length.toString();
@@ -144,15 +197,18 @@ var squtco = "4488FF";
 	for (var i = 0; i < cpco.length; i++) // >
 	{
 		var c = cpco[i];
-		if (c == '[')      { bc = bc + 1; inbr += 1; pushed = '<font color="#'+brtco+'">'; c = '<font color="#'+brco+'">' + c + '</font><font color="#'+brtag+'">'; }
-		else if (c == ']') { bc = bc - 1; inbr -= 1; c = '</font><font color="#'+brco+'">' + c + '</font>'; }
-		else if (c == '{') { sc = sc + 1; insq += 1; pushed = '<font color="#'+sqtco+'">'; c = '<font color="#'+sqco+'">' + c + '</font><font color="#'+sqtag+'">'; }
-		else if (c == '}') { sc = sc - 1; insq -= 1; c = '</font><font color="#'+sqco+'">' + c + '</font>'; }
-		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + c + '</font><font color="#'+antco+'">'; }
-		else if (c == '>') { insq -= 1; c = '</font><font color="#'+anco+'">' + c + '</font>'; }
+		if (c == '[')      { bc = bc + 1; inbr += 1; pushed = '<font color="#'+brtco+'">'; c = '<font color="#'+brco+'">' + c + '<\/font><font color="#'+brtag+'">'; }
+		else if (c == ']') { bc = bc - 1; inbr -= 1; pushed=''; c = '<\/font><font color="#'+brco+'">' + c + '<\/font>'; }
+
+		else if (c == '{') { sc = sc + 1; insq += 1; pushed = '<font color="#'+sqtco+'">'; c = '<font color="#'+sqco+'">' + c + '<\/font><font color="#'+sqtag+'">'; }
+		else if (c == '}') { sc = sc - 1; insq -= 1; pushed='';c = '<\/font><font color="#'+sqco+'">' + c + '<\/font>'; }
+
+		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + c + '<\/font><font color="#'+antco+'">'; }
+		else if (c == '>') { insq -= 1; c = '<\/font><font color="#'+anco+'">' + c + '<\/font>'; }
+
 		else if (c == ' ')
 		{
-			if (pushed != '') { c = '</font>' + c + pushed; pushed = ''; }
+			if (pushed != '') { c = '<\/font>' + c + pushed; pushed = ''; }
 		}
 		else if (c == '"')
 		{
@@ -160,12 +216,12 @@ var squtco = "4488FF";
 			if (inq == 1) { inq=0; } else { inq=1;}
 			if (inq == 1)
 			{
-				c = '<font color="#'+quco+'">' + c + '</font>';
+				c = '<font color="#'+quco+'">' + c + '<\/font>';
 				c = c + '<font color="#'+qutco+'">';
 			}
 			else // leaving quote
 			{
-				c = '</font><font color="#'+quco+'">' + c + '</font>';
+				c = '<\/font><font color="#'+quco+'">' + c + '<\/font>';
 			}
 		}
 		else if (0) // (c == "'")
@@ -174,19 +230,19 @@ var squtco = "4488FF";
 			if (ins == 1) { ins=0; } else { ins=1;}
 			if (ins == 1)
 			{
-				c = '<font color="#'+squco+'">' + c + '</font>';
+				c = '<font color="#'+squco+'">' + c + '<\/font>';
 				c = c + '<font color="#'+squtco+'">';
 			}
 			else // leaving quote
 			{
-				c = '</font><font color="#'+squco+'">' + c + '</font>';
+				c = '<\/font><font color="#'+squco+'">' + c + '<\/font>';
 			}
 		}
 		cpcr = cpcr + c;
 	}
 	
 	dig.innerHTML = cpcr;
-	var tgt = document.getElementById("pccount");
+	var tgt = document.getElementById("xpccount");
 	tgt.innerHTML = cpct;
 	var hi = '';
 	var ho = ''
@@ -194,10 +250,10 @@ var squtco = "4488FF";
 	var hso = ''
 	var dqi = 'ok';
 	var sqi = 'ok';
-	if (bc != 0) { hi = '<b><font color="#ff0000">'; ho = '</font></b>';}
-	if (sc != 0) { hsi = '<b><font color="#ff0000">'; hso = '</font></b>';}
-	if (sqb != 0) { sqi = '<b><font color="#ff0000">unbalanced</font>'; }
-	if (dqb != 0) { dqi = '<b><font color="#ff0000">unbalanced</font>'; }
+	if (bc != 0) { hi = '<b><font color="#ff0000">'; ho = '<\/font><\/b>';}
+	if (sc != 0) { hsi = '<b><font color="#ff0000">'; hso = '<\/font><\/b>';}
+	if (sqb != 0) { sqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
+	if (dqb != 0) { dqi = '<b><font color="#ff0000">unbalanced<\/font>'; }
 	msg.innerHTML = 'Balance: []='+hi+bc.toString()+ho+' / {}='+hsi+sc.toString()+hso+ ' / "='+dqi; //+"; // '="+sqi;
 }
 </SCRIPT>
