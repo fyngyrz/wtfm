@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-docsystemcfgname = 'reperdunkdoc_system.cfg'
+docsystemcfgname = 'doc_system.cfg'
 
 warning = ''
 debug = ''
