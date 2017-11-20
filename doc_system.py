@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.18 Beta
+     Version: 0.0.19 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -169,7 +169,7 @@ var sqco = "ff0000";
 var sqtco = "ff8800";
 var sqtag = "ff00ff";
 
-var anco = "ffff00";
+var anco = "884444";
 var antco = "5599FF";
 
 var quco = "00ffff";

@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.19
+ * Changed HTML angle bracket colors in previewer and forms
+
 0.0.18
  * HTML / aa-macro previewer improved
  * added stand-along previewer HTML page
