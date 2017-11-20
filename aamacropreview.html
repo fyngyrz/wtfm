@@ -136,10 +136,13 @@ var squtco = "4488FF";
 	msg.innerHTML = 'Balance: []='+hi+bc.toString()+ho+' / {}='+hsi+sc.toString()+hso+ ' / "='+dqi; //+"; // '="+sqi;
 };
 </SCRIPT>
-<title>aa-macro syntax / display</title>
+<title>aa_macro syntax / display</title>
 </HEAD>
 <BODY>
 <div style="text-align: center;">
+<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+<h3>Previewer for aa_macro and wtfm</h3>
+</div>
 <div style="padding: .5em;
 overflow-y: auto; 
 overflow-x: auto; 
@@ -185,11 +188,57 @@ Content Size: <span class="bar" id="pccount">0</span>
 </div>
 <br>
 <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
-<b>Reference Material:</b>
+<h3>Reference Material:</h3>
 <blockquote style="padding-top:0; margin-top:0;">
 <a target="_blank" href="http://ourtimelines.com/aamacrodoc/tocpage.html"><b>aa_macro</b> manual</a><br>
 <a target="_blank" href="http://ourtimelines.com/wtfm/tocpage.html"><b>wtfm</b> manual</a>
 </blockquote>
+<P>
+<h3>Ultra-basic Guide</h3>
+<P>
+<b>wtfm</b> is a documentation system based on <b>aa_macro</b>.
+</p>
+<P>
+<b>aa_macro</b> is a markup and macro language. It uses two types of tags:
+</p>
+<ol>
+<li>Built-ins, designated by one of <a target="_blank" href="http://ourtimelines.com/aamacrodoc/builtinref.html">168 <b>pre</b>-defined keywords</a> inside <i>square</i> brackets: <span style="font-family: Courier; font-weight: bold;">[keyword]</span></li>
+<li>Styles, designated by <b>user</b>-defined keywords inside <i>sqiggly</i> brackets: <span style="font-family: Courier; font-weight: bold;">{keyword}</span></li>
+</ol>
+
+<P>
+You can pass parameters to styles; the built-in <span style="font-family: Courier; font-weight: bold;">[b]</span> represents content
+past a style's keyword:
+</p>
+
+<div style="padding-left: 2em;">
+<table>
+<tr><td><span style="font-family: Courier; font-weight: bold;">[style italics &lt;i&gt;[b]&lt;i&gt;]</span></td><td><span style="color: #008800;">&larr; the style definition</span></td></tr>
+</table>
+</div>
+<blockquote>
+
+</blockquote>
+
+<P>
+When that style is used, the content, in this case, "<span style="font-family: Courier; font-weight: bold;">slanty text</span>", is passed
+to the style and placed where the <span style="font-family: Courier; font-weight: bold;">[b]</span> tag is located:
+</p>
+
+<div style="padding-left: 2em;">
+<table>
+<tr><td><span style="font-family: Courier; font-weight: bold;">{italics slanty text}</span></td><td><span style="color: #008800;">&larr; the style invocation</span></td></tr>
+<tr><td><span style="font-family: Courier; font-weight: bold;">&lt;i&gt;slanty text&lt;/i&gt;</span></td><td><span style="color: #008800;">&larr; the result</span></td></tr>
+</table>
+</div>
+
+<P>
+This is just the tip of the proverbial iceberg. <b>aa_macro's</b> broad
+selection of built-in keywords provides the tools to process your text in
+many ways; <b>aa_macro</b> styles can do almost anything to, and with, the
+content passed to them.
+</p>
+
 </div>
 <P>
 <a href="http://validator.w3.org/check?uri=referer">
