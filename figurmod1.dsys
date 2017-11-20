@@ -8,8 +8,9 @@
 [gstyle figt {figtag}[v fig_count]]
 
 [gstyle figank <a name="{figt}"></a>]
-[gstyle figlnk [splitcount 2][split |||,[b]]&bull;&nbsp;<a href="[parm 0]#{figtag}[parm 1]">[parm 2]</a><br>[nl]]
+[gstyle figlnk [splitcount 2][split |||,[b]]<a href="[parm 0]#{figtag}[parm 1]">[parm 2]</a><br>[nl]]
 
-[gstyle figure {upfig_count}{figank}[append fig_list,[v current_page]|||[v fig_count]|||[b]]]
+[gstyle figlow {upfig_count}{figank}[append fig_list,[v current_page]|||[v fig_count]|||[v xyzzy_foo12]]]
+[gstyle figure [local xyzzy_foo12 [b]][ne sep=|,style=figlow,[b]|]]
 
-[gstyle figures [dlist wrap=figlnk,fig_list]]
+[gstyle figures [ul sep=|||,[dlist inter=|||,wrap=figlnk,fig_list]]]
