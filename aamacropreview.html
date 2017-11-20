@@ -57,6 +57,7 @@ var squtco = "4488FF";
 	var src = document.getElementById("dpagecontentx");
 	var dig = document.getElementById("pretty");
 	var cpco = src.innerText;
+//	console.log(JSON.stringify(cpco))
 	var cpc = cpco;
 	var cpct = cpc.length.toString();
 	var cpcr = '';
@@ -213,7 +214,7 @@ past a style's keyword:
 
 <div style="padding-left: 2em;">
 <table>
-<tr><td><span style="font-family: Courier; font-weight: bold;">[style italics &lt;i&gt;[b]&lt;i&gt;]</span></td><td><span style="color: #008800;">&larr; the style definition</span></td></tr>
+<tr><td><span style="font-family: Courier; font-weight: bold;">[style italics &lt;i&gt;[b]&lt;/i&gt;]</span></td><td><span style="color: #008800;">&larr; the style definition</span></td></tr>
 </table>
 </div>
 <blockquote>
@@ -229,6 +230,19 @@ to the style and placed where the <span style="font-family: Courier; font-weight
 <table>
 <tr><td><span style="font-family: Courier; font-weight: bold;">{italics slanty text}</span></td><td><span style="color: #008800;">&larr; the style invocation</span></td></tr>
 <tr><td><span style="font-family: Courier; font-weight: bold;">&lt;i&gt;slanty text&lt;/i&gt;</span></td><td><span style="color: #008800;">&larr; the result</span></td></tr>
+</table>
+</div>
+
+<P>
+You can nest styles and built-ins. Here's how that can look:
+</P>
+
+<div style="padding-left: 2em;">
+<table>
+<tr><td><span style="font-family: Courier; font-weight: bold;">[style italics &lt;i&gt;[b]&lt;/i&gt;]</span></td><td><span style="color: #008800;">&larr; style definition</span></td></tr>
+<tr><td><span style="font-family: Courier; font-weight: bold;">[style bold &lt;b&gt;[b]&lt;/b&gt;]</span></td><td><span style="color: #008800;">&larr; style definition</span></td></tr>
+<tr><td><span style="font-family: Courier; font-weight: bold;">{italics {bold fat, slanty text}}</span></td><td><span style="color: #008800;">&larr; invocation</span></td></tr>
+<tr><td><span style="font-family: Courier; font-weight: bold;">&lt;i&gt;&lt;b&gt;fat, slanty text&lt;/b&gt;&lt;/i&gt;</span></td><td><span style="color: #008800;">&larr; the result</span></td></tr>
 </table>
 </div>
 
