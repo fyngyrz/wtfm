@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-docsystemcfgname = 'doc_system.cfg'
+docsystemcfgname = 'reperdunkdoc_system.cfg'
 
 warning = ''
 debug = ''
@@ -22,13 +22,13 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: November 19th, 2017
+     LastRev: November 20th, 2017
   LastDocRev: November 2nd, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.19 Beta
+     Version: 0.0.20 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -137,18 +137,11 @@ height: 8em;"></div>
 <div style="margin-top: .5em; width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 Content Size: <span class="bar" id="xpccount"></span></div>
 
-<div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
-&nbsp;<br>
-<span style="color: #0000ff;">
-<b>Sample <b>aa_macro</b> and HTML syntax; copy and paste into above text area (or try your own):</b>
-</span>
-<br>
-<span style="font-family: Courier; white-space: pre-wrap;">
-&lt;htmltag style="width: 30em;"&gt;foo&lt;/htmltag&gt; {style content} [built-in content]
-{style [built-in {style content} content]} unincorporated text
-[built-in] {style} unincorporated "quoted" text
-</span>
+<div style="margin-left: auto; margin-right: auto; width: 90%;">
+<button onclick=showem()>Click for Demo</button>
+<button onclick=clearem()>Click to Clear</button>
 </div>
+
 <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 <br>
 <b>Reference:</b><br>
@@ -159,6 +152,24 @@ Content Size: <span class="bar" id="xpccount"></span></div>
 """
 
 previewscript = """<SCRIPT>
+function clearem()
+{
+var clr = document.getElementById("dpagecontentx");
+	clr.innerText = '';
+	clr = document.getElementById("pretty");
+	clr.innerText = '';
+}
+function showem()
+{
+var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]' +
+'{style [built-in {style content} content]} unincorporated text' +
+'[built-in] {style} unincorporated "quoted" text';
+
+var src = document.getElementById("dpagecontentx");
+	src.innerText = samt;
+	onpCharInput('foo');
+}
+
 function onpCharInput(e)
 {
 var brco = "ffff00";
