@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.22
+ * little bit smarter about cursor focus in previewers
+
 0.0.21
  * single quote color in forms, previewer
 

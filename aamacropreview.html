@@ -9,15 +9,13 @@ window.onload = function()
 {
     hitme = document.getElementById("dpagecontentx")
     hitme.focus();
-    hitme.select();
 };
 function clearem()
 {
-var clr = document.getElementById("dpagecontentx");
+var clr = document.getElementById("pretty");
 	clr.innerText = '';
-	clr.focus(); // these don't work in Safari - can't focus an empty element. Apple is lazy.
-	clr.select();
-	clr = document.getElementById("pretty");
+	clr = document.getElementById("dpagecontentx");
+	clr.focus();
 	clr.innerText = '';
 };
 function showem()
@@ -29,6 +27,7 @@ var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-
 var src = document.getElementById("dpagecontentx");
 	src.innerText = samt;
 	onpCharInput('foo');
+	src.focus();
 };
 
 function onpCharInput(e)

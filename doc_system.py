@@ -28,7 +28,7 @@ doc ="""Documentation Generation System
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.21 Beta
+     Version: 0.0.22 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -155,6 +155,7 @@ previewscript = """<SCRIPT>
 function clearem()
 {
 var clr = document.getElementById("dpagecontentx");
+	clr.focus();
 	clr.innerText = '';
 	clr = document.getElementById("pretty");
 	clr.innerText = '';
@@ -168,6 +169,7 @@ var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-
 var src = document.getElementById("dpagecontentx");
 	src.innerText = samt;
 	onpCharInput('foo');
+	src.focus();
 }
 
 function onpCharInput(e)
