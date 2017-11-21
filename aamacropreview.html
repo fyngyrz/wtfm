@@ -35,7 +35,7 @@ function test()
 var srx = document.getElementById("dpagecontentx");
 var drx = document.getElementById("aaresult");
 var txx = srx.innerText;
-	rval = syncCallAjax(JSON.stringify(txx));
+	rval = syncCallAjax(JSON.stringify(txx.substring(0,8192)));
 	drx.innerText = JSON.parse(rval);
 }
 
