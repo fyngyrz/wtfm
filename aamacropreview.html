@@ -10,6 +10,35 @@ window.onload = function()
     hitme = document.getElementById("dpagecontentx")
     hitme.focus();
 };
+
+// this is synchronous - result returns only when called script provides it
+// ------------------------------------------------------------------------
+function syncCallAjax(spdq_myData)
+{
+var remote = '__Unset__';
+var request = new XMLHttpRequest();
+var remote_url;
+ 
+	remote_url = '/cgi-bin/fakeaamacro.py?myData=' + encodeURIComponent(spdq_myData);
+	request.open('GET', remote_url, false);  // false makes the request synchronous
+	request.send(null);
+ 
+	if (request.status === 200)
+	{
+		remote = request.responseText;
+	}
+	return(remote);
+}
+
+function test()
+{
+var srx = document.getElementById("dpagecontentx");
+var drx = document.getElementById("aaresult");
+var txx = srx.innerText;
+	rval = syncCallAjax(JSON.stringify(txx));
+	drx.innerText = JSON.parse(rval);
+}
+
 function clearem()
 {
 var clr = document.getElementById("pretty");
@@ -17,15 +46,14 @@ var clr = document.getElementById("pretty");
 	clr = document.getElementById("dpagecontentx");
 	clr.focus();
 	clr.innerText = '';
+	clr = document.getElementById("aaresult");
+	clr.innerText = '';
 	clr = document.getElementById("pccount");
 	clr.innerText = '0';
 };
 function showem()
 {
-var samt = '<htmltag style="width: 30em;">foo<\/htmltag> {style content} [built-in content]\n' +
-'{style [built-in {style content} content]} unincorporated text\n' +
-'[built-in] {style} unincorporated "quoted" text can\'t stop this\n\n' +
-'[style italics <i>[b]</i>]\n' +
+var samt = '[style italics <i>[b]</i>]  \n' +
 '{italics slanty text}';
 
 var src = document.getElementById("dpagecontentx");
@@ -79,8 +107,8 @@ var squtco = "4488FF";
 		else if (c == '{') { sc = sc + 1; insq += 1; pushed = '<font color="#'+sqtco+'">'; c = '<font color="#'+sqco+'">' + c + '<\/font><font color="#'+sqtag+'">'; }
 		else if (c == '}') { sc = sc - 1; insq -= 1; pushed='';c = '<\/font><font color="#'+sqco+'">' + c + '<\/font>'; }
 
-		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + c + '<\/font><font color="#'+antco+'">'; }
-		else if (c == '>') { insq -= 1; c = '<\/font><font color="#'+anco+'">' + c + '<\/font>'; }
+		else if (c == '<') { insq += 1; c = '<font color="#'+anco+'">' + '&lt;' + '<\/font><font color="#'+antco+'">'; }
+		else if (c == '>') { insq -= 1; c = '<\/font><font color="#'+anco+'">' + '&gt;' + '<\/font>'; }
 
 		else if (c == ' ')
 		{
@@ -157,11 +185,28 @@ height: 8em;
 background-color: #000000;
 font-family: Courier;"
 id="pretty"></div>
+
 <div id="mesg"
 style="width: 90%;
 margin-left: auto; margin-right: auto;
 text-align:
 left;">Balance: </div>
+&nbsp;<br>
+
+<div style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: pre-wrap;
+margin-left: auto; margin-right: auto;
+color: #00ff00;
+text-align: left;
+font-weight: bold;
+width: 90%;
+height: 8em;
+background-color: #000000;
+font-family: Courier;"
+id="aaresult"></div>
+
 &nbsp;<br>
 <div onkeyup="onpCharInput(event)"
 class="foo"
@@ -184,8 +229,11 @@ height: 8em;"></div>
 Content Size: <span class="bar" id="pccount">0</span>
 </div>
 <div style="margin-left: auto; margin-right: auto; width: 90%;">
+
 <button onclick=showem()>Click for Demo</button>
+<button onclick=test()>Click to Test</button>
 <button onclick=clearem()>Click to Clear</button>
+
 </div>
 <br>
 <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
