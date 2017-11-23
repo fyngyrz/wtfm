@@ -106,7 +106,11 @@ var demos = [
 
 'Casing:\n\n[upper caps locked]\n[lower NO Caps for YOU]\n[capt case a title]\n[capw word casing]\n[caps sentence casing.]',
 
-'Date and time:\n\n[date] [time]',
+'Date and time:\n\n[date] [time]\n' +
+'[time mode=12,sfx=auto]\n' +
+'[local t [time mode=12,sfx=auto]][int [slice 0:2,[v t]]]:[slice 2:4,[v t]][slice 6:,[v t]]\n' +
+'[time sfx= o\'clock]\n' +
+'[time mode=12,asfx= ante meridiem,psfx= post meridiem]\n',
 
 'Escapes:\n\nBrackets: [lb][rb] Squigglies: [ls][rs] Vertical Bar: [vb] Comma: [co]',
 
@@ -440,7 +444,7 @@ to peruse the
 <b>aa_macro</b> is a markup and macro language. It uses two types of tags:
 </p>
 <ol>
-<li>Built-ins, designated by one of <a target="_blank" href="http://ourtimelines.com/aamacrodoc/builtinref.html">169 <b>pre</b>-defined keywords</a> inside <i>square</i> brackets: <span style="font-family: Courier; font-weight: bold;">[keyword]</span></li>
+<li>Built-ins, designated by one of <a target="_blank" href="http://ourtimelines.com/aamacrodoc/builtinref.html">171 <b>pre</b>-defined keywords</a> inside <i>square</i> brackets: <span style="font-family: Courier; font-weight: bold;">[keyword]</span></li>
 <li>Styles, designated by <b>user</b>-defined keywords inside <i>squiggly</i> brackets: <span style="font-family: Courier; font-weight: bold;">{keyword}</span></li>
 </ol>
 
