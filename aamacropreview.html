@@ -35,45 +35,93 @@ var checked = '<span class="cchk" style="background: #4444cc; color: #ffffff;">[
 var unchecked = '<span class="cbak"><span class="cchk" style="background: #ffffff; color: #ffffff;">[iamacheck]</span></span>&nbsp;'+verbiage;
 
 var dindex = -1;
-var d1 = 'An italics style:\n\n[style italics <i>[b]</i>]  \n' +
-'{italics slanty text}';
-var d2 = 'A more concise italics style:\n\n[style i <i>[b]</i>]  \n' +
-'{i slanty text}';
-var d3 = 'A bold text style:\n\n[style b <b>[b]</b>]  \n' +
-'{b bold text}';
-var d4 = 'Nesting styles:\n\n[style b <b>[b]</b>]  \n' +
+var demos = [
+
+'Comments:\n\nSome text[comment This is a comment]',
+
+'An italics style:\n\n[style italics <i>[b]</i>]  \n' +
+'{italics slanty text}',
+
+'A more concise italics style:\n\n[style i <i>[b]</i>]  \n' +
+'{i slanty text}',
+
+'A bold text style:\n\n[style b <b>[b]</b>]  \n' +
+'{b bold text}',
+
+'Nesting styles:\n\n[style b <b>[b]</b>]  \n' +
 '[style i <i>[b]</i>]  \n' +
-'{b {i bold, italic text}}';
-var d5 = 'A CSS style:\n\n[style x <span style="color: #00ff00; font-family: Courier;">[b]</span>]  \n' +
-'{x Fixed font in green}';
-var d6 = 'URLs:\n\n[url http://ourtimelines.com/|Timelines!]';
-var d7 = 'Unparameterized replacement:\n\n[style otl [url http://ourtimelines.com/|Timelines!]]  \n' +
-'{otl}';
-var d8 = 'Structured paragraph:\n\n[style p <p>[nl][b][nl]</p>]  \n' +
-'{p This is a paragraph}';
-var d9 = 'Stack operations:\n\n[push bar]foo[pop]';
-var d10 = 'HTML list (UL or OL):\n\n[ul sep=|,foo|bar|bip]';
-var d11 = 'Data dictionaries:\n\n[dict mystuff,foo:bar,this:that,widget:wodget,she:he]  \n' +
-'[d mystuff,widget]';
-var d12 = 'Variables:\n\n[local test 1][global ing 2]  \n' +
-'[v test][v ing]';
-var d13 = 'Math:\n\n[local num 2][add [v num] 3]';
-var d14 = 'Roman numerals:\n\n[roman 27]';
-var d15 = 'Slicing:\n\n[slice 3:6,foobarbip]';
-var d16 = 'Multiple parameters:\n\n[style sect [split |,[b]]<h1>[parm 0]</h1>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
-'{sect Title|Content}';
-var d17 = 'Base conversion:\n\n[htodec 11]';
-var d18 = 'Soundex:\n\n[soundex Knuth]';
-var d19 = 'String replacement:\n\n[replace x,q,wxyz]';
-var d20 = 'Casing:\n\n[upper caps locked]\n[lower NO Caps for YOU]\n[capt case a title]\n[capw word casing]\n[caps sentence casing.]';
-var d21 = 'Date and time:\n\n[date] [time]';
-var d22 = 'Escapes: [lb][rb] [ls][rs] [vb]';
-var d23 = 'Forward references:\n\n[fref overhere]\n' +
+'{b {i bold, italic text}}',
+
+'A CSS style:\n\n[style x <span style="color: #00ff00; font-family: Courier;">[b]</span>]  \n' +
+'{x Fixed font in green}',
+
+'URLs:\n\n[url http://ourtimelines.com/|Timelines!]',
+
+'URL Encode:\n\nhttp://ourtimelines.com/foo.cgi?stuff=[urlencode some text]',
+
+'Unparameterized replacement:\n\n[style otl [url http://ourtimelines.com/|Timelines!]]  \n' +
+'{otl}',
+
+'Structured paragraph:\n\n[style p <p>[nl][b][nl]</p>]  \n' +
+'{p This is a paragraph}',
+
+'Stack operations:\n\n[push bar]foo[pop]',
+
+'HTML list (UL or OL):\n\n[ul sep=|,foo|bar|bip]',
+
+'Data list:\n\n[list mylist,apple,pomegranate,cherry]  \n' +
+'[asort mylist]  \n' +
+'[style show Data list element: <i>[b]</i><br>[nl]]  \n' +
+'[dlist mylist]\n' +
+'[dlist style=show,mylist]',
+
+'Data dictionaries:\n\n[dict mystuff,foo:bar,this:that,widget:wodget,she:he]  \n' +
+'[d mystuff,widget]',
+
+'Variables:\n\n[local test 1][global ing 2]  \n' +
+'[v test][v ing]',
+
+'Math:\n\n[local num 2][add [v num] 3]',
+
+'Numeric suffixes:\n\n[style sfx [b][th [b]]]  \n{sfx 1}\n{sfx 2}\n{sfx 3}\n{sfx 4}',
+
+'Comma-separation:\n\n[fcsep 1024]\n[fcsep 9764343.002]\n[csep 2048]\n[csep 1]',
+
+'Roman numerals:\n\n[roman 27]',
+
+'Slicing:\n\n[slice 3:6,foobarbip]',
+
+'Multiple parameters:\n\n[style section [split |,[b]]<h1>[parm 0]</h1>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
+'{section Title|Content}',
+
+'Base conversion:\n\n[htodec 11]',
+
+'Soundex:\n\n[soundex Knuth]',
+
+'Word Counting:\n\n[local foo so is this]  \n[wc this is a test]\n[wc [v foo]]',
+
+'Character conversion:\n\n[chr 65]\n[ord A]',
+
+'String replacement:\n\n[replace x,q,wxyz]',
+
+'Casing:\n\n[upper caps locked]\n[lower NO Caps for YOU]\n[capt case a title]\n[capw word casing]\n[caps sentence casing.]',
+
+'Date and time:\n\n[date] [time]',
+
+'Escapes:\n\nBrackets: [lb][rb] Squigglies: [ls][rs] Vertical Bar: [vb] Comma: [co]',
+
+'Forward references:\n\n[fref overhere]\n' +
 'intervening content...\n' +
 '[resolve overhere,arrived later]  \n' +
-'...and then a little more content.';
+'...and then a little more content.',
 
-var demos = [d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18,d19,d20,d21,d22,d23];
+'Tables:\n\n[table border=1,\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
+
+'Images:\n\n[lipath /safebox/]'+
+'[wepath /hpics/]  \n' +
+'[limg HMSVictory.jpg]\n' +
+'[limg title=HMS Victory,HMSVictory.jpg]\n' +
+'[limg target=http://ourtimelines.com,HMSVictory.jpg]'];
 
 window.onload = function()
 {
@@ -365,11 +413,13 @@ Content Size: <span class="bar" id="pccount">0</span>
 
 <P>
 
-<b>Next&nbsp;Demo</b> and <b>Prev&nbsp;Demo</b> will load various demonstrations of simple aa_macro usage,
-a different one with each click of a button. You can execute the macros using the
-using the <b>Test</b> button. You can also clear the text entry
-area (third box down) and try your own hand at aa_macro construction.
-Look at the demos, and feel free to peruse the
+<b>Next&nbsp;Demo</b> and <b>Prev&nbsp;Demo</b> will load various
+demonstrations of (very) basic aa_macro usage, a different one with each
+click of a button. You can execute the macros using the <b>Test</b>
+button. You can also clear the text entry area (third box down) and try
+your own hand at aa_macro construction. Look at the demos, and feel free
+to peruse the
+
 <a href="http://ourtimelines.com/aamacrodoc/tocpage.html">aa_macro&nbsp;documentation</a>.
 
 </p>
@@ -390,7 +440,7 @@ Look at the demos, and feel free to peruse the
 <b>aa_macro</b> is a markup and macro language. It uses two types of tags:
 </p>
 <ol>
-<li>Built-ins, designated by one of <a target="_blank" href="http://ourtimelines.com/aamacrodoc/builtinref.html">168 <b>pre</b>-defined keywords</a> inside <i>square</i> brackets: <span style="font-family: Courier; font-weight: bold;">[keyword]</span></li>
+<li>Built-ins, designated by one of <a target="_blank" href="http://ourtimelines.com/aamacrodoc/builtinref.html">169 <b>pre</b>-defined keywords</a> inside <i>square</i> brackets: <span style="font-family: Courier; font-weight: bold;">[keyword]</span></li>
 <li>Styles, designated by <b>user</b>-defined keywords inside <i>squiggly</i> brackets: <span style="font-family: Courier; font-weight: bold;">{keyword}</span></li>
 </ol>
 
