@@ -4,12 +4,142 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <META name="description" content="aa_macro previewer / syntax display">
 <META name="keywords" content="HTML,CSS,JavaScript,aa_macro,wtfm">
+<style type="text/css">
+.cchk {
+      display: inline-block;
+  white-space: nowrap;
+border-radius: 5px;
+height: 1em;
+width: 1em;
+       border: .1em solid #000000;
+ border-color: #000000;
+   background: #FFFFFF; 
+text-align: center;
+        color: #000000;
+}
+cbak {
+       display: inline-block;
+   white-space: nowrap;
+    background: #eeeeee; 
+  padding-left: .5em;
+ padding-right: .5em;
+    margin-top: 1px;
+ margin-bottom: 1px;
+         color: #000000;
+}
+</style>
 <SCRIPT type="text/javascript">
+var verbiage='&nbsp;Buttons Focus Text Entry';
+var ccm = '&#10003;';
+var checked = '<span class="cchk" style="background: #4444cc; color: #ffffff;">[iamacheck]</span>&nbsp;'+verbiage;
+var unchecked = '<span class="cbak"><span class="cchk" style="background: #ffffff; color: #ffffff;">[iamacheck]</span></span>&nbsp;'+verbiage;
+
+var dindex = -1;
+var d1 = 'An italics style:\n\n[style italics <i>[b]</i>]  \n' +
+'{italics slanty text}';
+var d2 = 'A more concise italics style:\n\n[style i <i>[b]</i>]  \n' +
+'{i slanty text}';
+var d3 = 'A bold text style:\n\n[style b <b>[b]</b>]  \n' +
+'{b bold text}';
+var d4 = 'Nesting styles:\n\n[style b <b>[b]</b>]  \n' +
+'[style i <i>[b]</i>]  \n' +
+'{b {i bold, italic text}}';
+var d5 = 'A CSS style:\n\n[style x <span style="color: #00ff00; font-family: Courier;">[b]</span>]  \n' +
+'{x Fixed font in green}';
+var d6 = 'URLs:\n\n[url http://ourtimelines.com/|Timelines!]';
+var d7 = 'Unparameterized replacement:\n\n[style otl [url http://ourtimelines.com/|Timelines!]]  \n' +
+'{otl}';
+var d8 = 'Structured paragraph:\n\n[style p <p>[nl][b][nl]</p>]  \n' +
+'{p This is a paragraph}';
+var d9 = 'Stack operations:\n\n[push bar]foo[pop]';
+var d10 = 'HTML list (UL or OL):\n\n[ul sep=|,foo|bar|bip]';
+var d11 = 'Data dictionaries:\n\n[dict mystuff,foo:bar,this:that,widget:wodget,she:he]  \n' +
+'[d mystuff,widget]';
+var d12 = 'Variables:\n\n[local test 1][global ing 2]  \n' +
+'[v test][v ing]';
+var d13 = 'Math:\n\n[local num 2][add [v num] 3]';
+var d14 = 'Roman numerals:\n\n[roman 27]';
+var d15 = 'Slicing:\n\n[slice 3:6,foobarbip]';
+var d16 = 'Multiple parameters:\n\n[style sect [split |,[b]]<h1>[parm 0]</h1>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
+'{sect Title|Content}';
+var d17 = 'Base conversion:\n\n[htodec 11]';
+var d18 = 'Soundex:\n\n[soundex Knuth]';
+var d19 = 'String replacement:\n\n[replace x,q,wxyz]';
+var d20 = 'Casing:\n\n[upper caps locked]\n[lower NO Caps for YOU]\n[capt case a title]\n[capw word casing]\n[caps sentence casing.]';
+var d21 = 'Date and time:\n\n[date] [time]';
+var d22 = 'Escapes: [lb][rb] [ls][rs] [vb]';
+var d23 = 'Forward references:\n\n[fref overhere]\n' +
+'intervening content...\n' +
+'[resolve overhere,arrived later]  \n' +
+'...and then a little more content.';
+
+var demos = [d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18,d19,d20,d21,d22,d23];
+
 window.onload = function()
 {
-    hitme = document.getElementById("dpagecontentx")
-    hitme.focus();
+//    hitme = document.getElementById("dpagecontentx")
+//    hitme.focus();
+var cdhk = document.getElementById("checkers");
+	cdhk.innerHTML = ccm;
+	ccm = cdhk.innerHTML;
+	checked = checked.replace('[iamacheck]',ccm);
+	unchecked = unchecked.replace('[iamacheck]',ccm);
+	cdhk.innerHTML = unchecked;
 };
+
+function showem() // next demo
+{
+var src = document.getElementById("dpagecontentx");
+var pp = '';
+var dlen = demos.length;
+
+	dindex += 1;
+    if (dindex >= dlen) { dindex = 0; }
+	pp = demos[dindex];
+
+	clearem();
+	src.innerText = pp;
+	onpCharInput('foo');
+	if (checkcheck() == true) { src.focus(); }
+};
+
+function showemback() // prev demo
+{
+var src = document.getElementById("dpagecontentx");
+var pp = '';
+var dlen = demos.length;
+
+	dindex -= 1;
+    if (dindex < 0) { dindex = dlen - 1; }
+	pp = demos[dindex];
+
+	clearem();
+	src.innerText = pp;
+	onpCharInput('foo');
+	if (checkcheck() == true) { src.focus(); }
+};
+
+function checkcheck()
+{
+var cchk = document.getElementById("checkers");
+	if (cchk.innerHTML.toString() == checked) { return true; }
+	return false;
+}
+
+function tcheck()
+{
+//alert("click!")
+var chk = document.getElementById("checkers");
+	if (chk.innerHTML == unchecked)
+	{
+		chk.innerHTML = checked;
+	}
+	else
+	{
+		chk.innerHTML = unchecked;
+	}
+//	console.log(chk.innerHTML+'\n'+checked+'\n'+unchecked);
+}
 
 // this is synchronous - result returns only when called script provides it
 // ------------------------------------------------------------------------
@@ -37,6 +167,7 @@ var drx = document.getElementById("aaresult");
 var txx = srx.innerText;
 	rval = syncCallAjax(JSON.stringify(txx.substring(0,8192)));
 	drx.innerText = JSON.parse(rval);
+	if (checkcheck() == true) { srx.focus(); }
 }
 
 function clearem()
@@ -44,22 +175,12 @@ function clearem()
 var clr = document.getElementById("pretty");
 	clr.innerText = '';
 	clr = document.getElementById("dpagecontentx");
-	clr.focus();
+	if (checkcheck() == true) { clr.focus(); }
 	clr.innerText = '';
 	clr = document.getElementById("aaresult");
 	clr.innerText = '';
 	clr = document.getElementById("pccount");
 	clr.innerText = '0';
-};
-function showem()
-{
-var samt = '[style italics <i>[b]</i>]  \n' +
-'{italics slanty text}';
-
-var src = document.getElementById("dpagecontentx");
-	src.innerText = samt;
-	onpCharInput('foo');
-	src.focus();
 };
 
 function onpCharInput(e)
@@ -230,18 +351,36 @@ Content Size: <span class="bar" id="pccount">0</span>
 </div>
 <div style="margin-left: auto; margin-right: auto; width: 90%;">
 
-<button onclick=showem()>Click for Demo</button>
-<button onclick=test()>Click to Test</button>
-<button onclick=clearem()>Click to Clear</button>
+<button onclick=showem() style="background-color: #dddddd;">Next Demo</button>
+<button onclick=showemback() style="background-color: #dddddd;">Prev Demo</button>
+<button onclick=test() style="background-color: #dddddd;">Test</button>
+<button onclick=clearem() style="background-color: #dddddd;">Clear</button>
+<span onclick=tcheck() id="checkers" style="cursor: default; user-select: none;">-</span>
 
 </div>
 <br>
 <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
+
+<h3>How to Use This Page</h3>
+
+<P>
+
+<b>Next&nbsp;Demo</b> and <b>Prev&nbsp;Demo</b> will load various demonstrations of simple aa_macro usage,
+a different one with each click of a button. You can execute the macros using the
+using the <b>Test</b> button. You can also clear the text entry
+area (third box down) and try your own hand at aa_macro construction.
+Look at the demos, and feel free to peruse the
+<a href="http://ourtimelines.com/aamacrodoc/tocpage.html">aa_macro&nbsp;documentation</a>.
+
+</p>
+
 <h3>Reference Material:</h3>
-<blockquote style="padding-top:0; margin-top:0;">
-<a target="_blank" href="http://ourtimelines.com/aamacrodoc/tocpage.html"><b>aa_macro</b> manual</a><br>
-<a target="_blank" href="http://ourtimelines.com/wtfm/tocpage.html"><b>wtfm</b> manual</a>
-</blockquote>
+<ul>
+<li><a target="_blank" href="http://ourtimelines.com/aamacrodoc/tocpage.html"><b>aa_macro</b> manual</a></li>
+<li><a target="_blank" href="https://github.com/fyngyrz/aa_macro"><b>aa_macro</b> project at Github</a></li>
+<li><a target="_blank" href="http://ourtimelines.com/wtfm/tocpage.html"><b>wtfm</b> manual</a></li>
+<li><a target="_blank" href="https://github.com/fyngyrz/wtfm"><b>wtfm</b> project at Github</a></li>
+</ul>
 <P>
 <h3>Ultra-basic Guide</h3>
 <P>
