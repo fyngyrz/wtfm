@@ -45,6 +45,15 @@ var demos = [
 'A more concise italics style:\n\n[style i <i>[b]</i>]  \n' +
 '{i slanty text}',
 
+'An italics style for markdown:\n\n[style i _[b]_]  \n' +
+'{i slanty text}',
+
+'A variable italics style for plaintext, HMTL, and markdown:\n\n' +
+'[style i [if [v mode] bare [b]][if [v mode] mark _[b]_][if [v mode] html <i>[b]</i>]]  \n' +
+'[global mode mark]{i testing}\n' +
+'[global mode html]{i testing}\n' +
+'[global mode bare]{i testing}',
+
 'A bold text style:\n\n[style b <b>[b]</b>]  \n' +
 '{b bold text}',
 
@@ -493,8 +502,12 @@ You can nest styles and built-ins. Here's how that can look:
 </div>
 
 <P>
+Ending a line with two spaces "eats" the following newline.
+</p>
+
+<P>
 This is just the tip of the proverbial iceberg. <b>aa_macro's</b> broad
-selection of built-in keywords provides the tools to process your text in
+selection of built-in keywords provides the tools to process text in
 many ways; <b>aa_macro</b> styles can do almost anything to, and with, the
 content passed to them.
 </p>
