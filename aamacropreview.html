@@ -64,7 +64,10 @@ var demos = [
 'A CSS style:\n\n[style x <span style="color: #00ff00; font-family: Courier;">[b]</span>]  \n' +
 '{x Fixed font in green}',
 
-'URLs:\n\n[url http://ourtimelines.com/|Timelines!]',
+'URLs:\n\n[url http://ourtimelines.com/|Timelines!]\n' +
+'[url tgt=_blank,http://ourtimelines.com/|Timelines!]\n' +
+'[url css=text-decoration: none;,http://ourtimelines.com/|Timelines!]\n' +
+'[url nam=localName]',
 
 'URL Encode:\n\nhttp://ourtimelines.com/foo.cgi?stuff=[urlencode some text]',
 
@@ -132,6 +135,21 @@ var demos = [
 'intervening content...\n' +
 '[resolve overhere,arrived later]  \n' +
 '...and then a little more content.',
+
+'For iteration:\n\n[style show [b] ]  \n' +
+'[for show,0,10,1]\n' +
+'[for show,10,0,-1]',
+
+'Switch / case:\n\n' +
+'[style foo f:[b] ][style bar b:[b]]' +
+'[style huh ?:[b]]  \n' +
+'[switch default=huh,myswitch x|foo,y|bar]  \n' +
+'[case myswitch x,with-foo]\n' +
+'[case myswitch y,with-bar]\n' +
+'[case myswitch z,with-nothing]',
+
+'C Highlighting:\n\n[raw ccode void main()\n{\nprintf("Hello, Whirled");\n}]  \n' +
+'[getc high=c,var=ccode]',
 
 'Tables:\n\n[table border=1,\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
 
