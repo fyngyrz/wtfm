@@ -123,6 +123,11 @@ var demos = [
 
 'Casing:\n\n[upper caps locked]\n[lower NO Caps for YOU]\n[capt case a title]\n[capw word casing]\n[caps sentence casing.]',
 
+'Encryption:\n\n' +
+'[local x [encrypt breakat=8,seed=19,icount=5,salt=flaming furball,this is a test]]  \n' +
+'[v x]\n' +
+'[decrypt seed=19,icount=5,salt=flaming furball,[v x]]',
+
 'Date and time:\n\n[date] [time]\n' +
 '[time mode=12,sfx=auto]\n' +
 '[local t [time mode=12,sfx=auto]][int [slice 0:2,[v t]]]:[slice 2:4,[v t]][slice 6:,[v t]]\n' +
