@@ -29,8 +29,8 @@ class macro(object):
                  you written your congresscritter about patent and
                  copyright reform yet?
   Incep Date: June 17th, 2015     (for Project)
-     LastRev: November 26th, 2017     (for Class)
-  LastDocRev: November 26th, 2017     (for Class)
+     LastRev: November 27th, 2017     (for Class)
+  LastDocRev: November 27th, 2017     (for Class)
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1 from inception
               OS X 10.12, Python 2.7.10 as of Jan 31st, 2017
@@ -39,7 +39,7 @@ class macro(object):
      Version: 
 	"""
 	def version_set(self):
-		return('1.0.107 Beta')
+		return('1.0.109 Beta')
 	"""
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
@@ -152,6 +152,8 @@ class macro(object):
 	[vdec (quiet=1,)(pre=1,)variableName]			# deccrement a local(global) variable
 	[load variableName fileName]					# load filename into local variable
 	[gload variableName fileName]					# load filename into global variable
+	[save variableName fileName]					# save filename from local variable
+	[gsave variableName fileName]					# save filename from global variable
 	
 	[page]											# reset local environment: variables
 													  global variables are unaffected
@@ -927,6 +929,62 @@ The contents of the list are safe to include in the output if you like.
 			self.theGlobals[vn] = fc
 		except:
 			return em+'(unable to create/update global variable) '
+		return o
+
+	# [gsave variableName fileName]
+	def gsave_fn(self,tag,data):
+		o = ''
+		em = ' aa_macro gsave operator error '
+		if self.noshell == True: return '! gsave Not Available !'
+		try:
+			plist = data.split(' ')
+		except:
+			plist = ['','']
+		if len(plist) != 2: return em
+		vn = plist[0]
+		fn = plist[1]
+		if len(vn) == 0: return em+'(variable name) '
+		if len(fn) == 0: return em+'(file name) '
+		try:
+			fh = open(fn,'w')
+		except:
+			return em+'! (write file open failure) !'
+		try:
+			fh.write(self.theGlobals.get(vn,''))
+		except:
+			return em+'! (file write failure) !'
+		try:
+			fh.close()
+		except:
+			return em+'! (file close failure) !'
+		return o
+
+	# [save variableName fileName]
+	def save_fn(self,tag,data):
+		o = ''
+		em = ' aa_macro save operator error '
+		if self.noshell == True: return '! save Not Available !'
+		try:
+			plist = data.split(' ')
+		except:
+			plist = ['','']
+		if len(plist) != 2: return em
+		vn = plist[0]
+		fn = plist[1]
+		if len(vn) == 0: return em+'(variable name) '
+		if len(fn) == 0: return em+'(file name) '
+		try:
+			fh = open(fn,'w')
+		except:
+			return em+'! (write file open failure) !'
+		try:
+			fh.write(self.theLocals.get(vn,''))
+		except:
+			return em+'! (file write failure) !'
+		try:
+			fh.close()
+		except:
+			return em+'! (file close failure) !'
 		return o
 
 	# [load variableName fileName]
@@ -4541,19 +4599,6 @@ The contents of the list are safe to include in the output if you like.
 					oo = oo.replace(atpre,'<span style="color: #'+self.theGlobals['cpp_atpre']+';">')
 					oo = oo.replace(atpost,'</span>')
 
-#					oo = oo.replace(fpre,'<span style="color: #ff8844">')
-#					oo = oo.replace(fpost,'</span>')
-#					oo = oo.replace(spre,'<span style="color: #4488ff">')
-#					oo = oo.replace(spost,'</span>')
-#					oo = oo.replace(stpre,'<span style="color: #ffffff">')
-#					oo = oo.replace(stpost,'</span>')
-#					oo = oo.replace(copre,'<span style="color: #888888">')
-#					oo = oo.replace(copost,'</span>')
-#					oo = oo.replace(pppre,'<span style="color: #ff0000">')
-#					oo = oo.replace(pppost,'</span>')
-#					oo = oo.replace(atpre,'<span style="color: #ff00ff">')
-#					oo = oo.replace(atpost,'</span>')
-
 					oo = oo.replace(spacefool,tabchar)
 					o += oo
 			except Exception,e:
@@ -4569,6 +4614,94 @@ The contents of the list are safe to include in the output if you like.
 						fh.close()
 				except:
 					o += '--error closing "%s"--' % (filename)
+		return o
+
+	def encrypt_fn(self,tag,data):
+		opts,data = self.popts(['seed','salt','icount','breakat'],data)
+		o = ''
+		nsalt = ''
+		nseed = 1
+		icount = 1
+		breakdef = 16
+		breakat = breakdef
+		for el in opts:
+			if el[0] == 'seed=':
+				try:
+					nseed = int(el[1])
+				except:
+					nseed = 1
+			elif el[0] == 'salt=':
+				nsalt = el[1]
+			elif el[0] == 'icount=':
+				try:
+					icount = int(el[1])
+				except:
+					icount = 1
+			elif el[0] == 'breakat=':
+				try:
+					breakat = int(el[1])
+				except:
+					breakat = breakdef
+				if breakat < 1:
+					breakat = 1
+		try:
+			rmod = argen(seed=nseed,salt=nsalt,iteratecount=icount)
+		except Exception,e:
+			o += str(e)+'\n'
+		try:
+			v = rmod.encrypt(data)
+			if breakat != 0:
+				ct = 0
+				for c in v:
+					o += c
+					ct += 1
+					if ct >= breakat:
+						o += '\n'
+						ct = 0
+			else:
+				o = v
+		except Exception,e:
+			o += str(e)+'\n'
+		return o
+
+	def decrypt_fn(self,tag,data):
+		opts,data = self.popts(['seed','salt','icount'],data)
+		o = ''
+		nsalt = ''
+		nseed = 1
+		icount = 1
+		for el in opts:
+			if el[0] == 'seed=':
+				try:
+					nseed = int(el[1])
+				except:
+					nseed = 1
+			if el[0] == 'salt=':
+				nsalt = el[1]
+			if el[0] == 'icount=':
+				try:
+					icount = int(el[1])
+				except:
+					icount = 1
+		try:
+			rmod = argen(seed=nseed,salt=nsalt,iteratecount=icount)
+		except Exception,e:
+			o += str(e)+'\n'
+		try:
+			data = data.replace('\n','')
+			x = rmod.decrypt(data)
+			for c in x:
+				v = ord(c)
+				if v == 0x0a:
+					o += c
+				elif v == 0x0d:
+					o += c
+				elif v >= 0x20 and v < 0x7F:
+					o += c
+				else:
+					o += '?'
+		except Exception,e:
+			o += str(e)+'\n'
 		return o
 
 	def setFuncs(self): #    '':self._fn,
@@ -4706,7 +4839,9 @@ The contents of the list are safe to include in the output if you like.
 					'vdec'	: self.vdec_fn,		# deccrement a local(global) variable
 					'load'	: self.load_fn,		# load file into local variable
 					'gload'	: self.gload_fn,	# load file into global variable
-					
+					'save'	: self.save_fn,		# save file from local variable
+					'gsave'	: self.gsave_fn,	# save file from global variable
+
 					# stack
 					# -----
 					'pop'	: self.pop_fn,		# pop a value from the stack
@@ -4781,6 +4916,8 @@ The contents of the list are safe to include in the output if you like.
 					'getc'	: self.getc_fn,		# [getc filename] import c text
 					'alphalead': self.alphalead_fn, #[alphalead (trail=1,)string] return leading alpha
 					'alphanumlead': self.alphanumlead_fn, #[alphanumlead (trail=1,)string] return leading alpha
+					'encrypt':self.encrypt_fn,	#[encrypt (seed=N,)(seed=String,)content]
+					'decrypt':self.decrypt_fn,	#[decrypt (seed=N,)(seed=String,)content]
 
 					# Miscellaneous
 					# -------------
@@ -5038,6 +5175,88 @@ The contents of the list are safe to include in the output if you like.
 			s += fmt % (key,rawsty,ending)
 		s += post
 		return s
+
+class argen(object):
+	"""Class to provide simplistic random number generator"""
+
+	def version_set(self):
+		return('0.0.1 Beta')
+
+	def __init__(self,seed=1,iteratecount=1,salt=''):
+		self.setSalt(salt)
+		self.setSeed(seed)
+		self.reset()
+		self.setIterate(iteratecount)
+		self.version = self.version_set()
+
+	def setSeed(self,seed):
+		self.seed = seed * 5
+
+	def setIterate(self,iteratecount):
+		self.iteratecount = iteratecount
+
+	def setSalt(self,salt):
+		self.salt = salt
+		self.shaker = 0
+		self.grains = len(salt)
+
+	def nextGrain(self):
+		crystal = 0
+		if self.grains > 0:
+			self.shaker += 1
+			if self.shaker >= self.grains:
+				self.shaker = 0
+			crystal = (ord(self.salt[self.shaker]) & 0x0F) << 4
+			self.shaker += 1
+			if self.shaker >= self.grains:
+				self.shaker = 0
+			crystal = crystal | (ord(self.salt[self.shaker]) & 0x0F)
+		return crystal
+
+	def iterate(self):
+		for i in range(0,self.iteratecount):
+			self.rnum = self.rnum * 5
+			lval = (self.rnum & 0xFFFF) >> 8;
+			self.rval = lval ^ self.nextGrain()
+
+	def reset(self):
+		self.rnum = self.seed
+		self.shaker = 0
+
+	def advance(self,distance):
+		for i in range(0,distance):
+			self.iterate()
+
+	def __str__(self):
+		return str(self.rval)
+
+	def get(self):
+		self.iterate()
+		return self.rval
+
+	def encrypt(self,content):
+		content = str(content)
+		o = ''
+		for c in content:
+			o += "%0.2X" % (ord(c) ^ self.get())
+		return o
+
+	def decrypt(self,content,seed=None,salt=None):
+		if seed != None:
+			self.seed = seed
+		if salt != None:
+			self.salt = salt
+		content = str(content)
+		length = len(content)
+		if length & 1 != 0:
+			return ''
+		i = 0
+		o = ''
+		while(i < length):
+			o += chr(int(content[i:i+2],16) ^ self.get())
+			i += 2
+		return o
+
 
 if __name__ == "__main__":
 	def xprint(s):
