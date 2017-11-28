@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.24
+ * Added display of current page parse tree upon Generate
+
 0.0.23
  * Improved previewer demo somewhat
 

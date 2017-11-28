@@ -6,6 +6,7 @@ docsystemcfgname = 'doc_system.cfg'
 warning = ''
 debug = ''
 do_debug = False
+buggery = ''
 
 doc ="""Documentation Generation System
       Author: fyngyrz  (Ben)
@@ -23,12 +24,12 @@ doc ="""Documentation Generation System
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
      LastRev: November 20th, 2017
-  LastDocRev: November 2nd, 2017
+  LastDocRev: November 28th, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.23 Beta
+     Version: 0.0.24 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -740,6 +741,7 @@ pabody  = """
 [DEBUG]
 [PREVIEWER]
 [REFERENCE]
+[BUGGERY]
 """
 
 # Style form
@@ -1177,6 +1179,34 @@ def resequence():
 def preview():
 	pass
 
+# Reveals HTML codes
+# ------------------
+def reveal(s):
+	lbrace = 'LEFT/7777-BRACE-fibblex'
+	rbrace = 'RITE/8888-BRACE-smuchsh'
+	s = s.replace('<',lbrace)
+	s = s.replace('>',rbrace)
+	s = s.replace('&','&amp;')
+	s = s.replace(lbrace,'&lt;')
+	s = s.replace(rbrace,'&gt;')
+	s = s.replace('\n','<font color="#0000ff">\\n</font>')
+	return s
+
+def nameof(s):
+	o = '<font color="#ff00ff">{'
+	dex = 0
+	for c in s:
+		dex += 1
+		if c == ' ':
+			return s[dex:],o+'}</font>'
+		else:
+			o += c
+	return s[dex:],o+'}</font>'
+
+def blockname(s):
+	s = '<font color="#000000">['+s+']</font>'
+	return s
+
 # Generates all pages to target
 # -----------------------------
 def generate():
@@ -1185,6 +1215,8 @@ def generate():
 	global dbname
 	global projectname
 	global warning
+	global webpagename
+	global buggery
 
 	parentlist = {}
 	obj = macro()
@@ -1367,12 +1399,42 @@ def generate():
 				return
 #		discard = obj.do(pagref)
 		rawmode = obj.theLocals.get('ds_rawmode','0')
+		doldebug = True
 		if rawmode == '0':
 			co = cpp + co
 			if ps != '':
 				co = '{%s %s}' %  (ps,co)
 			try: # try
+				if (doldebug == True and pn == webpagename):
+					obj.debug = True
 				pco = obj.do(str(unclean(co)))
+				if (doldebug == True and pn == webpagename):
+					obj.debug = False
+					buggery = '<hr><br><h3>Parse Tree</h3><b>Tag Information Key:</b> line:globalCharacterOffset (data size) "data"<br><br>'
+					tabber = '&nbsp;' * 4
+					tubber = '---&gt;'
+					xstack = []
+					tdepth = 0
+					lastdep = 1
+					lastlev = 1
+					try:
+						for xel in obj.debstack:
+							xtag,xdepth,xline,xchar,xdata,xdlev = xel
+							xdatalen = len(xdata)
+							while (xdata.find('  ') != -1):
+								xdata = xdata.replace('  ',' ')
+							xtrimdata = reveal(xdata[0:48])
+							if xtag == 's':
+								xtrimdata,xtag = nameof(xtrimdata)
+							else:
+								xtag = blockname(xtag)
+							thistab = tabber * ((xdlev-1)+(xdepth-1))
+							thistub = tubber * (xdepth-1)
+							unit = thistab+'<b><font color="#008800">%s %d:%d (%d)</font></b> "<font color="#ff0000">%s</font>"\n' % (xtag,xline,xchar,xdatalen,xtrimdata)
+							buggery += unit
+					except Exception,e:
+						buggery = str(e)
+					buggery = '<div style="font-family: Courier; white-space: pre-wrap; text-align: left;">' + buggery + '</div>'
 			except Exception,e: # except
 				fh.close()
 				ln = sys.exc_info()[-1].tb_lineno
@@ -1875,6 +1937,7 @@ if warning != '':
 	warning = '<pre>'+warning+'</pre>'
 mybody = mybody.replace('[WARNING]',warning)
 mybody = mybody.replace('[DEBUG]',debug)
+mybody = mybody.replace('[BUGGERY]',buggery)
 mybody = mybody.replace('[MODE]','<INPUT TYPE="HIDDEN" NAME="mode" VALUE="%s">' % (mode))
 mybody = mybody.replace('[XPREFIX]',xprefix)
 mybody = mybody.replace('[XSYSTEM]',xsystem)
