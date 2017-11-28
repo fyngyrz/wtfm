@@ -61,8 +61,8 @@ var demos = [
 '[style i <i>[b]</i>]  \n' +
 '{b {i bold, italic text}}',
 
-'A CSS style:\n\n[style x <span style="color: #00ff00; font-family: Courier;">[b]</span>]  \n' +
-'{x Fixed font in green}',
+'A CSS style:\n\n[style x <span style="color: #0000ff; font-family: Courier;">[b]</span>]  \n' +
+'{x Fixed font in blue}',
 
 'URLs:\n\n[url http://ourtimelines.com/|Timelines!]\n' +
 '[url tgt=_blank,http://ourtimelines.com/|Timelines!]\n' +
@@ -84,7 +84,7 @@ var demos = [
 'Data list:\n\n[list mylist,apple,pomegranate,cherry]  \n' +
 '[asort mylist]  \n' +
 '[style show Data list element: <i>[b]</i><br>[nl]]  \n' +
-'[dlist mylist]\n' +
+'[dlist mylist]<br>\n' +
 '[dlist style=show,mylist]',
 
 'Data dictionaries:\n\n[dict mystuff,foo:bar,this:that,widget:wodget,she:he]  \n' +
@@ -108,7 +108,7 @@ var demos = [
 
 'Slicing:\n\n[slice 3:6,foobarbip]',
 
-'Multiple parameters:\n\n[style section [split |,[b]]<h1>[parm 0]</h1>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
+'Multiple parameters:\n\n[style section [split |,[b]]<h2>[parm 0]</h2>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
 '{section Title|Content}',
 
 'Base conversion:\n\n[htodec 11]',
@@ -137,9 +137,9 @@ var demos = [
 'Escapes:\n\nBrackets: [lb][rb] Squigglies: [ls][rs] Vertical Bar: [vb] Comma: [co]',
 
 'Forward references:\n\n[fref overhere]\n' +
-'intervening content...\n' +
+'...intervening content...\n' +
 '[resolve overhere,arrived later]  \n' +
-'...and then a little more content.',
+'and then a little more content.',
 
 'For iteration:\n\n[style show [b] ]  \n' +
 '[for show,0,10,1]\n' +
@@ -153,15 +153,15 @@ var demos = [
 '[case myswitch y,with-bar]\n' +
 '[case myswitch z,with-nothing]',
 
-'C Highlighting:\n\n[raw ccode void main()\n{\nprintf("Hello, Whirled");\n}]  \n' +
-'[getc high=c,var=ccode]',
+'C Highlighting:\n\n<div style="white-space: pre-wrap;">[raw ccode \n#define TRUE 0\nvoid main()\n{\n    printf("Hello, Whirled"); // Whirled Peas!\n}]  \n' +
+'[getc high=c,var=ccode]</div>',
 
 'Tables:\n\n[table border=1,\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
 
 'Images:\n\n[lipath /safebox/]'+
 '[wepath /hpics/]  \n' +
-'[limg HMSVictory.jpg]\n' +
-'[limg title=HMS Victory,HMSVictory.jpg]\n' +
+'<br>[limg HMSVictory.jpg]<br>\n' +
+'[limg title=HMS Victory,HMSVictory.jpg]<br>\n' +
 '[limg target=http://ourtimelines.com,HMSVictory.jpg]'];
 
 window.onload = function()
@@ -253,15 +253,23 @@ function test()
 {
 var srx = document.getElementById("dpagecontentx");
 var drx = document.getElementById("aaresult");
+var aee = document.getElementById("aaexec");
 var txx = srx.innerText;
+var rez = '';
+	txx = txx.replace(/script/gi,'!--');
+	txx = txx.replace(/exec/gi,'!--');
 	rval = syncCallAjax(JSON.stringify(txx.substring(0,8192)));
-	drx.innerText = JSON.parse(rval);
+	rez = JSON.parse(rval);
+	drx.innerText = rez;
+	aee.innerHTML = rez;
 	if (checkcheck() == true) { srx.focus(); }
 }
 
 function clearem()
 {
 var clr = document.getElementById("pretty");
+var aee = document.getElementById("aaexec");
+	aee.innerText = '';
 	clr.innerText = '';
 	clr = document.getElementById("dpagecontentx");
 	if (checkcheck() == true) { clr.focus(); }
@@ -416,6 +424,21 @@ height: 8em;
 background-color: #000000;
 font-family: Courier;"
 id="aaresult"></div>
+
+&nbsp;<br>
+<div style="padding: .5em;
+overflow-y: auto; 
+overflow-x: auto; 
+white-space: normal;
+margin-left: auto; margin-right: auto;
+color: #00ff00;
+text-align: left;
+font-weight: normal;
+width: 90%;
+height: 8em;
+background-color: #000000;
+font-family: Courier;"
+id="aaexec"></div>
 
 &nbsp;<br>
 <div onkeyup="onpCharInput(event)"
