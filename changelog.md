@@ -6,6 +6,9 @@ This log reflects changes to the wftm documentation system. Other changes
 such as to the associated utilities and sample files are not tracked here.
 
 ### Log
+0.0.25
+ * Page parse tree now supports tooltips for built-in and style content
+
 0.0.24
  * Added display of current page parse tree upon Generate
 

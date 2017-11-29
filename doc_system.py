@@ -23,13 +23,13 @@ doc ="""Documentation Generation System
                  responsibilities and any subsequent consequences are entirely yours. Have you
                  written your congresscritter about patent and copyright reform yet?
   Incep Date: June 17th, 2015
-     LastRev: November 20th, 2017
+     LastRev: November 29th, 2017
   LastDocRev: November 28th, 2017
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: Ubuntu 12.04.5 LTS, Python 2.7.3
       Status: BETA
      1st-Rel: 0.0.1
-     Version: 0.0.24 Beta
+     Version: 0.0.25 Beta
     Policies: 1) I will make every effort to never remove functionality or
                  alter existing functionality once past BETA stage. Anything
                  new will be implemented as something new, thus preserving all
@@ -660,7 +660,34 @@ div#docnote
 	border: 1px solid #000000;
 	background: #ddddff;
 	color: #000000;
-}"""
+}
+.tooltip
+{
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+.tooltip .tooltiptext
+{
+	position: absolute;
+	visibility: hidden;
+	width: 600px;
+	top: 125%;
+	left: 0px;
+	background-color: #ffff88;
+	color: #000000;
+	text-align: left;
+	padding: 5px;
+	border-radius: 5px;
+	border-color: #000000;
+	border-style: solid;
+	z-index: 1;
+}
+.tooltip:hover .tooltiptext
+{
+	visibility: visible;
+}
+"""
 
 # command lists used to populate the cmd bars on the three form types
 # -------------------------------------------------------------------
@@ -1203,6 +1230,15 @@ def nameof(s):
 			o += c
 	return s[dex:],o+'}</font>'
 
+def woname(s):
+	o = ''
+	dex = 0
+	for c in s:
+		dex += 1
+		if c == ' ':
+			return s[dex:]
+	return s
+
 def blockname(s):
 	s = '<font color="#000000">['+s+']</font>'
 	return s
@@ -1426,11 +1462,14 @@ def generate():
 							xtrimdata = reveal(xdata[0:48])
 							if xtag == 's':
 								xtrimdata,xtag = nameof(xtrimdata)
+								xdata = woname(xdata)
 							else:
 								xtag = blockname(xtag)
 							thistab = tabber * ((xdlev-1)+(xdepth-1))
 							thistub = tubber * (xdepth-1)
-							unit = thistab+'<b><font color="#008800">%s %d:%d (%d)</font></b> "<font color="#ff0000">%s</font>"\n' % (xtag,xline,xchar,xdatalen,xtrimdata)
+							xddata = '<div class="tooltip">'+xtrimdata+'<span class="tooltiptext">'+xdata+'</span></div>'
+							unit = thistab+'<b><font color="#008800">%s %d:%d (%d)</font></b> "<font color="#ff0000">%s</font>"\n' % (xtag,xline,xchar,xdatalen,xddata)
+#							unit = thistab+'<b><font color="#008800">%s %d:%d (%d)</font></b> "<font color="#ff0000">%s</font>"\n' % (xtag,xline,xchar,xdatalen,xtrimdata)
 							buggery += unit
 					except Exception,e:
 						buggery = str(e)
