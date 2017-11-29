@@ -111,6 +111,11 @@ var demos = [
 'Multiple parameters:\n\n[style section [split |,[b]]<h2>[parm 0]</h2>[nl]<p>[nl][parm 1][nl]</p>]  \n' +
 '{section Title|Content}',
 
+'Variable Number of Parameters:\n\n' +
+'[style multiparm [parm [b]] ]  \n' +
+'[split |,grapes|oranges|cherries|passionfruit|tomatoes|raspberries]  \n' +
+'[for multiparm,0,[v loc_splitcount],1]',
+
 'Base conversion:\n\n[htodec 11]',
 
 'Soundex:\n\n[soundex Knuth]',
