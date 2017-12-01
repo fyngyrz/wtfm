@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <META name="description" content="aa_macro previewer / syntax display">
 <META name="keywords" content="HTML,CSS,JavaScript,aa_macro,wtfm">
-<style type="text/css">
+<style>
 .cchk {
       display: inline-block;
   white-space: nowrap;
@@ -28,7 +28,7 @@ cbak {
          color: #000000;
 }
 </style>
-<SCRIPT type="text/javascript">
+<SCRIPT>
 var verbiage='&nbsp;Buttons Focus Text Entry';
 var ccm = '&#10003;';
 var checked = '<span class="cchk" style="background: #4444cc; color: #ffffff;">[iamacheck]</span>&nbsp;'+verbiage;
@@ -104,7 +104,10 @@ var demos = [
 
 'Comma-separation:\n\n[fcsep 1024]\n[fcsep 9764343.002]\n[csep 2048]\n[csep 1]',
 
-'Roman numerals:\n\n[roman 27]',
+'Roman numerals:\n\n'+
+'<br>[roman 27]<br>\n'+
+'[style rom [roman [b]] ]  \n' +
+'[for rom,1,31,1]',
 
 'Slicing:\n\n[slice 3:6,foobarbip]',
 
@@ -163,7 +166,7 @@ var demos = [
 
 'Tables:\n\n[table border=1,\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
 
-'Smart itemization:<br>\n'+
+'Smart itemization:<br>\n\n'+
 '[style numit [v loc_splashnum]:[b]]  \n' +
 '[style enumerate [splash post=<br>,style=numit,inter=[nl],[b]]]  \n' +
 '[style itemize [splash inter=[co] ,ntl= and ,[b]]]  \n' +
@@ -180,13 +183,36 @@ window.onload = function()
 {
 //    hitme = document.getElementById("dpagecontentx")
 //    hitme.focus();
+var hitme = document.getElementById("buttray")
 var cdhk = document.getElementById("checkers");
+var arrayLength = demos.length;
+var dex = 0;
+var str = '';
 	cdhk.innerHTML = ccm;
 	ccm = cdhk.innerHTML;
 	checked = checked.replace('[iamacheck]',ccm);
 	unchecked = unchecked.replace('[iamacheck]',ccm);
 	cdhk.innerHTML = unchecked;
+	// demos
+	for (var i = 0; i < arrayLength; i++) // >
+	{
+		dex = demos[i].indexOf("\n\n");
+		str = demos[i].slice(0,dex-1);
+		str = '<button onclick=dodemo('+i.toString()+') style="background-color: #dddddd;">'+str+'</button> '
+		hitme.innerHTML = hitme.innerHTML + str;
+	}
 };
+
+function dodemo(picked)
+{
+var src = document.getElementById("dpagecontentx");
+var pp = '';
+	pp = demos[picked];
+	clearem();
+	src.innerText = pp;
+	onpCharInput('foo');
+	if (checkcheck() == true) { src.focus(); }
+}
 
 function showem() // next demo
 {
@@ -211,7 +237,7 @@ var pp = '';
 var dlen = demos.length;
 
 	dindex -= 1;
-    if (dindex < 0) { dindex = dlen - 1; }
+    if (dindex < 0) { dindex = dlen - 1; } // >
 	pp = demos[dindex];
 
 	clearem();
@@ -476,10 +502,24 @@ height: 8em;"></div>
 <div style="margin-top: .5em; width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 Content Size: <span class="bar" id="pccount">0</span>
 </div>
+
+&nbsp;<br>
+<div style="padding: .5em;
+margin-left: auto; margin-right: auto;
+white-space: normal;
+color: #00ff00;
+text-align: center;
+font-weight: normal;
+width: 90%;
+height: 8em;
+font-family: Courier;"
+id="buttray"></div>
+
+
 <div style="margin-left: auto; margin-right: auto; width: 90%;">
 
-<button onclick=showemback() style="background-color: #dddddd;">Prev Demo</button>
-<button onclick=showem() style="background-color: #dddddd;">Next Demo</button>
+<!-- button onclick=showemback() style="background-color: #dddddd;">Prev Demo</button -->
+<!-- button onclick=showem() style="background-color: #dddddd;">Next Demo</button -->
 <button onclick=test() style="background-color: #dddddd;">Test</button>
 <button onclick=clearem() style="background-color: #dddddd;">Clear</button>
 <span onclick=tcheck() id="checkers" style="cursor: default; user-select: none;">-</span>
