@@ -145,10 +145,11 @@ var demos = [
 '[v x]\n' +
 '[decrypt seed=19,icount=5,salt=flaming furball,[v x]]',
 
-'Date and time:\n\n[date] [time]\n' +
-'[time mode=12,sfx=auto]\n' +
-'[local t [time mode=12,sfx=auto]][int [slice 0:2,[v t]]]:[slice 2:4,[v t]][slice 6:,[v t]]\n' +
-'[time sfx= o\'clock]\n' +
+'Date and time:\n\n'+
+'[br][br][br [date] [time]]\n' +
+'[br [time mode=12,sfx=auto]]\n' +
+'[br [local t [time mode=12,sfx=auto]][int [slice 0:2,[v t]]]:[slice 2:4,[v t]][slice 6:,[v t]]]\n' +
+'[br [time sfx= o\'clock]]\n' +
 '[time mode=12,asfx= ante meridiem,psfx= post meridiem]\n',
 
 'Escapes:\n\nBrackets: [lb][rb] Squigglies: [ls][rs] Vertical Bar: [vb] Comma: [co]',
