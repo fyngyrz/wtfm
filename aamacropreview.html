@@ -33,8 +33,17 @@ var verbiage='&nbsp;Buttons Focus Text Entry';
 var ccm = '&#10003;';
 var checked = '<span class="cchk" style="background: #4444cc; color: #ffffff;">[iamacheck]</span>&nbsp;'+verbiage;
 var unchecked = '<span class="cbak"><span class="cchk" style="background: #ffffff; color: #ffffff;">[iamacheck]</span></span>&nbsp;'+verbiage;
-
 var dindex = -1;
+
+var ddl = '<form action="">' +
+'<font color="#000000"><b>Choose Demo</b></font>' +
+'<fieldset style="border: 0; margin: 0; padding: 0;">' +
+'<select id="selTest" onchange="dodemosel()">' +
+'[ITEMS]' +
+'</select>' +
+'</fieldset>' +
+'</form>'
+
 var demos = [
 
 'Comments:\n\nSome text[comment This is a comment]',
@@ -181,13 +190,13 @@ var demos = [
 
 window.onload = function()
 {
-//    hitme = document.getElementById("dpagecontentx")
-//    hitme.focus();
 var hitme = document.getElementById("buttray")
 var cdhk = document.getElementById("checkers");
 var arrayLength = demos.length;
 var dex = 0;
 var str = '';
+var strb = '';
+var options = '<option value="-1">None...</option>\n'; // <option value = "#FFFFFF">White</option>
 	cdhk.innerHTML = ccm;
 	ccm = cdhk.innerHTML;
 	checked = checked.replace('[iamacheck]',ccm);
@@ -198,9 +207,12 @@ var str = '';
 	{
 		dex = demos[i].indexOf("\n\n");
 		str = demos[i].slice(0,dex-1);
-		str = '<button onclick=dodemo('+i.toString()+') style="background-color: #dddddd;">'+str+'</button> '
-		hitme.innerHTML = hitme.innerHTML + str;
+		strb = '<option value="'+i.toString()+'">'+str+'</option>';
+		options = options + strb;
 	}
+	ddl = ddl.replace('[ITEMS]',options);
+//		console.log(ddl);
+	hitme.innerHTML = hitme.innerHTML + ddl;
 };
 
 function dodemo(picked)
@@ -212,6 +224,21 @@ var pp = '';
 	src.innerText = pp;
 	onpCharInput('foo');
 	if (checkcheck() == true) { src.focus(); }
+}
+
+function dodemosel()
+{
+var src = document.getElementById("selTest");
+var picked = src.value.toString();
+	picked = parseInt(picked);
+	if (picked != -1)
+	{
+		dodemo(picked);
+	}
+	else
+	{
+		clearem();
+	}
 }
 
 function showem() // next demo
@@ -255,7 +282,6 @@ var cchk = document.getElementById("checkers");
 
 function tcheck()
 {
-//alert("click!")
 var chk = document.getElementById("checkers");
 	if (chk.innerHTML == unchecked)
 	{
@@ -265,7 +291,6 @@ var chk = document.getElementById("checkers");
 	{
 		chk.innerHTML = unchecked;
 	}
-//	console.log(chk.innerHTML+'\n'+checked+'\n'+unchecked);
 }
 
 // this is synchronous - result returns only when called script provides it
@@ -506,18 +531,17 @@ Content Size: <span class="bar" id="pccount">0</span>
 &nbsp;<br>
 <div style="padding: .5em;
 margin-left: auto; margin-right: auto;
+margin-bottom: .5em;
+padding-bottom: 0px;
 white-space: normal;
 color: #00ff00;
 text-align: center;
 font-weight: normal;
 width: 90%;
-height: 8em;
 font-family: Courier;"
 id="buttray"></div>
 
-
-<div style="margin-left: auto; margin-right: auto; width: 90%;">
-
+<div style="margin-top: 0px; padding-top: 0px; margin-left: auto; margin-right: auto; width: 90%;">
 <!-- button onclick=showemback() style="background-color: #dddddd;">Prev Demo</button -->
 <!-- button onclick=showem() style="background-color: #dddddd;">Next Demo</button -->
 <button onclick=test() style="background-color: #dddddd;">Test</button>
@@ -528,7 +552,7 @@ id="buttray"></div>
 <br>
 <div style="width: 90%; margin-left: auto; margin-right: auto; text-align: left;">
 
-<h3>How to Use This Page</h3>
+<b>How to Use This Page</b>
 
 <P>
 
