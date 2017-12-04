@@ -104,7 +104,11 @@ var demos = [
 
 'Math:\n\n[local num 2]  \n[add [v num] 3]\n[int 23.4]\n[abs -17]\n[mul 3 [v num]]',
 
-'Random number:\n\n[br][br][br [random]][br [random seed=foobar]]',
+'Random number:\n\n[br][br][br [random]][br [random seed=foobar]]\n'+
+'[style rrange [int [mul mode=float,[b] [random]]]]  \n'+
+'[br {rrange 10}]\n'+
+'[br {rrange 50}]\n'+
+'[br {rrange 100}]\n',
 
 'Sum up a list:\n\n[style sumlistlow [b][local list_sum [add [b] [v list_sum]]]]  \n' +
 '[style sumlist [local list_sum 0][dlist inter= + ,style=sumlistlow,[b]] = [v list_sum]]  \n' +
