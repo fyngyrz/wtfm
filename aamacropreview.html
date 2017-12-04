@@ -78,7 +78,7 @@ var demos = [
 '[url css=text-decoration: none;,http://ourtimelines.com/|Timelines!]\n' +
 '[url nam=localName]',
 
-'URL Encode:\n\nhttp://ourtimelines.com/foo.cgi?stuff=[urlencode hi, Fred & Linda]',
+'URL Encode:\n\n[url tgt=_blank,https://www.google.com/search?q=[urlencode olives, and capers?]|Google Search]',
 
 'Unparameterized replacement:\n\n[style otl [url http://ourtimelines.com/|Timelines!]]  \n' +
 '{otl}',
@@ -103,6 +103,8 @@ var demos = [
 '[v test][v ing]',
 
 'Math:\n\n[local num 2]  \n[add [v num] 3]\n[int 23.4]\n[abs -17]\n[mul 3 [v num]]',
+
+'Random number:\n\n[br][br][br [random]][br [random seed=foobar]]',
 
 'Sum up a list:\n\n[style sumlistlow [b][local list_sum [add [b] [v list_sum]]]]  \n' +
 '[style sumlist [local list_sum 0][dlist inter= + ,style=sumlistlow,[b]] = [v list_sum]]  \n' +
