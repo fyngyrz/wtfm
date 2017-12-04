@@ -38,7 +38,7 @@ if fail == 1:
 	raise SystemExit
 else:
 	try:
-		mod = macro(noshell=True,noembrace=True,noinclude=True,locklipath='/safebox/',lockwepath='/hpics/')
+		mod = macro(noshell=True,noembrace=True,noinclude=True,locklipath='/safebox/',lockwepath='/hpics/',xlimit=35,dlimit=4)
 		if 1:
 			oData = mod.do(pyObject)
 		else:
