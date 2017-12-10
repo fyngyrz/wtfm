@@ -152,9 +152,15 @@ var demos = [
 '[decrypt seed=19,icount=5,salt=flaming furball,[v x]]',
 
 'Date and time:\n\n'+
-'[br][br][br [date] [time]]\n' +
+'[br][br][br [date] [time] [datetime]]\n' +
+'[local dt [datetime]]  \n'+
+'[local year [slice 0:4,[v dt]]]  \n'+
+'[local month [month mode=long,[int [slice 4:6,[v dt]]]]]  \n'+
+'[local day [int [slice 6:8,[v dt]]]][local day [v day][th [v day]]]  \n'+
+'[local hour [int [slice 8:10,[v dt]]]]  \n'+
+'[local minute [slice 10:12,[v dt]]]  \n'+
+'[br [v month] [v day], [v year] [twelve [v hour]]:[v minute] [ampm [v hour]] MST]\n' +
 '[br [time mode=12,sfx=auto]]\n' +
-'[br [local t [time mode=12,sfx=auto]][int [slice 0:2,[v t]]]:[slice 2:4,[v t]][slice 6:,[v t]]]\n' +
 '[br [time sfx= o\'clock]]\n' +
 '[time mode=12,asfx= ante meridiem,psfx= post meridiem]\n',
 
@@ -180,7 +186,7 @@ var demos = [
 'C Highlighting:\n\n<div style="white-space: pre-wrap;">[raw ccode \n#define TRUE 0\nvoid main()\n{\n    printf("Hello, Whirled"); // Whirled Peas!\n}]  \n' +
 '[getc high=c,var=ccode]</div>',
 
-'Tables:\n\n[table border=1,\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
+'Tables:\n\n[table border=1 bgcolor="#0000cc",\n[row ,[header align="right",stuff][header more stuff]]\n[row ,[cell align="right",foo][cell ,bar]]\n]',
 
 'Smart itemization:<br>\n\n'+
 '[style numit [v loc_splashnum]:[b]]  \n' +
