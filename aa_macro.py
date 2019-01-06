@@ -29,13 +29,13 @@ class macro(object):
                  and any subsequent consequences are entirely yours. Have
                  you written your congresscritter about patent and
                  copyright reform yet?
-  Incep Date: June 17th, 2015         (for Project)
-     LastRev: December 27th, 2018     (for Class)
-  LastDocRev: December 27th, 2018     (for Class)
+  Incep Date: June 17th, 2015       (for Project)
+     LastRev: January 6th, 2019     (for Class)
+  LastDocRev: January 6th, 2019     (for Class)
      Version: 
 	"""
 	def version_set(self):
-		return('1.0.131 Beta')
+		return('1.0.133 Beta')
 	"""
  Tab spacing: 4 (set your editor to this for sane formatting while reading)
      Dev Env: OS X 10.6.8, Python 2.6.1 from inception
@@ -360,8 +360,13 @@ class macro(object):
 	
 	Styles
 	------
-	[style styleName Style]			# Defines a local style. Use [b] for body of style
-	[gstyle styleName]				# Defines a global style. Use [b] for body of style
+	[style (help=helpstring,)(help2=helpstring,)styleName Style]	# Defines a local style. Use [b] for body of style
+	[gstyle (help=helpstring,)(help2=helpstring,)styleName Style]	# Defines a global style. Use [b] for body of style
+
+	[helps localstylename]						# returns helpstring, if any
+	[helpg globalstylename]						# returns helpstring, if any
+	[helps2 localstylename]						# returns second helpstring, if any
+	[helpg2 globalstylename]					# returns second helpstring, if any
 
 	[glos styleName contentToStyle]	# contentToStyle goes where [b] tag(s) is/are in style...
 									  only uses global styles
@@ -506,6 +511,10 @@ class macro(object):
 		self.placeholder = 'Q|zXaH7RppY#32m' # hopefully you'll never use this string, lol
 		self.styles = {}
 		self.gstyles = {}
+		self.dstyles = {}
+		self.dgstyles = {}
+		self.dstyles2 = {}
+		self.dgstyles2 = {}
 		self.stack = []
 		self.parms = []
 		self.refs = {}
@@ -783,10 +792,14 @@ The contents of the list are safe to include in the output if you like.
 	def resetGlobals(self):
 		self.theGlobals = {}
 		self.gstyles = {}
+		self.dgstyles = {}
+		self.dgstyles2 = {}
 
 	def resetLocals(self):
 		self.theLocals = {}
 		self.styles = {}
+		self.dstyles = {}
+		self.dstyles2 = {}
 
 	def resetDicts(self):
 		self.theDicts = {}
@@ -3122,6 +3135,14 @@ The contents of the list are safe to include in the output if you like.
 
 	def style_fn(self,tag,data):
 		if data != '':
+			lhelp = None
+			llhelp = None
+			opts,data = self.popts(['help','help2'],data)
+			for el in opts:
+				if el[0] == 'help=':
+					lhelp = el[1]
+				elif el[0] == 'help2=':
+					llhelp = el[1]
 			try:
 				d1,d2 = data.split(' ',1)
 			except:
@@ -3131,10 +3152,22 @@ The contents of the list are safe to include in the output if you like.
 				else:
 					return ' ?style?="%s","%s" ' % (str(tag),str(data))
 			self.styles[d1] = d2
+			if lhelp != None:
+				self.dstyles[d1] = lhelp
+			if llhelp != None:
+				self.dstyles2[d1] = llhelp
 		return ''
 
 	def gstyle_fn(self,tag,data):
 		if data != '':
+			lhelp = None
+			llhelp = None
+			opts,data = self.popts(['help','help2'],data)
+			for el in opts:
+				if el[0] == 'help=':
+					lhelp = el[1]
+				elif el[0] == 'help2=':
+					llhelp = el[1]
 			try:
 				d1,d2 = data.split(' ',1)
 			except:
@@ -3144,7 +3177,39 @@ The contents of the list are safe to include in the output if you like.
 				else:
 					return ' ?gstyle?="%s","%s" ' % (str(tag),str(data))
 			self.gstyles[d1] = d2
+			if lhelp != None:
+				self.dgstyles[d1] = lhelp
+			if llhelp != None:
+				self.dgstyles2[d1] = llhelp
 		return ''
+	
+	def helps_fn(self,tag,data):
+		try:
+			o = self.do(self.dstyles[data])
+		except:
+			return ''
+		return o
+	
+	def helpg_fn(self,tag,data):
+		try:
+			o = self.do(self.dgstyles[data])
+		except:
+			return ''
+		return o
+	
+	def helps2_fn(self,tag,data):
+		try:
+			o = self.do(self.dstyles2[data])
+		except:
+			return ''
+		return o
+	
+	def helpg2_fn(self,tag,data):
+		try:
+			o = self.do(self.dgstyles2[data])
+		except:
+			return ''
+		return o
 	
 	def color_fn(self,tag,data):
 		o = ''
@@ -5307,6 +5372,10 @@ The contents of the list are safe to include in the output if you like.
 					'case'  : self.case_fn,		# define a case
 					'for'	: self.for_fn,		# [for style,x,y,z]
 					'in'	: self.in_fn,		# [in style,list]
+					'helps'	: self.helps_fn,	# [helps stylename]
+					'helpg'	: self.helpg_fn,	# [helpg stylename]
+					'helps2': self.helps2_fn,	# [helps2 stylename]
+					'helpg2': self.helpg2_fn,	# [helpg2 stylename]
 
 					# Parsing and text processing
 					# ---------------------------
