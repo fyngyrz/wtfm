@@ -1,6 +1,13 @@
 [global toctitle Table of Contents]
 [global TOC <a style="color: {linkcolor};" href="tocpage.html"><span style="white-space:nowrap;">Table of Contents</span></a>]
 
+Anchors
+-------
+[global tocanchor &#167;]
+[hmap tochexlist]
+[gstyle tochexlab [translate tochexlist,[lower [b]]]]
+[gstyle toclocanchor <a name="{tochexlab [strip [b]]}"><a style="text-decoration: none;" href="#{tochexlab [strip [b]]}">[v tocanchor]</a>]
+
 Flags
 -----
 [global fl_indents true]	// true for indents on TOC page, false for no indents
@@ -13,44 +20,44 @@ Section / Name interval
 
 [gstyle h1v [if [v fl_numbers] true [gv 1level]]]
 [gstyle h1tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h1v}{inter}[parm 2]</a>]
-[gstyle h1s <a name="{tocref}{h1v}"></a><h1>{h1v}{inter}[b]</h1>]
+[gstyle h1s <a name="{tocref}{h1v}"></a><h1>{toclocanchor [b]} {h1v}{inter}[b]</h1>]
 [gstyle h1 {hbump 1level}{res1}{h1s [b]}[append toclist,[v current_page]|||{tocref}{h1v}|||1|||{h1v}{tinter}[b]]]
-[gstyle h1sn <h1>{h1v}{inter}[b]</h1>]
+[gstyle h1sn <h1>{toclocanchor [b]} {h1v}{inter}[b]</h1>]
 [gstyle h1nx {hbump 1level}{res1}{h1sn [b]}[append toclist,[v current_page]|||{tocref}{h1v}|||1|||{h1v}{tinter}[b]]]
 
 [gstyle h2v [if [v fl_numbers] true [gv 1level].[gv 2level]]]
 [gstyle h2tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h2v}{inter}[parm 2]</a>]
-[gstyle h2s <a name="{tocref}{h2v}"></a><h2>{h2v}{inter}[b]</h2>]
+[gstyle h2s <a name="{tocref}{h2v}"></a><h2>{toclocanchor [b]} {h2v}{inter}[b]</h2>]
 [gstyle h2 {hbump 2level}{res2}{h2s [b]}[append toclist,[v current_page]|||{tocref}{h2v}|||2|||{h2v}{tinter}[b]]]
-[gstyle h2sn <h2>{h2v}{inter}[b]</h2>]
+[gstyle h2sn <h2>{toclocanchor [b]} {h2v}{inter}[b]</h2>]
 [gstyle h2nx {hbump 2level}{res2}{h2sn [b]}[append toclist,[v current_page]|||{tocref}{h2v}|||2|||{h2v}{tinter}[b]]]
 
 [gstyle h3v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level]]]
 [gstyle h3tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h3v}{inter}[parm 2]</a>]
-[gstyle h3s <a name="{tocref}{h3v}"></a><h3>{h3v}{inter}[b]</h3>]
+[gstyle h3s <a name="{tocref}{h3v}"></a><h3>{toclocanchor [b]} {h3v}{inter}[b]</h3>]
 [gstyle h3 {hbump 3level}{res3}{h3s [b]}[append toclist,[v current_page]|||{tocref}{h3v}|||3|||{h3v}{tinter}[b]]]
-[gstyle h3sn <h3>{h3v}{inter}[b]</h3>]
+[gstyle h3sn <h3>{toclocanchor [b]} {h3v}{inter}[b]</h3>]
 [gstyle h3nx {hbump 3level}{res3}{h3sn [b]}[append toclist,[v current_page]|||{tocref}{h3v}|||3|||{h3v}{tinter}[b]]]
 
 [gstyle h4v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level].[gv 4level]]]
 [gstyle h4tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h4v}{inter}[parm 2]</a>]
-[gstyle h4s <a name="{tocref}{h4v}"></a><h4>{h4v}{inter}[b]</h4>]
+[gstyle h4s <a name="{tocref}{h4v}"></a><h4>{toclocanchor [b]} {h4v}{inter}[b]</h4>]
 [gstyle h4 {hbump 4level}{res4}{h4s [b]}[append toclist,[v current_page]|||{tocref}{h4v}|||4|||{h4v}{tinter}[b]]]
-[gstyle h4sn <h4>{h4v}{inter}[b]</h4>]
+[gstyle h4sn <h4>{toclocanchor [b]} {h4v}{inter}[b]</h4>]
 [gstyle h4nx {hbump 4level}{res4}{h4sn [b]}[append toclist,[v current_page]|||{tocref}{h4v}|||4|||{h4v}{tinter}[b]]]
 
 [gstyle h5v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level].[gv 4level].[gv 5level]]]
 [gstyle h5tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h5v}{inter}[parm 2]</a>]
-[gstyle h5s <a name="{tocref}{h5v}"></a><h5>{h5v}{inter}[b]</h5>]
+[gstyle h5s <a name="{tocref}{h5v}"></a><h5>{toclocanchor [b]} {h5v}{inter}[b]</h5>]
 [gstyle h5 {hbump 5level}{res5}{h5s [b]}[append toclist,[v current_page]|||{tocref}{h5v}|||5|||{h5v}{tinter}[b]]]
-[gstyle h5sn <h5>{h5v}{inter}[b]</h5>]
+[gstyle h5sn <h5>{toclocanchor [b]} {h5v}{inter}[b]</h5>]
 [gstyle h5nx {hbump 5level}{res5}{h5sn [b]}[append toclist,[v current_page]|||{tocref}{h5v}|||5|||{h5v}{tinter}[b]]]
 
 [gstyle h6v [if [v fl_numbers] true [gv 1level].[gv 2level].[gv 3level].[gv 4level].[gv 5level].[gv 6level]]]
 [gstyle h6tx [split |||,[b]]<a href="[parm 0]#[parm 1]">{h6v}{inter}[parm 2]</a>]
-[gstyle h6s <a name="{tocref}{h6v}"></a><h6>{h6v}{inter}[b]</h6>]
+[gstyle h6s <a name="{tocref}{h6v}"></a><h6>{toclocanchor [b]} {h6v}{inter}[b]</h6>]
 [gstyle h6 {hbump 6level}{res6}{h6s [b]}[append toclist,[v current_page]|||{tocref}{h6v}|||6|||{h6v}{tinter}[b]]]
-[gstyle h6sn <h6>{h6v}{inter}[b]</h6>]
+[gstyle h6sn <h6>{toclocanchor [b]} {h6v}{inter}[b]</h6>]
 [gstyle h6nx {hbump 6level}{res6}{h6sn [b]}[append toclist,[v current_page]|||{tocref}{h6v}|||6|||{h6v}{tinter}[b]]]
 
 -----
