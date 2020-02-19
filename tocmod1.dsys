@@ -5,8 +5,8 @@ Anchors
 -------
 [global tocanchor &#167;]
 [hmap tochexlist]
-[gstyle tochexlab [translate tochexlist,[lower [b]]]]
-[gstyle toclocanchor <a name="{tochexlab [strip [b]]}"><a style="text-decoration: none;" href="#{tochexlab [strip [b]]}">[v tocanchor]</a>]
+[gstyle tochexlab L[translate tochexlist,[lower [b]]]]
+[gstyle toclocanchor <a id="{tochexlab [strip [b]]}" style="text-decoration: none;" href="#{tochexlab [strip [b]]}">[v tocanchor]</a>]
 
 Flags
 -----
